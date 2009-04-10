@@ -1,10 +1,10 @@
 #labels Phase-QA
-#Project communication through Skype.
+= Project communication through Skype =
 
-= Introduction =
+== Introduction ==
 
 Skype is a free, cross-platform services that offers many services that are useful, including group voice chat, screen-sharing, and file transfer.
 
-= Contacts =
-*Michael - itrekkie
-*Simon - break314dancer
+== Contacts ==
+  *Michael - itrekkie
+  *Simon - break314dancer
