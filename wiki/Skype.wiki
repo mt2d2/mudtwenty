@@ -6,5 +6,5 @@
 Skype is a free, cross-platform services that offers many services that are useful, including group voice chat, screen-sharing, and file transfer.
 
 == Contacts ==
-  *Michael - itrekkie
-  *Simon - break314dancer
+*  Michael - itrekkie
+*  Simon - break314dancer
