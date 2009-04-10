@@ -1,14 +1,10 @@
-#summary One-sentence summary of this page.
 #labels Phase-QA
+#Project communication through Skype.
 
 = Introduction =
 
-Add your content here.
+Skype is a free, cross-platform services that offers many services that are useful, including group voice chat, screen-sharing, and file transfer.
 
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+= Contacts =
+*Michael - itrekkie
+*Simon - break314dancer
