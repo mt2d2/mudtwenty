@@ -1,0 +1,12 @@
+#summary Schedule of deliverables, including work distribution.
+
+= Introduction =
+We only have four weeks to plan, design, code, test, and deploy this monstrosity. To help, we need a schedule for major milestones, meetings, and deliverables.
+
+= Meetings =
+  * First checkpoint, *13 April 2009*, Gould Simpson 701 
+
+= Project Schedule =
+  * Design/UML, *13 April 2009*
+  * Javadoc, i.e., all method headers, *14 April 2009*
+  
