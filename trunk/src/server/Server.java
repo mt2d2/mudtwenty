@@ -58,7 +58,7 @@ public class Server
 			try
 			{
 				socket = serverSocket.accept();
-				newClient = new ServerThread(socket);
+				newClient = new ServerThread(this, socket);
 				this.clients.add(newClient);
 				new Thread(newClient).start();
 

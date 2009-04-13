@@ -12,9 +12,11 @@ import java.net.Socket;
 	private State	state;
 	private BufferedReader in;
 	private PrintWriter out;
-
-	public ServerThread(Socket socket)
+	private Server server;
+	
+	public ServerThread(Server server, Socket socket)
 	{
+		this.server = server;
 		this.socket = socket;
 		this.state = State.OK;
 		
@@ -63,6 +65,10 @@ import java.net.Socket;
 					}
 					
 					this.setState(State.DONE);
+				}
+				else if (input.equalsIgnoreCase("ooc"));
+				{
+					this.server.sendMessageToAllClients("Client " + this + "broadcasts OOC");
 				}
 			}		
 		}
