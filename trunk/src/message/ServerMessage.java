@@ -4,9 +4,11 @@ public class ServerMessage extends Message
 {	
 	private Command command;
 	
-	public ServerMessage()
+	public ServerMessage(Command command)
 	{
 		super();
+		
+		this.command = command;
 	}
 	
 	public Command getCommand()

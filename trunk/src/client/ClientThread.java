@@ -97,7 +97,7 @@ public class ClientThread implements Runnable
 
 	private void displayServerMessage(final String input)
 	{
-		this.displayServerMessage(input, Color.BLACK);
+		this.displayServerMessage(input, null);
 	}
 
 	private void displayServerMessage(final String input, final Color color)
