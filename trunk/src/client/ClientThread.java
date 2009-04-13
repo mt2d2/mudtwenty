@@ -1,9 +1,8 @@
 package client;
 
 import java.awt.Color;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
@@ -13,13 +12,15 @@ import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import message.ClientMessage;
+
 public class ClientThread implements Runnable
 {
-	private Client			client;
-	private Socket			socket;
-	private BufferedReader	in;
-	private PrintWriter		out;
-	private boolean			done;
+	private Client				client;
+	private Socket				socket;
+	private ObjectInputStream	in;
+	private PrintWriter			out;
+	private boolean				done;
 
 	public ClientThread(Client client, String server, int port)
 	{
@@ -27,7 +28,7 @@ public class ClientThread implements Runnable
 		{
 			this.client = client;
 			this.socket = new Socket(server, port);
-			this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+			this.in = new ObjectInputStream(this.socket.getInputStream());
 			this.out = new PrintWriter(socket.getOutputStream(), true);
 			this.done = false;
 		}
@@ -53,13 +54,14 @@ public class ClientThread implements Runnable
 		this.out.flush();
 	}
 
-	public String getLine()
+	public ClientMessage getMessage()
 	{
+		// TODO some of these exceptions need to be looked at
 		try
 		{
-			return this.in.readLine();
+			return (ClientMessage) this.in.readObject();
 		}
-		catch(NullPointerException e)
+		catch (NullPointerException e)
 		{
 			return null;
 		}
@@ -71,11 +73,10 @@ public class ClientThread implements Runnable
 		{
 			return null;
 		}
-	}
-
-	public boolean hasInput()
-	{
-		return true;
+		catch (ClassNotFoundException e)
+		{
+			return null;
+		}
 	}
 
 	@Override
@@ -83,21 +84,16 @@ public class ClientThread implements Runnable
 	{
 		while (!this.done)
 		{
-			String input = this.getLine();
+			final ClientMessage message = this.getMessage();
 
-			if (input == null)
+			if (message == null)
 			{
 				this.displayServerMessage("Server connection has been terminated.", Color.RED);
 				break;
 			}
 			else
-				this.displayServerMessage(input.trim());
+				this.displayServerMessage(message.getPayload().trim(), message.getColor());
 		}
-	}
-
-	private void displayServerMessage(final String input)
-	{
-		this.displayServerMessage(input, null);
 	}
 
 	private void displayServerMessage(final String input, final Color color)
