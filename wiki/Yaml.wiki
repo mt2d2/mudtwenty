@@ -1,4 +1,4 @@
-#summary Yaml as human-readable serialization for Rooms
+#summary Yaml as human-readable serialization for Universe objects
 
 = Introduction =
 Yaml is a concise,  human-readable serialization of an object. Using [http://jyaml.sourceforge.net/download.html JYaml], we can easily serialize back and forth between Java objects and these Yaml files. I think this would be perfect for representing things in the Universe (Rooms especially). Any ideas? Thoughts?
