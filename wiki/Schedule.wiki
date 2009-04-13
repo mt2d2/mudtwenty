@@ -20,4 +20,6 @@ We only have four weeks to plan, design, code, test, and deploy this monstrosity
 
 = Work Distribution =
   * Michael, *client/server interaction, GUI*
-  * Simon, *content design, GUI interaction*
+  * Simon, *content design, Universe interaction with content*
+  * Aaron, *Client GUI design, Universe interaction with content*
+  * Quinten, *content design, Universe interaction with content*
