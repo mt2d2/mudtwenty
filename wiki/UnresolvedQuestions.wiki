@@ -7,3 +7,14 @@ There's more than one thing that needs to be discussed. List any questions that 
   * Data storage? vs Everything in memory?
   * Which extra credit?
   * Design patterns?
+
+== Design Patterns ==
+  * AbstractFactory
+  * Composite
+  * Builder
+  * Decorator 
+  * Iterator
+  * Prototype
+  * Proxy
+  * State
+  * Strategy
