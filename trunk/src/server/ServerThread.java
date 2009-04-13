@@ -6,20 +6,20 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
- class ServerThread implements Runnable
+class ServerThread implements Runnable
 {
-	private Socket	socket;
-	private State	state;
-	private BufferedReader in;
-	private PrintWriter out;
-	private Server server;
-	
+	private Socket			socket;
+	private State			state;
+	private BufferedReader	in;
+	private PrintWriter		out;
+	private Server			server;
+
 	public ServerThread(Server server, Socket socket)
 	{
 		this.server = server;
 		this.socket = socket;
 		this.state = State.OK;
-		
+
 		try
 		{
 			this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
@@ -35,24 +35,27 @@ import java.net.Socket;
 	public void run()
 	{
 		while (this.getState() == State.OK)
-		{			
+		{
 			String input = null;
-			
+
 			try
 			{
-				input = this.in.readLine().trim();
+				input = this.in.readLine();
+
+				if (input != null)
+					input = input.trim();
 			}
 			catch (IOException e1)
 			{
 				e1.printStackTrace();
 			}
-			
+
 			if (input == null)
 				break; // client closed the connection
 			else
 			{
 				this.sendMessage("You said: " + input);
-				
+
 				if (input.equalsIgnoreCase("exit"))
 				{
 					try
@@ -63,22 +66,23 @@ import java.net.Socket;
 					{
 						e.printStackTrace();
 					}
-					
+
 					this.setState(State.DONE);
 				}
-				else if (input.equalsIgnoreCase("ooc"));
+				
+				if (input.equalsIgnoreCase("ooc"))
 				{
-					this.server.sendMessageToAllClients("Client " + this + "broadcasts OOC");
+					this.server.sendMessageToAllClients("client" + this + " invoked ooc");
 				}
-			}		
+			}
 		}
 	}
-	
+
 	public State getState()
 	{
 		return this.state;
 	}
-	
+
 	public void setState(State state)
 	{
 		this.state = state;

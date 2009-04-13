@@ -17,7 +17,7 @@ public class Server
 
 	/**
 	 * Logging utility, globally addressed in entire program as "mudtwenty".
-	 * This could be agumented by using a global properties file to localize the
+	 * This could be augmented by using a global properties file to localize the
 	 * error strings.
 	 */
 	private static Logger		logger	= Logger.getLogger("mudtwenty");
@@ -58,6 +58,7 @@ public class Server
 			try
 			{
 				socket = serverSocket.accept();
+				logger.info("Client connected to server: " + socket);
 				newClient = new ServerThread(this, socket);
 				this.clients.add(newClient);
 				new Thread(newClient).start();
@@ -83,13 +84,13 @@ public class Server
 						for (ServerThread st : Server.this.clients)
 							if (st.getState() == State.DONE)
 								toRemove.add(st);
-						
+
 						for (ServerThread st : toRemove)
 							Server.this.sendMessageToAllClients("Client leaving: " + st);
-						
+
 						Server.this.clients.removeAll(toRemove);
 						toRemove.clear();
-						
+
 						// TODO thread sleeping every second? Timer instead?
 						try
 						{
