@@ -1,4 +1,4 @@
-#summary Schedule of deliverables, including work distribution
+#summary schedule of deliverables, including work distribution
 #labels Featured,Phase-Design
 
 = Introduction =
