@@ -44,20 +44,22 @@ public class Client extends JFrame
 
 	public Client()
 	{
+		// setup the JFrame
 		this.setTitle("mudtwenty");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		this.setJMenuBar(this.layoutMenuBar());
+		this.setPreferredSize(new Dimension(640, 480));
 		this.cards = new JPanel(new CardLayout());
 		this.cards.add(this.layoutGameInterface(), GAME_CARD);
 		this.cards.add(this.layoutConnectorInterface(), CONNECTOR_CARD);
 		this.getContentPane().add(this.cards);
-
-		this.setJMenuBar(this.layoutMenuBar());
-		this.setPreferredSize(new Dimension(640, 480));
 		this.pack();
 
+		// request focus on the input as default
 		this.textField.requestFocusInWindow();
 
+		// spawn the ClientThread to communicate with the server
+		// TODO move to ActionListener on Button from connector screen
 		this.clientThread = new ClientThread(this, "localhost", 8080);
 		new Thread(this.clientThread).start();
 	}
@@ -70,7 +72,7 @@ public class Client extends JFrame
 	public void appendServerText(String text, Color color)
 	{
 		Document doc = this.textArea.getDocument();
-		StyleConstants.setForeground(this.textArea.getStyle("color"), color != null ? color : DEFAULT_TEXT_COLOR);
+		StyleConstants.setForeground(this.textArea.getStyle("color"), color == null ? DEFAULT_TEXT_COLOR : color);
 
 		try
 		{

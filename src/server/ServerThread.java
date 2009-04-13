@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 class ServerThread implements Runnable
 {
+	private static final Logger logger = Logger.getLogger("mudtwenty");
+	
 	private Socket			socket;
 	private State			state;
 	private BufferedReader	in;
@@ -58,16 +61,7 @@ class ServerThread implements Runnable
 
 				if (input.equalsIgnoreCase("exit"))
 				{
-					try
-					{
-						this.socket.close();
-					}
-					catch (IOException e)
-					{
-						e.printStackTrace();
-					}
-
-					this.setState(State.DONE);
+					this.terminateConnection();
 				}
 				
 				if (input.equalsIgnoreCase("ooc"))
@@ -76,6 +70,25 @@ class ServerThread implements Runnable
 				}
 			}
 		}
+	}
+
+	/**
+	 * 
+	 */
+	private void terminateConnection()
+	{
+		try
+		{
+			this.socket.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		this.server.sendMessageToAllClients("client terminated connection: " + this);
+		logger.info("client terminated connection: " + this);
+		this.setState(State.DONE);
 	}
 
 	public State getState()
