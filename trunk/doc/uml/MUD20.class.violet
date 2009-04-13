@@ -244,8 +244,8 @@ walked into the beginners room and made that his
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>41.0</double> 
-     <double>299.0</double> 
+     <double>40.0</double> 
+     <double>361.0</double> 
     </void> 
    </object> 
   </void> 
@@ -444,6 +444,28 @@ Command</string>
     <void method="setLocation"> 
      <double>440.0</double> 
      <double>55.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="ClassNode18" class="com.horstmann.violet.ClassNode"> 
+    <void property="attributes"> 
+     <void property="text"> 
+      <string>OK
+LOGIN_REQUIRED</string> 
+     </void> 
+    </void> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>&lt;&lt;enum&gt;&gt;
+Status</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>37.0</double> 
+     <double>78.0</double> 
     </void> 
    </object> 
   </void> 
@@ -692,6 +714,18 @@ Command</string>
    </object> 
    <object idref="ClassNode8"/> 
    <object idref="ClassNode5"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="endArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
+    </void> 
+    <void property="lineStyle"> 
+     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
+    </void> 
+   </object> 
+   <object idref="ClassNode13"/> 
+   <object idref="ClassNode18"/> 
   </void> 
  </object> 
 </java> 
