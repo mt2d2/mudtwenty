@@ -42,7 +42,7 @@ public class Server
 		this.serverSocket.close();
 	}
 
-	private void sendMessageToAllClients(String message)
+	public void sendMessageToAllClients(String message)
 	{
 		for (ServerThread st : this.clients)
 			st.sendMessage(message);
