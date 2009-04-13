@@ -5,7 +5,9 @@
 We only have four weeks to plan, design, code, test, and deploy this monstrosity. To help, we need a schedule for major milestones, meetings, and deliverables.
 
 = Meetings =
-  * First checkpoint, *13 April 2009*, Gould Simpson 701 
+  * First checkpoint, *13 April 2009*, Gould Simpson 701
+  * Second meeting, *24 - 27 April 2009*
+  * Review meeting, *8-10 May 2009*
 
 = Project Schedule =
   * Design/UML, *13 April 2009*
@@ -13,6 +15,5 @@ We only have four weeks to plan, design, code, test, and deploy this monstrosity
   * Second meeting scheduling, *16 April 2009*
   * Server/Client relationship GUI coding completed, *20 April 2009*
   * Completion of model for second meeting, i.e., Universe, *23 April 2009*
-  * Second meeting, *24 - 27 April 2009*
   * Code freeze, bug fixes only
   * Project due, final submission, *6 May 2009*
