@@ -15,7 +15,8 @@ We only have four weeks to plan, design, code, test, and deploy this monstrosity
   * Second meeting scheduling, *16 April 2009*
   * Server/Client relationship GUI coding completed, *20 April 2009*
   * Completion of model for second meeting, i.e., Universe, *23 April 2009*
-  * Code freeze, bug fixes only
+  * Code freeze, bug fixes only, *4 May 2009*
+  * Finalize design doc, *4 May 2009*
   * Project due, final submission, *6 May 2009*
 
 = Work Distribution =
