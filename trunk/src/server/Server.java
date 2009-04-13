@@ -10,17 +10,17 @@ import java.util.logging.Logger;
 public class Server
 {
 	/**
-	 * Port the server will run on this local host. In the future, this could be
-	 * read from a configuration file.
-	 */
-	private static final int	PORT	= 8080;
-
-	/**
 	 * Logging utility, globally addressed in entire program as "mudtwenty".
 	 * This could be augmented by using a global properties file to localize the
 	 * error strings.
 	 */
-	private static Logger		logger	= Logger.getLogger("mudtwenty");
+	private static final Logger	logger	= Logger.getLogger("mudtwenty");
+
+	/**
+	 * Port the server will run on this local host. In the future, this could be
+	 * read from a configuration file.
+	 */
+	private static final int	PORT	= 8080;
 
 	private List<ServerThread>	clients;
 	private ServerSocket		serverSocket;
@@ -29,7 +29,7 @@ public class Server
 	public Server() throws IOException
 	{
 		// Display welcome message
-		logger.info("Booting server on localhost:" + PORT);
+		logger.info("booting server on localhost:" + PORT);
 
 		this.clients = new ArrayList<ServerThread>();
 		this.serverSocket = new ServerSocket(PORT);
@@ -58,18 +58,16 @@ public class Server
 			try
 			{
 				socket = serverSocket.accept();
-				logger.info("Client connected to server: " + socket);
 				newClient = new ServerThread(this, socket);
 				this.clients.add(newClient);
 				new Thread(newClient).start();
 
-				logger.fine("Got connection at Socket: " + socket);
-				logger.finer("Handing with thread, client id: " + this.clients.indexOf(newClient));
+				logger.info("client connected to server: " + socket);
 			}
 			catch (IOException e)
 			{
-				logger.warning("Error establishing socket connection.");
-				logger.fine("" + e.getStackTrace());
+				logger.warning("error establishing socket connection.");
+				logger.throwing("Server", "acceptClients", e);
 			}
 
 			// reaper thread
@@ -84,9 +82,6 @@ public class Server
 						for (ServerThread st : Server.this.clients)
 							if (st.getState() == State.DONE)
 								toRemove.add(st);
-
-						for (ServerThread st : toRemove)
-							Server.this.sendMessageToAllClients("Client leaving: " + st);
 
 						Server.this.clients.removeAll(toRemove);
 						toRemove.clear();
@@ -118,7 +113,7 @@ public class Server
 		}
 		catch (IOException e)
 		{
-			logger.severe("Error establishing server on port " + PORT);
+			logger.severe("error establishing server on port " + PORT);
 			logger.throwing("Server", "main", e);
 		}
 	}
