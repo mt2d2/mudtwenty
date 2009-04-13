@@ -1,16 +1,16 @@
 package message;
 
 public class ServerMessage extends Message
-{
-	private String payload;
+{	
+	private Command command;
 	
 	public ServerMessage()
 	{
 		super();
 	}
 	
-	public String getPayload()
+	public Command getCommand()
 	{
-		return this.payload;
+		return this.command;
 	}
 }
