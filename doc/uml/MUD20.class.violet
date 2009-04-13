@@ -8,15 +8,16 @@
       <string>-name: string
 -totalHealth: int
 -currentHealth: int
--itemList: ArrayList
--currentActions: ArrayList&lt;Interactions&gt;
+-itemList: List&lt;Item&gt;
+-currentActions: List&lt;Interaction&gt;
 
 </string> 
      </void> 
     </void> 
     <void property="name"> 
      <void property="text"> 
-      <string>&lt;&lt;abstract&gt;&gt;creature</string> 
+      <string>&lt;&lt;abstract&gt;&gt;
+Creature</string> 
      </void> 
     </void> 
    </object> 
@@ -113,16 +114,15 @@
    <object id="ClassNode5" class="com.horstmann.violet.ClassNode"> 
     <void property="attributes"> 
      <void property="text"> 
-      <string>-numRooms: int
--numOccupants: int
--playerList: ArrayList
--currentPlayers: HashMap
+      <string>-rooms: List&lt;Room&gt;
+-players: List&lt;Player&gt;
+
 </string> 
      </void> 
     </void> 
     <void property="name"> 
      <void property="text"> 
-      <string>MUD/world/universe</string> 
+      <string>Universe</string> 
      </void> 
     </void> 
    </object> 
@@ -160,7 +160,7 @@
      <void property="text"> 
       <string>name: String
 purpose: String
-roomID: long
+room: Room
 </string> 
      </void> 
     </void> 
@@ -172,13 +172,13 @@ getPurpose(): String</string>
     </void> 
     <void property="name"> 
      <void property="text"> 
-      <string>&lt;&lt;abstract&gt;&gt;Item</string> 
+      <string>Item</string> 
      </void> 
     </void> 
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>949.0</double> 
+     <double>963.0</double> 
      <double>503.0</double> 
     </void> 
    </object> 
@@ -257,7 +257,7 @@ walked into the beginners room and made that his
     <void property="methods"> 
      <void property="text"> 
       <string>+Attack(int ap): void
-+perform(creature enemy): boolean</string> 
++perform(Creature enemy): boolean</string> 
      </void> 
     </void> 
     <void property="name"> 
@@ -326,27 +326,6 @@ walked into the beginners room and made that his
   </void> 
   <void method="connect"> 
    <object class="com.horstmann.violet.ClassRelationshipEdge"> 
-    <void property="endArrowHead"> 
-     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
-    </void> 
-    <void property="endLabel"> 
-     <string>*</string> 
-    </void> 
-    <void property="lineStyle"> 
-     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
-    </void> 
-    <void property="middleLabel"> 
-     <string>comprised of</string> 
-    </void> 
-    <void property="startLabel"> 
-     <string>1</string> 
-    </void> 
-   </object> 
-   <object idref="ClassNode5"/> 
-   <object idref="ClassNode6"/> 
-  </void> 
-  <void method="connect"> 
-   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
     <void property="bentStyle"> 
      <object class="com.horstmann.violet.BentStyle" field="HVH"/> 
     </void> 
@@ -377,27 +356,6 @@ walked into the beginners room and made that his
    </object> 
    <object idref="ClassNode6"/> 
    <object idref="ClassNode1"/> 
-  </void> 
-  <void method="connect"> 
-   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
-    <void property="endArrowHead"> 
-     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
-    </void> 
-    <void property="endLabel"> 
-     <string>*</string> 
-    </void> 
-    <void property="lineStyle"> 
-     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
-    </void> 
-    <void property="middleLabel"> 
-     <string>contains</string> 
-    </void> 
-    <void property="startLabel"> 
-     <string>1</string> 
-    </void> 
-   </object> 
-   <object idref="ClassNode6"/> 
-   <object idref="ClassNode7"/> 
   </void> 
   <void method="connect"> 
    <object class="com.horstmann.violet.ClassRelationshipEdge"> 
@@ -455,6 +413,45 @@ walked into the beginners room and made that his
    </object> 
    <object idref="ClassNode0"/> 
    <object idref="ClassNode9"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="endLabel"> 
+     <string>1..*</string> 
+    </void> 
+    <void property="middleLabel"> 
+     <string>composed of</string> 
+    </void> 
+    <void property="startArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="BLACK_DIAMOND"/> 
+    </void> 
+    <void property="startLabel"> 
+     <string>1</string> 
+    </void> 
+   </object> 
+   <object idref="ClassNode5"/> 
+   <object idref="ClassNode6"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="bentStyle"> 
+     <object class="com.horstmann.violet.BentStyle" field="VHV"/> 
+    </void> 
+    <void property="endLabel"> 
+     <string>*</string> 
+    </void> 
+    <void property="middleLabel"> 
+     <string>contains</string> 
+    </void> 
+    <void property="startArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="DIAMOND"/> 
+    </void> 
+    <void property="startLabel"> 
+     <string>1</string> 
+    </void> 
+   </object> 
+   <object idref="ClassNode6"/> 
+   <object idref="ClassNode7"/> 
   </void> 
  </object> 
 </java> 
