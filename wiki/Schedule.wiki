@@ -1,4 +1,5 @@
-#summary Schedule of deliverables, including work distribution.
+#summary Schedule of deliverables, including work distribution
+#labels Featured,Phase-Design
 
 = Introduction =
 We only have four weeks to plan, design, code, test, and deploy this monstrosity. To help, we need a schedule for major milestones, meetings, and deliverables.
