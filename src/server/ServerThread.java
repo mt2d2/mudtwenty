@@ -1,21 +1,24 @@
 package server;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Logger;
 
+import message.ClientMessage;
+
 class ServerThread implements Runnable
 {
-	private static final Logger logger = Logger.getLogger("mudtwenty");
-	
-	private Socket			socket;
-	private State			state;
-	private BufferedReader	in;
-	private PrintWriter		out;
-	private Server			server;
+	private static final Logger	logger	= Logger.getLogger("mudtwenty");
+
+	private Socket				socket;
+	private State				state;
+	private BufferedReader		in;
+	private ObjectOutputStream	out;
+	private Server				server;
 
 	public ServerThread(Server server, Socket socket)
 	{
@@ -26,12 +29,15 @@ class ServerThread implements Runnable
 		try
 		{
 			this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-			this.out = new PrintWriter(this.socket.getOutputStream(), true);
+			this.out = new ObjectOutputStream(this.socket.getOutputStream());
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
+
+		// send a welcome message to the client
+		this.sendMessage("welcome to mudtwenty", Server.SYSTEM_TEXT_COLOR);
 	}
 
 	@Override
@@ -60,14 +66,10 @@ class ServerThread implements Runnable
 				this.sendMessage("You said: " + input);
 
 				if (input.equalsIgnoreCase("exit"))
-				{
 					this.terminateConnection();
-				}
-				
+
 				if (input.equalsIgnoreCase("ooc"))
-				{
 					this.server.sendMessageToAllClients("client" + this + " invoked ooc");
-				}
 			}
 		}
 	}
@@ -86,7 +88,6 @@ class ServerThread implements Runnable
 			e.printStackTrace();
 		}
 
-		this.server.sendMessageToAllClients("client terminated connection: " + this);
 		logger.info("client terminated connection: " + this);
 		this.setState(State.DONE);
 	}
@@ -103,7 +104,19 @@ class ServerThread implements Runnable
 
 	public void sendMessage(String message)
 	{
-		this.out.println(message);
-		this.out.flush();
+		this.sendMessage(message, null);
+	}
+
+	public void sendMessage(String message, Color color)
+	{
+		try
+		{
+			this.out.writeObject(new ClientMessage(message, color));
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
