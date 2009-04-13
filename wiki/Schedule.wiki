@@ -9,4 +9,9 @@ We only have four weeks to plan, design, code, test, and deploy this monstrosity
 = Project Schedule =
   * Design/UML, *13 April 2009*
   * Javadoc, i.e., all method headers, *14 April 2009*
-  
+  * Second meeting scheduling, *16 April 2009*
+  * Server/Client relationship GUI coding completed, *20 April 2009*
+  * Completion of model for second meeting, i.e., Universe, *23 April 2009*
+  * Second meeting, *24 - 27 April 2009*
+  * Code freeze, bug fixes only
+  * Project due, final submission, *6 May 2009*
