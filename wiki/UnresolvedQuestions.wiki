@@ -1,6 +1,5 @@
 #summary unresolved questions needing answers
 
-= Introduction =
 There's more than one thing that needs to be discussed. List any questions that are unresolved here.
 
   * Which network port can we use?
