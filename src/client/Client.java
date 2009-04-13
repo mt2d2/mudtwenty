@@ -14,65 +14,61 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
-public class Client extends JFrame
-{
-	private static final long	serialVersionUID	= 1L;
+public class Client extends JFrame {
+	private static final long serialVersionUID = 1L;
 
-	private JTextArea			textArea;
-	private JTextField			textField;
+	private JTextArea textArea;
+	private JTextField textField;
 
-	public Client()
-	{
+	public Client() {
 		this.setTitle("mudtwenty");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.add(this.layoutInterface());
+		this.getContentPane().add(this.layoutInterface());
 		this.setJMenuBar(this.layoutMenuBar());
 		this.setPreferredSize(new Dimension(640, 480));
 		this.pack();
+
+		this.textField.requestFocusInWindow();
 	}
 
-	private void handleExitEvent()
-	{
+	private void handleExitEvent() {
 		System.exit(0);
 	}
 
-	private void handleAboutEvent()
-	{
+	private void handleAboutEvent() {
 		JOptionPane.showMessageDialog(this, "About");
 	}
 
-	protected void handleSendEvent()
-	{
+	protected void handleSendEvent() {
 		// disable textField and grab input
 		String input = this.textField.getText();
-		if (input.length() != 0)
-		{
+		if (input.length() != 0) {
 			this.textField.setEnabled(false);
-			input = input.trim();
-			this.textArea.append(input + "\n");
+			this.textArea.append(input.trim() + "\n");
 		}
-		
+
 		// restore text to blank
 		this.textField.setText("");
 		this.textField.setEnabled(true);
-		this.textField.requestFocus();
+		this.textField.requestFocusInWindow();
 	}
 
-	private JMenuBar layoutMenuBar()
-	{
+	private JMenuBar layoutMenuBar() {
 		JMenuBar menu = new JMenuBar();
 
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem about = new JMenuItem("About");
 		about.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e)
-			{
+			public void actionPerformed(ActionEvent e) {
 				Client.this.handleAboutEvent();
 			}
 		});
@@ -81,8 +77,7 @@ public class Client extends JFrame
 		JMenuItem exit = new JMenuItem("Exit");
 		exit.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e)
-			{
+			public void actionPerformed(ActionEvent e) {
 				Client.this.handleExitEvent();
 			}
 		});
@@ -93,19 +88,20 @@ public class Client extends JFrame
 		return menu;
 	}
 
-	private JPanel layoutInterface()
-	{
+	private JPanel layoutInterface() {
 		JPanel panel = new JPanel(new BorderLayout());
 		ActionListener sendEventListener = new SendEventListener();
 
 		// setup instance components
 		this.textArea = new JTextArea();
-		this.textField = new JTextField();
 		this.textArea.setEditable(false);
-		this.textField.registerKeyboardAction(sendEventListener, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), JComponent.WHEN_FOCUSED);
+		this.textField = new JTextField();
+		this.textField.registerKeyboardAction(sendEventListener, KeyStroke
+				.getKeyStroke(KeyEvent.VK_ENTER, 0, false),
+				JComponent.WHEN_FOCUSED);
 
 		// text area
-		panel.add(this.textArea, BorderLayout.CENTER);
+		panel.add(new JScrollPane(this.textArea), BorderLayout.CENTER);
 
 		// entry panel
 		JPanel entryPanel = new JPanel(new BorderLayout());
@@ -118,11 +114,9 @@ public class Client extends JFrame
 		return panel;
 	}
 
-	private class SendEventListener implements ActionListener
-	{
+	private class SendEventListener implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent e)
-		{
+		public void actionPerformed(ActionEvent e) {
 			Client.this.handleSendEvent();
 		}
 	}
@@ -130,12 +124,23 @@ public class Client extends JFrame
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			System.setProperty("apple.laf.useScreenMenuBar", "true");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
+
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
-			public void run()
-			{
+			public void run() {
 				new Client().setVisible(true);
 			}
 		});
