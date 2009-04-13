@@ -1,4 +1,4 @@
-#summary Project communication and collaboration through Skype
+#summary project communication and collaboration through Skype
 #labels Phase-QA
 
 == Introduction ==
