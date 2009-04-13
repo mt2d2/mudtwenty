@@ -8,7 +8,6 @@ We only have four weeks to plan, design, code, test, and deploy this monstrosity
   * First checkpoint, *13 April 2009*, Gould Simpson 701
   * Second meeting, *24 - 27 April 2009*
   * Review meeting, *8-10 May 2009*
-  * Final meeting, *8 - 10 May 2009*
 
 = Project Schedule =
   * Design/UML, *13 April 2009*
