@@ -33,6 +33,7 @@ public class Client extends JFrame
 {
 	private static Logger		logger				= Logger.getLogger("mudtwenty");
 	private static final long	serialVersionUID	= 1L;
+	private static final Color	DEFAULT_TEXT_COLOR	= Color.BLACK;
 	private static final String	GAME_CARD			= "GAME_CARD";
 	private static final String	CONNECTOR_CARD		= "CONNECTOR_CARD";
 
@@ -69,7 +70,7 @@ public class Client extends JFrame
 	public void appendServerText(String text, Color color)
 	{
 		Document doc = this.textArea.getDocument();
-		StyleConstants.setForeground(this.textArea.getStyle("color"), color != null ? color : Color.BLACK);
+		StyleConstants.setForeground(this.textArea.getStyle("color"), color != null ? color : DEFAULT_TEXT_COLOR);
 
 		try
 		{
