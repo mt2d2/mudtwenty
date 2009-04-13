@@ -4,8 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -14,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 public class Client extends JFrame
@@ -31,6 +34,33 @@ public class Client extends JFrame
 		this.setJMenuBar(this.layoutMenuBar());
 		this.setPreferredSize(new Dimension(640, 480));
 		this.pack();
+	}
+
+	private void handleExitEvent()
+	{
+		System.exit(0);
+	}
+
+	private void handleAboutEvent()
+	{
+		JOptionPane.showMessageDialog(this, "About");
+	}
+
+	protected void handleSendEvent()
+	{
+		// disable textField and grab input
+		String input = this.textField.getText();
+		if (input.length() != 0)
+		{
+			this.textField.setEnabled(false);
+			input = input.trim();
+			this.textArea.append(input + "\n");
+		}
+		
+		// restore text to blank
+		this.textField.setText("");
+		this.textField.setEnabled(true);
+		this.textField.requestFocus();
 	}
 
 	private JMenuBar layoutMenuBar()
@@ -63,25 +93,16 @@ public class Client extends JFrame
 		return menu;
 	}
 
-	private void handleExitEvent()
-	{
-		System.exit(0);
-
-	}
-
-	private void handleAboutEvent()
-	{
-		JOptionPane.showMessageDialog(this, "About");
-	}
-
 	private JPanel layoutInterface()
 	{
 		JPanel panel = new JPanel(new BorderLayout());
+		ActionListener sendEventListener = new SendEventListener();
 
 		// setup instance components
 		this.textArea = new JTextArea();
 		this.textField = new JTextField();
 		this.textArea.setEditable(false);
+		this.textField.registerKeyboardAction(sendEventListener, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), JComponent.WHEN_FOCUSED);
 
 		// text area
 		panel.add(this.textArea, BorderLayout.CENTER);
@@ -89,10 +110,21 @@ public class Client extends JFrame
 		// entry panel
 		JPanel entryPanel = new JPanel(new BorderLayout());
 		entryPanel.add(this.textField, BorderLayout.CENTER);
-		entryPanel.add(new JButton("Send"), BorderLayout.EAST);
+		JButton sendButton = new JButton("Send");
+		sendButton.addActionListener(sendEventListener);
+		entryPanel.add(sendButton, BorderLayout.EAST);
 		panel.add(entryPanel, BorderLayout.SOUTH);
 
 		return panel;
+	}
+
+	private class SendEventListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			Client.this.handleSendEvent();
+		}
 	}
 
 	/**
