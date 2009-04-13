@@ -2,15 +2,15 @@ package message;
 
 public class ClientMessage extends Message
 {
-	private Command command;
+	private String payload;
 	
 	public ClientMessage()
 	{
 		super();
 	}
 	
-	public Command getCommand()
+	public String getPayload()
 	{
-		return this.command;
+		return this.payload;
 	}
 }
