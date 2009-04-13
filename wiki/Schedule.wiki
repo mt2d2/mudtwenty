@@ -17,3 +17,7 @@ We only have four weeks to plan, design, code, test, and deploy this monstrosity
   * Completion of model for second meeting, i.e., Universe, *23 April 2009*
   * Code freeze, bug fixes only
   * Project due, final submission, *6 May 2009*
+
+= Work Distribution =
+  * Michael, *client/server interaction, GUI*
+  * Simon, *content design, GUI interaction*
