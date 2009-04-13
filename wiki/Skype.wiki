@@ -1,5 +1,5 @@
 #labels Phase-QA
-# Project communcation
+#projection communication and collaboration
 
 = Project communication through Skype =
 
