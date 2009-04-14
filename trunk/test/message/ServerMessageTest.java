@@ -1,6 +1,7 @@
 package message;
 
-import java.awt.Color;
+import static org.junit.Assert.assertEquals;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -68,7 +69,7 @@ public class ServerMessageTest
 				File file2 = new File(tempDir, "tempFile" + x++);
 				ObjectInputStream is = new ObjectInputStream(new FileInputStream(file2));
 				ServerMessage prHost = (ServerMessage) is.readObject();
-//			 	assertEquals(message.getColor().getRGB(), prHost.getColor().getRGB());
+			 	assertEquals(message.getCommand(), prHost.getCommand());
 				is.close();
 			}
 			catch (FileNotFoundException e)
