@@ -128,9 +128,12 @@ public class ClientThread implements Runnable
 			this.out.close();
 			this.socket.close();
 		}
+		catch (NullPointerException e)
+		{
+			// pass
+		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
