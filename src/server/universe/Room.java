@@ -1,6 +1,6 @@
 package server.universe;
 
-import Java.util.List;
+import java.util.List;
 
 /**
  * A Room represents a location in the universe.
@@ -19,7 +19,7 @@ public class Room
 	/**
 	 * @return A list of all of the exits from the room.
 	 */
-	public List<Room> getExits()
+	public List<Exit> getExits()
 	{
 		return exits;
 	}
@@ -28,9 +28,9 @@ public class Room
 	/**
 	 * @return A list of all of the items in the room.
 	 */
-	public List<Player> getItems()
+	public List<Item> getItems()
 	{
-		return players;
+		return items;
 	}
 
 }
