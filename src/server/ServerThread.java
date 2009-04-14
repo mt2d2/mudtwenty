@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import message.ClientMessage;
 import message.ServerMessage;
 
-class ServerThread implements Runnable
+public class ServerThread implements Runnable
 {
 	private static final Logger	logger	= Logger.getLogger("mudtwenty");
 
@@ -52,7 +52,7 @@ class ServerThread implements Runnable
 				if (input == null)
 					break;
 				else
-					this.sendMessage(this.server.getServerResponse(input.getCommand()).respond(input.getArguments()));
+					this.sendMessage(this.server.getServerResponse(input.getCommand()).respond(this, input.getArguments()));
 			}
 			catch (IOException e)
 			{
@@ -70,7 +70,7 @@ class ServerThread implements Runnable
 	/**
 	 * 
 	 */
-	private void terminateConnection()
+	public void terminateConnection()
 	{
 		try
 		{
@@ -105,8 +105,7 @@ class ServerThread implements Runnable
 		}
 		catch (IOException e)
 		{
-			logger.warning("error writing object on ServerThread: " + this);
-			logger.throwing("ServerThread", "sendMessage", e);
+			// pass, ignore sending null when exiting
 		}
 	}
 }
