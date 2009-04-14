@@ -4,6 +4,11 @@ import java.awt.Color;
 
 public class ClientMessage extends Message
 {
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+	
 	private String payload;
 	private Color color;
 	

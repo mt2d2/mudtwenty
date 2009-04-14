@@ -1,18 +1,33 @@
 package message;
 
+import java.util.List;
+
 public class ServerMessage extends Message
-{	
-	private Command command;
+{
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
 	
-	public ServerMessage(Command command)
+
+	private Command	command;
+	private List<String> arguments;
+	
+	public ServerMessage(Command command, List<String> arguments)
 	{
 		super();
-		
+
+		this.arguments = arguments;
 		this.command = command;
 	}
-	
+
 	public Command getCommand()
 	{
 		return this.command;
+	}
+	
+	public List<String> getArguments()
+	{
+		return this.arguments;
 	}
 }

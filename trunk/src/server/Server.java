@@ -5,8 +5,16 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
+
+import message.ClientMessage;
+import message.Command;
+import server.response.EchoResponse;
+import server.response.ServerResponse;
+import server.response.UnknownResponse;
 
 public class Server
 {
@@ -28,7 +36,8 @@ public class Server
 	private List<ServerThread>	clients;
 	private ServerSocket		serverSocket;
 	private boolean				done;
-
+	private Map<Command, ServerResponse>	actions;
+	
 	public Server() throws IOException
 	{
 		// Display welcome message
@@ -36,6 +45,7 @@ public class Server
 
 		this.clients = new ArrayList<ServerThread>();
 		this.serverSocket = new ServerSocket(PORT);
+		this.installServerResponses();
 		this.done = false;
 
 		// reaper thread
@@ -48,6 +58,13 @@ public class Server
 		this.serverSocket.close();
 	}
 
+	private void installServerResponses()
+	{
+		this.actions = new HashMap<Command, ServerResponse>();
+		this.actions.put(Command.ECHO, new EchoResponse());
+		this.actions.put(Command.UNKNOWN, new UnknownResponse());
+	}
+
 	public void sendMessageToAllClients(String message)
 	{
 		this.sendMessageToAllClients(message, null);
@@ -56,7 +73,12 @@ public class Server
 	public void sendMessageToAllClients(String message, Color color)
 	{
 		for (ServerThread st : this.clients)
-			st.sendMessage(message, color);
+			st.sendMessage(new ClientMessage(message, color));
+	}
+	
+	public ServerResponse getServerResponse(Command input)
+	{
+		return this.actions.get(input);
 	}
 
 	private void acceptClients()

@@ -3,7 +3,7 @@ package client;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
@@ -19,7 +19,7 @@ public class ClientThread implements Runnable
 	private Client				client;
 	private Socket				socket;
 	private ObjectInputStream	in;
-	private PrintWriter			out;
+	private ObjectOutputStream	out;
 	private boolean				done;
 
 	public ClientThread(Client client, String server, int port)
@@ -28,8 +28,8 @@ public class ClientThread implements Runnable
 		{
 			this.client = client;
 			this.socket = new Socket(server, port);
+			this.out = new ObjectOutputStream(this.socket.getOutputStream());
 			this.in = new ObjectInputStream(this.socket.getInputStream());
-			this.out = new PrintWriter(socket.getOutputStream(), true);
 			this.done = false;
 		}
 		catch (ConnectException e)
@@ -48,11 +48,21 @@ public class ClientThread implements Runnable
 		}
 	}
 
-	public void sendMessage(String message)
+	public void sendMessage(String input)
 	{
-		this.out.println(message);
-		this.out.flush();
+		try
+		{
+			this.out.writeObject( InputParser.parse(input));
+			this.out.flush();
+
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+	
 
 	public ClientMessage getMessage()
 	{
@@ -105,5 +115,20 @@ public class ClientThread implements Runnable
 				ClientThread.this.client.appendServerText(input, color);
 			}
 		});
+	}
+
+	public void closeConnection()
+	{
+		try
+		{
+			this.in.close();
+			this.out.close();
+			this.socket.close();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
