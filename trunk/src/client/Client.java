@@ -30,6 +30,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyleConstants;
+
 public class Client extends JFrame
 {
 	private static Logger		logger				= Logger.getLogger("mudtwenty");
