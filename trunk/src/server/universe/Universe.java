@@ -3,14 +3,15 @@ package server.universe;
 import java.util.List;
 
 /**
- * A Universe represents the entire state of the virtual world.
- * A universe consists of a set of rooms and a set of players.
+ * A Universe represents the entire state of the virtual world. A universe
+ * consists of a set of rooms and a set of players.
  */
 public class Universe
 {
+	private List<Room>			rooms;
+	private List<Player>		players;
 
-	private List<Room> rooms;
-	private List<Player> players;
+	private transient Session	session;
 
 	/**
 	 * Create a universe with the given lists of rooms and players.
@@ -36,5 +37,4 @@ public class Universe
 	{
 		return players;
 	}
-
 }
