@@ -3,7 +3,7 @@
 = Introduction =
 Yaml is a concise,  human-readable serialization of an object. Using [http://jyaml.sourceforge.net/download.html JYaml], we can easily serialize back and forth between Java objects and these Yaml files. I think this would be perfect for representing things in the Universe (Rooms especially). Any ideas? Thoughts?
 
----
+----
 
 Advantages:
  * We might be able to modify the world and the items therein by editing text files.
@@ -15,10 +15,10 @@ Disadvantages:
 
 --Quinten
 
----
+----
 
 The problem I see with default java serialization is that it requires you to be able to create those files with Java itself. We talked about that being a bad idea during the meeting today. By keeping Room/Item descriptions in Yaml, we -- and importantly _a user_ -- could edit them by hand. It would be an instant, albeit crude MUD editor. -- Michael
 
----
+----
 
-I agree that that is an advantage to using Yaml. I am personally partial to the idea of keeping all our data stored in plain text so that it's relatively easy to add bits to the world, edit descriptions, etc. I think that we should make sure that it works fairly easily and ask Jan about whether it's okay.
+I agree that that is an advantage to using Yaml. I am personally partial to the idea of keeping all our data stored in plain text so that it's relatively easy to add bits to the world, edit descriptions, etc. I think that we should make sure that it works fairly easily and ask Jan about whether it's okay. -- Quinten
