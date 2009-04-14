@@ -8,6 +8,8 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -52,7 +54,7 @@ public class ClientThread implements Runnable
 	{
 		try
 		{
-			this.out.writeObject( InputParser.parse(input));
+			this.out.writeObject(InputParser.parse(input));
 			this.out.flush();
 
 		}
@@ -62,7 +64,6 @@ public class ClientThread implements Runnable
 			e.printStackTrace();
 		}
 	}
-	
 
 	public ClientMessage getMessage()
 	{
@@ -102,7 +103,9 @@ public class ClientThread implements Runnable
 				break;
 			}
 			else
-				this.displayServerMessage(message.getPayload().trim(), message.getColor());
+				this.displayServerMessage(
+						DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(message.getTime())) + "> " + message.getPayload().trim(), message
+								.getColor());
 		}
 	}
 
