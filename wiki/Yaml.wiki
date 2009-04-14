@@ -11,4 +11,4 @@ Yaml is a concise,  human-readable serialization of an object. Using [http://jya
  * It would likely be simpler and more convenient to just serialize objects through the builtin java serialization.
  * Depending on how complex rooms, items, etc. get, the resulting YAML might get pretty messy.
 
-The problem I see with default java serialization is that it requires you to be able to create those files with Java itself. We talked about that being a bad idea during the meeting today. By keeping Room/Item descriptions in Yaml, we -- and importantly _a user_ -- could edit them by hand. It would be an instant, albeit crude MUD editor.
+The problem I see with default java serialization is that it requires you to be able to create those files with Java itself. We talked about that being a bad idea during the meeting today. By keeping Room/Item descriptions in Yaml, we -- and importantly _a user_ -- could edit them by hand. It would be an instant, albeit crude MUD editor. -- Michael
