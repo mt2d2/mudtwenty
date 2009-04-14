@@ -1,0 +1,5 @@
+#summary A way to chat that is not skype.
+
+= Introduction =
+
+There's a channel at `irc.freenode.net` called `#mudtwenty`.
