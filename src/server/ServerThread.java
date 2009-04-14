@@ -1,14 +1,13 @@
 package server;
 
-import java.awt.Color;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Logger;
 
 import message.ClientMessage;
+import message.ServerMessage;
 
 class ServerThread implements Runnable
 {
@@ -16,7 +15,7 @@ class ServerThread implements Runnable
 
 	private Socket				socket;
 	private State				state;
-	private BufferedReader		in;
+	private ObjectInputStream	in;
 	private ObjectOutputStream	out;
 	private Server				server;
 
@@ -28,16 +27,17 @@ class ServerThread implements Runnable
 
 		try
 		{
-			this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+			this.in = new ObjectInputStream(this.socket.getInputStream());
 			this.out = new ObjectOutputStream(this.socket.getOutputStream());
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			logger.info("error establishing in and out streams on ServerThread: " + this);
+			logger.throwing("ServerThread", "ServerThread", e);
 		}
 
 		// send a welcome message to the client
-		this.sendMessage("welcome to mudtwenty", Server.SYSTEM_TEXT_COLOR);
+		this.sendMessage(new ClientMessage("welcome to mudtwenty", Server.SYSTEM_TEXT_COLOR));
 	}
 
 	@Override
@@ -45,31 +45,24 @@ class ServerThread implements Runnable
 	{
 		while (this.getState() == State.OK)
 		{
-			String input = null;
-
 			try
 			{
-				input = this.in.readLine();
+				ServerMessage input = (ServerMessage) this.in.readObject();
 
-				if (input != null)
-					input = input.trim();
+				if (input == null)
+					break;
+				else
+					this.sendMessage(this.server.getServerResponse(input.getCommand()).respond(input.getArguments()));
 			}
-			catch (IOException e1)
+			catch (IOException e)
 			{
-				e1.printStackTrace();
+				this.terminateConnection();
+				break;
 			}
-
-			if (input == null)
-				break; // client closed the connection
-			else
+			catch (ClassNotFoundException e)
 			{
-				this.sendMessage("You said: " + input);
-
-				if (input.equalsIgnoreCase("exit"))
-					this.terminateConnection();
-
-				if (input.equalsIgnoreCase("ooc"))
-					this.server.sendMessageToAllClients("client" + this + " invoked ooc");
+				this.terminateConnection();
+				break;
 			}
 		}
 	}
@@ -81,6 +74,8 @@ class ServerThread implements Runnable
 	{
 		try
 		{
+			this.in.close();
+			this.out.close();
 			this.socket.close();
 		}
 		catch (IOException e)
@@ -102,21 +97,16 @@ class ServerThread implements Runnable
 		this.state = state;
 	}
 
-	public void sendMessage(String message)
-	{
-		this.sendMessage(message, null);
-	}
-
-	public void sendMessage(String message, Color color)
+	public void sendMessage(ClientMessage message)
 	{
 		try
 		{
-			this.out.writeObject(new ClientMessage(message, color));
+			this.out.writeObject(message);
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.warning("error writing object on ServerThread: " + this);
+			logger.throwing("ServerThread", "sendMessage", e);
 		}
 	}
 }

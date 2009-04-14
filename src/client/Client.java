@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -28,7 +30,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyleConstants;
-
 public class Client extends JFrame
 {
 	private static Logger		logger				= Logger.getLogger("mudtwenty");
@@ -43,7 +44,7 @@ public class Client extends JFrame
 	private ClientThread		clientThread;
 
 	public Client()
-	{
+	{		
 		// setup the JFrame
 		this.setTitle("mudtwenty");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,14 +55,23 @@ public class Client extends JFrame
 		this.cards.add(this.layoutConnectorInterface(), CONNECTOR_CARD);
 		this.getContentPane().add(this.cards);
 		this.pack();
-
-		// request focus on the input as default
-		this.textField.requestFocusInWindow();
-
+		
 		// spawn the ClientThread to communicate with the server
 		// TODO move to ActionListener on Button from connector screen
 		this.clientThread = new ClientThread(this, "localhost", 8080);
 		new Thread(this.clientThread).start();
+		
+		// request focus on the input as default
+		this.textField.requestFocusInWindow();
+		
+		// add a window close listener
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				Client.this.handleExitEvent();
+			}
+		});
 	}
 
 	public void appendServerText(String text)
@@ -87,6 +97,7 @@ public class Client extends JFrame
 
 	private void handleExitEvent()
 	{
+		this.clientThread.closeConnection();
 		System.exit(0);
 	}
 
@@ -95,7 +106,7 @@ public class Client extends JFrame
 		JOptionPane.showMessageDialog(this, "About");
 	}
 
-	protected void handleSendEvent()
+	private void handleSendEvent()
 	{
 		// disable textField and grab input
 		String input = this.textField.getText();

@@ -2,5 +2,5 @@ package message;
 
 public enum Command
 {
-	LOOK, OOC
+	ECHO, LOOK, OOC, UNKNOWN
 }
