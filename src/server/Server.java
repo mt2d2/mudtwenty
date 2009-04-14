@@ -24,7 +24,7 @@ import server.response.UnknownResponse;
  * PORT and delegates each client to a separate thread. Server maintains a list
  * of associated clients (which it periodically prunes) to allow messages to be
  * send to each connected client.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class Server
@@ -58,7 +58,7 @@ public class Server
 	 * Default constructor for Server. It attempts to establish a ServerSocket
 	 * on PORT, and will throw an IOException in the case that this is
 	 * impossible. After, it enters a blocking loop waiting for connections.
-	 * 
+	 *
 	 * @throws IOException
 	 *             indicates problem starting server, most likely a different
 	 *             service running on the same port
@@ -100,7 +100,7 @@ public class Server
 	/**
 	 * Returns a ServerResponse appropriate to a given Command. This is useful
 	 * for quickly parsing incoming ClientMessages for its appropriate action.
-	 * 
+	 *
 	 * @param input
 	 *            selected command
 	 * @return input's associated ServerResponse
@@ -113,7 +113,7 @@ public class Server
 	/**
 	 * Sends a message to all clients. This is a convince method for defaulting
 	 * to the default color.
-	 * 
+	 *
 	 * @param message
 	 *            message to be sent to clients
 	 */
@@ -124,7 +124,7 @@ public class Server
 
 	/**
 	 * Sends a message to all clients in a given color.
-	 * 
+	 *
 	 * @param message
 	 *            message to be sent to clients
 	 * @param color
@@ -168,14 +168,14 @@ public class Server
 	 * An extension of TimerTask that periodically prunes finished clients. That
 	 * is, this removes clients whose State is DONE from the list of active
 	 * clients.
-	 * 
+	 *
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
 	private class ReaperTask extends TimerTask
 	{
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.util.TimerTask#run()
 		 */
 		@Override
@@ -199,7 +199,7 @@ public class Server
 	/**
 	 * Main entrance to the Server. This creates a new Server, catching severe
 	 * exceptions.
-	 * 
+	 *
 	 * @param args
 	 *            there are no arguments for Server
 	 */
