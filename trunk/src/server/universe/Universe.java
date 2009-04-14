@@ -37,4 +37,12 @@ public class Universe
 	{
 		return players;
 	}
+	
+	/**
+	 * @return A table of sessions, i.e., all active users in the MUD.
+	 */
+	public Session getSession()
+	{
+		return this.session;
+	}
 }
