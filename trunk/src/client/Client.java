@@ -31,10 +31,27 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyleConstants;
 
+/**
+ * GUI client that can connect to the MUD Server. Allows the user to configure
+ * the host and port of the server, and, if the connection were successful,
+ * communicates with the server through a basic terminal emulator.
+ * 
+ * This is a huge work in progress. Currently, the user has no option when
+ * connecting to a server. It currently only connects to localhost on port 8080.
+ * 
+ * @author Michael Tremel (mtremel@email.arizona.edu)
+ */
 public class Client extends JFrame
 {
+	/**
+	 * Logging utility, globally addressed in entire program as "mudtwenty".
+	 * This could be augmented by using a global properties file to localize the
+	 * error strings.
+	 */
 	private static Logger		logger				= Logger.getLogger("mudtwenty");
+
 	private static final long	serialVersionUID	= 1L;
+
 	private static final Color	DEFAULT_TEXT_COLOR	= Color.BLACK;
 	private static final String	GAME_CARD			= "GAME_CARD";
 	private static final String	CONNECTOR_CARD		= "CONNECTOR_CARD";
@@ -44,8 +61,12 @@ public class Client extends JFrame
 	private JTextField			textField;
 	private ClientThread		clientThread;
 
+	/**
+	 * Sole constructor for client. Sets up the JFrame, adding appropriate
+	 * contents and listeners.
+	 */
 	public Client()
-	{		
+	{
 		// setup the JFrame
 		this.setTitle("mudtwenty");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,15 +77,15 @@ public class Client extends JFrame
 		this.cards.add(this.layoutConnectorInterface(), CONNECTOR_CARD);
 		this.getContentPane().add(this.cards);
 		this.pack();
-		
+
 		// spawn the ClientThread to communicate with the server
 		// TODO move to ActionListener on Button from connector screen
 		this.clientThread = new ClientThread(this, "localhost", 8080);
 		new Thread(this.clientThread).start();
-		
+
 		// request focus on the input as default
 		this.textField.requestFocusInWindow();
-		
+
 		// add a window close listener
 		this.addWindowListener(new WindowAdapter() {
 			@Override
@@ -75,11 +96,26 @@ public class Client extends JFrame
 		});
 	}
 
+	/**
+	 * Adds text to the server display window with a null color. The system will
+	 * resort to its default color.
+	 * 
+	 * @param text
+	 *            the text to append
+	 */
 	public void appendServerText(String text)
 	{
 		this.appendServerText(text, null);
 	}
 
+	/**
+	 * Adds text to the server display window with a given color.
+	 * 
+	 * @param text
+	 *            the text to append
+	 * @param color
+	 *            the color to append that text in
+	 */
 	public void appendServerText(String text, Color color)
 	{
 		Document doc = this.textArea.getDocument();
@@ -96,17 +132,29 @@ public class Client extends JFrame
 		}
 	}
 
+	/**
+	 * Gracefully handles an exit event. This asks the connection to the server
+	 * to close before quitting the client.
+	 */
 	private void handleExitEvent()
 	{
 		this.clientThread.closeConnection();
 		System.exit(0);
 	}
 
+	/**
+	 * Simple about screen. Nothing fancy here.
+	 */
 	private void handleAboutEvent()
 	{
 		JOptionPane.showMessageDialog(this, "About");
 	}
 
+	/**
+	 * Invoked when the user wishes to send a message to the server, either by
+	 * hitting enter when the entry field is in focus or by pressing the send
+	 * button.
+	 */
 	private void handleSendEvent()
 	{
 		// disable textField and grab input
@@ -125,6 +173,9 @@ public class Client extends JFrame
 		this.textField.requestFocusInWindow();
 	}
 
+	/**
+	 * @return JMenuBar that will be used by the application
+	 */
 	private JMenuBar layoutMenuBar()
 	{
 		JMenuBar menu = new JMenuBar();
@@ -155,6 +206,9 @@ public class Client extends JFrame
 		return menu;
 	}
 
+	/**
+	 * @return JPanel with components related to the server and port setup
+	 */
 	private JPanel layoutConnectorInterface()
 	{
 		JPanel panel = new JPanel();
@@ -165,6 +219,9 @@ public class Client extends JFrame
 		return panel;
 	}
 
+	/**
+	 * @return JPanel containing the components for the terminal emulator
+	 */
 	private JPanel layoutGameInterface()
 	{
 		JPanel panel = new JPanel(new BorderLayout());
@@ -191,6 +248,11 @@ public class Client extends JFrame
 		return panel;
 	}
 
+	/**
+	 * Invokes handleSendEvent() when an action is fired.
+	 * 
+	 * @author Michael Tremel (mtremel@email.arizona.edu)
+	 */
 	private class SendEventListener implements ActionListener
 	{
 		@Override
@@ -201,7 +263,11 @@ public class Client extends JFrame
 	}
 
 	/**
+	 * Main entrance to the client. Attempts to set a matching plaf for the
+	 * jvm's host and makes a new Client visible.
+	 * 
 	 * @param args
+	 *            there are no arguments to Client
 	 */
 	public static void main(String[] args)
 	{

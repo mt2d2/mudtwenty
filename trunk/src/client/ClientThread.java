@@ -16,6 +16,16 @@ import javax.swing.SwingUtilities;
 
 import message.ClientMessage;
 
+/**
+ * This class is responsible for initiating a socket connection to the given
+ * server, sending messages, and recieving messages from Server.
+ * 
+ * @author Michael Tremel (mtremel@email.arizona.edu)
+ */
+/**
+ * @author mt2
+ * 
+ */
 public class ClientThread implements Runnable
 {
 	private Client				client;
@@ -24,6 +34,16 @@ public class ClientThread implements Runnable
 	private ObjectOutputStream	out;
 	private boolean				done;
 
+	/**
+	 * Sole constructor. Attempts to open a socket connection on server port.
+	 * 
+	 * @param client
+	 *            GUI owner of this
+	 * @param server
+	 *            host to open socket to
+	 * @param port
+	 *            port on which the socket will be opened
+	 */
 	public ClientThread(Client client, String server, int port)
 	{
 		try
@@ -50,6 +70,14 @@ public class ClientThread implements Runnable
 		}
 	}
 
+	/**
+	 * Sends a message to the Server, flushing after. input, which is generated
+	 * by the user, is parsed before sending the message.
+	 * 
+	 * @see #message
+	 * @param input
+	 *            user-generated input
+	 */
 	public void sendMessage(String input)
 	{
 		try
@@ -65,6 +93,9 @@ public class ClientThread implements Runnable
 		}
 	}
 
+	/**
+	 * @return message sent from Server
+	 */
 	public ClientMessage getMessage()
 	{
 		// TODO some of these exceptions need to be looked at
@@ -90,6 +121,11 @@ public class ClientThread implements Runnable
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run()
 	{
@@ -109,6 +145,14 @@ public class ClientThread implements Runnable
 		}
 	}
 
+	/**
+	 * Appends text to the terminal emulator on the EDT.
+	 * 
+	 * @param input
+	 *            message to be added
+	 * @param color
+	 *            color in which the message will be added
+	 */
 	private void displayServerMessage(final String input, final Color color)
 	{
 		SwingUtilities.invokeLater(new Runnable() {
@@ -120,6 +164,10 @@ public class ClientThread implements Runnable
 		});
 	}
 
+	/**
+	 * Closes the connection to the server. The Input- and OutputStreams are
+	 * closed, and finally the socket is closed.
+	 */
 	public void closeConnection()
 	{
 		try
@@ -131,6 +179,7 @@ public class ClientThread implements Runnable
 		catch (NullPointerException e)
 		{
 			// pass
+			// TODO, really pass?
 		}
 		catch (IOException e)
 		{
