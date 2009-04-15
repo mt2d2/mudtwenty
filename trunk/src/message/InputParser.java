@@ -1,4 +1,4 @@
-package client;
+package message;
 
 import java.util.Arrays;
 
