@@ -24,7 +24,6 @@ public class Room
 		return exits;
 	}
 
-
 	/**
 	 * @return A list of all of the items in the room.
 	 */
