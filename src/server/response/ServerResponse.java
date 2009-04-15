@@ -9,7 +9,6 @@ import server.ServerThread;
  * This interface dictates a correct response from the Server to a Client.
  * ServerResponse are externally associated with a Command.
  * 
- * @see #message
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public interface ServerResponse
