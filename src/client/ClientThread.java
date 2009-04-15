@@ -23,10 +23,6 @@ import message.InputParser;
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
-/**
- * @author mt2
- * 
- */
 public class ClientThread implements Runnable
 {
 	private Client				client;
