@@ -1,10 +1,12 @@
 package server.universe;
 
+import java.util.List;
+
 /**
  * The Player class represents a player's character.
- * It keeps track of all of the player's stats and such.
+ * It should keep track of all of the player's stats.
  */
-public class Player implements Creature
+public class Player extends Creature
 {
 
 }
