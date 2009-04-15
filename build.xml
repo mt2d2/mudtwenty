@@ -7,11 +7,16 @@
 <project basedir="." default="build" name="mudtwenty">
     <property environment="env"/>
     <property name="ECLIPSE_HOME" value="../../../../../../Applications/Eclipse"/>
+    <property name="junit.output.dir" value="doc/junit"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.junit4_4.5.0.v20090204/junit.jar"/>
+    </path>
     <path id="mudtwenty.classpath">
         <pathelement location="bin"/>
+        <path refid="JUnit 4.libraryclasspath"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -58,10 +63,34 @@
             <classpath refid="mudtwenty.classpath"/>
         </java>
     </target>
+    <target name="ClientMessageTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="message.ClientMessageTest" todir="${junit.output.dir}"/>
+            <classpath refid="mudtwenty.classpath"/>
+        </junit>
+    </target>
     <target name="Server">
         <java classname="server.Server" failonerror="true" fork="yes">
-            <jvmarg line="-server"/>
+            <jvmarg line="-server -Djava.awt.headless=true"/>
             <classpath refid="mudtwenty.classpath"/>
         </java>
+    </target>
+    <target name="ServerMessageTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="message.ServerMessageTest" todir="${junit.output.dir}"/>
+            <classpath refid="mudtwenty.classpath"/>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
     </target>
 </project>
