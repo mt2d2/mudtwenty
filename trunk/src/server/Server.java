@@ -68,13 +68,19 @@ public class Server
 		// Display welcome message
 		logger.info("booting server on localhost:" + PORT);
 
+		// Initial setup
 		this.clients = new ArrayList<ServerThread>();
 		this.serverSocket = new ServerSocket(PORT);
-		this.installServerResponses();
 		this.done = false;
 		this.timer = new Timer();
+		
+		// prefer latency over bandwith, over connection time
+		this.serverSocket.setPerformancePreferences(0, 2, 1);
+		
+		// install responses
+		this.installServerResponses();		
 
-		// reaper thread
+		// spawn reaper thread
 		timer.schedule(new ReaperTask(), 0, 1000);
 
 		// main loop accepts clients, spawns new threads to handle each
