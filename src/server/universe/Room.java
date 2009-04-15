@@ -10,6 +10,9 @@ public class Room
 	private List<Exit> exits;
 	private List<Item> items;
 
+	/**
+	 * Create a new room with the given attributes.
+	 */
 	public Room(List<Exit> exits, List<Item> items)
 	{
 		this.exits = exits;
