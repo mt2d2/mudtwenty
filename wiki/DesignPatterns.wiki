@@ -1,0 +1,24 @@
+#summary What design patterns we'll use and how.
+
+= Introduction =
+
+We have to use 6 patterns, and any more patterns are extra credit. Therefore, we should use as many patterns as humanly possible! Note: We might make separate pages for discussion of each pattern, but it might also be good to just add notes to this one page.
+
+= Design Patterns =
+== Abstract Factory ==
+== Composite ==
+[http://en.wikipedia.org/wiki/Composite_pattern Link].
+We could use this pattern with items in the world. In order to properly use it, we would have to have an interface (like item) that is extended by leafs (like ordinary items) and composites (like bags, containers, etc.)
+
+== Builder ==
+== Decorator ==
+== Iterator ==
+== Prototype ==
+We could use prototypes to make new types of objects. For example, we could have a sword prototype, and create lots of different swords by cloning this prototypical sword and setting its attributes (description, damage, weight, value, etc.)
+
+This would prevent us having to create lots of subclasses for different types of items, and doing things this way allows us to create unique items easily.
+
+== Proxy ==
+== State ==
+== Strategy ==
+Jan hinted in class that it would be obvious what pattern to use for the AI of MOBs ... this is it. There could be, like, a CombatStrategy class, a DialogStrategy class, etc. and different MOBs could use and change to different strategies at different times.
