@@ -7,7 +7,6 @@ We have to use 6 patterns, and any more patterns are extra credit. Therefore, we
 = Design Patterns =
 == Abstract Factory ==
 == Composite ==
-[http://en.wikipedia.org/wiki/Composite_pattern Link].
 We could use this pattern with items in the world. In order to properly use it, we would have to have an interface (like item) that is extended by leafs (like ordinary items) and composites (like bags, containers, etc.)
 
 == Builder ==
@@ -21,4 +20,4 @@ This would prevent us having to create lots of subclasses for different types of
 == Proxy ==
 == State ==
 == Strategy ==
-Jan hinted in class that it would be obvious what pattern to use for the AI of MOBs ... this is it. There could be, like, a CombatStrategy class, a DialogStrategy class, etc. and different MOBs could use and change to different strategies at different times.
+Jan hinted in class that it would be obvious what pattern to use for the AI of MOBs ... this is it. There could be, like, a `CombatStrategy` class, a `DialogStrategy` class, etc. and different MOBs could use and change to different strategies at different times.
