@@ -9,3 +9,10 @@ There's more than one thing that needs to be discussed. List any questions that 
   * Design patterns?
 
 It might be convenient to discuss major issues on a newsgroup, like the one at <http://groups.google.com/group/mudtwenty>.
+
+----
+
+ * Abstract class or interface for creature?
+   * Where should what methods be?
+ * `Map<String,Int>` or `List<Skill>` for skills?
+ * String or enum for direction?
