@@ -1,0 +1,5 @@
+#summary A way to discuss that is not wiki.
+
+= Introduction =
+
+There's a newsgroup on google groups at http://groups.google.com/group/mudtwenty/.
