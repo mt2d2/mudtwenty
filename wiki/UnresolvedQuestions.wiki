@@ -8,13 +8,4 @@ There's more than one thing that needs to be discussed. List any questions that 
   * Which extra credit?
   * Design patterns?
 
-== Design Patterns ==
-  * AbstractFactory
-  * Composite
-  * Builder
-  * Decorator 
-  * Iterator
-  * Prototype
-  * Proxy
-  * State
-  * Strategy
+It might be convenient to discuss major issues on a newsgroup, like the one at <http://groups.google.com/group/mudtwenty>.
