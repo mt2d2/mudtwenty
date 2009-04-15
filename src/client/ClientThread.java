@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import message.ClientMessage;
+import message.InputParser;
 
 /**
  * This class is responsible for initiating a socket connection to the given

@@ -10,8 +10,8 @@ import java.net.Socket;
 import java.util.logging.Logger;
 
 import message.ClientMessage;
+import message.InputParser;
 import message.ServerMessage;
-import client.InputParser;
 
 /**
  * Handles each client in a non-blocking fashion, reading input and responding
