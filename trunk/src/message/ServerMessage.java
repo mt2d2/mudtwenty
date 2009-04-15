@@ -86,6 +86,7 @@ public class ServerMessage extends MessageProtocol
 		}
 	}
 
+
 	/* (non-Javadoc)
 	 * @see message.MessageProtocol#writeExternal(java.io.ObjectOutput)
 	 */

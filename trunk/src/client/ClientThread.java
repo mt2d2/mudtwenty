@@ -71,7 +71,6 @@ public class ClientThread implements Runnable
 	 * Sends a message to the Server, flushing after. input, which is generated
 	 * by the user, is parsed before sending the message.
 	 * 
-	 * @see #message
 	 * @param input
 	 *            user-generated input
 	 */
