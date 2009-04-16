@@ -238,8 +238,8 @@ Direction</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>759.0</double> 
-     <double>517.0</double> 
+     <double>760.0</double> 
+     <double>509.0</double> 
     </void> 
    </object> 
   </void> 
@@ -296,6 +296,21 @@ will be sent back to the client.</string>
     <void method="setLocation"> 
      <double>8.0</double> 
      <double>202.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="ClassNode12" class="com.horstmann.violet.ClassNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>java.util.Serializable</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>1101.0</double> 
+     <double>466.0</double> 
     </void> 
    </object> 
   </void> 
@@ -484,6 +499,21 @@ will be sent back to the client.</string>
    </object> 
    <object idref="ClassNode4"/> 
    <object idref="ClassNode11"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="bentStyle"> 
+     <object class="com.horstmann.violet.BentStyle" field="VHV"/> 
+    </void> 
+    <void property="endArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="TRIANGLE"/> 
+    </void> 
+    <void property="lineStyle"> 
+     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
+    </void> 
+   </object> 
+   <object idref="ClassNode2"/> 
+   <object idref="ClassNode12"/> 
   </void> 
  </object> 
 </java> 
