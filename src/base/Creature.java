@@ -41,7 +41,7 @@ public abstract class Creature extends Entity {
 	 * Figures out what health, money, other stats
 	 * will be.
 	 */
-	public void generateStats() {
+	private void generateStats() {
 		this.totalHealth = this.level * 10;
 		this.currentHealth = this.totalHealth;
 	}
