@@ -55,7 +55,7 @@ public abstract class MessageProtocol implements Externalizable
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
 	{
 		this.time = in.readLong();
-		this.status = Status.valueOf(in.readUTF());
+		this.status = Status.get(in.readByte());
 	}
 
 	/* (non-Javadoc)
@@ -65,6 +65,6 @@ public abstract class MessageProtocol implements Externalizable
 	public void writeExternal(ObjectOutput out) throws IOException
 	{
 		out.writeLong(this.time);
-		out.writeUTF(this.status.name());
+		out.write(this.status.getCode());
 	}
 }

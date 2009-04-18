@@ -26,7 +26,7 @@ public class ServerMessageTest
 		File tempDir = new File(System.getProperty("java.io.tmpdir"));
 		start = System.currentTimeMillis();
 		List<ServerMessage> messageObjects = new ArrayList<ServerMessage>();
-
+		
 		for (int x = 0; x < 1000; x++)
 			messageObjects.add(new ServerMessage(Command.ECHO, Arrays.asList(new String[] {"hi", "hi"})));
 

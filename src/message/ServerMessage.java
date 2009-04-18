@@ -67,14 +67,12 @@ public class ServerMessage extends MessageProtocol
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
 	{
 		// properties of message
-		// avoid a call to super for speed
-		// super.readExternal(in);
-		this.time = in.readLong();
-		this.status = Status.valueOf(in.readUTF());
+		super.readExternal(in);
 
 		// read command, non-nullable
-		this.command = Command.valueOf(in.readUTF());
-
+		//this.command = Command.valueOf(in.readUTF());
+		this.command = Command.get(in.readByte());
+		
 		// read arguments List, non-nullable
 		int arrayCount = in.readInt();
 		this.arguments = new ArrayList<String>();
@@ -94,14 +92,11 @@ public class ServerMessage extends MessageProtocol
 	public void writeExternal(ObjectOutput out) throws IOException
 	{
 		// properties of message
-		// avoid a call to super for speed
-		// super.writeExternal(out);
-		out.writeLong(this.time);
-		out.writeUTF(this.status.name());
+		super.writeExternal(out);
 
-		// write command, non-nullable
-		out.writeUTF(this.command.name());
-
+		// write Command, non-nullable
+		out.write(this.command.getCode());
+		
 		// write arguments List, non-nullable
 		out.writeInt(this.arguments.size());
 		// write arguments, nullable
