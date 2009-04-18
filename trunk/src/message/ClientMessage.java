@@ -79,9 +79,7 @@ public class ClientMessage extends MessageProtocol
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
 	{
 		// properties of message
-		// avoid a call to super for speed
-		this.time = in.readLong();
-		this.status = Status.valueOf(in.readUTF());
+		super.readExternal(in);
 
 		this.payload = in.readUTF();
 
@@ -98,9 +96,7 @@ public class ClientMessage extends MessageProtocol
 	public void writeExternal(ObjectOutput out) throws IOException
 	{
 		// properties of message
-		// avoid a call to super for speed
-		out.writeLong(this.time);
-		out.writeUTF(this.status.name());
+		super.writeExternal(out);
 
 		// write payload, non-nullable
 		out.writeUTF(this.payload);
