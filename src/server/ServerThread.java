@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import message.ClientMessage;
 import message.InputParser;
 import message.ServerMessage;
+import base.Player;
 
 /**
  * Handles each client in a non-blocking fashion, reading input and responding
@@ -50,6 +51,9 @@ public class ServerThread implements Runnable
 	private boolean				textMode;
 	private BufferedReader		textIn;
 	private PrintWriter			textOut;
+
+	// user associated with this thread
+	private Player				player;
 
 	/**
 	 * Sole constructor for this class. Takes server for reference and a
@@ -271,5 +275,21 @@ public class ServerThread implements Runnable
 	private boolean isTextMode()
 	{
 		return this.textMode;
+	}
+
+	/**
+	 * @return Player associated with this ServerThread
+	 */
+	public Player getPlayer()
+	{
+		return this.player;
+	}
+
+	/**
+	 * @return <code>true</code> if the user is logged in, or <code>false</code>
+	 */
+	public boolean isLoggedIn()
+	{
+		return this.player == null;
 	}
 }
