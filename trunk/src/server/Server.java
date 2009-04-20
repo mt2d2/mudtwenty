@@ -19,6 +19,7 @@ import server.response.ExitResponse;
 import server.response.HelpResponse;
 import server.response.ServerResponse;
 import server.response.UnknownResponse;
+import server.response.WhoResponse;
 
 /**
  * This is the Server of mudtwenty. It handles incoming socket connections on
@@ -103,6 +104,7 @@ public class Server
 		this.actions.put(Command.UNKNOWN, new UnknownResponse());
 		this.actions.put(Command.EXIT, new ExitResponse());
 		this.actions.put(Command.HELP, new HelpResponse());
+		this.actions.put(Command.WHO, new WhoResponse());
 	}
 
 	/**
@@ -170,6 +172,36 @@ public class Server
 				logger.throwing("Server", "acceptClients", e);
 			}
 		}
+	}
+
+	/**
+	 * @return description of users on the MUD server, including the users and
+	 *         guests logged in
+	 */
+	public String getUsersOnline()
+	{
+		StringBuilder message = new StringBuilder();
+		int guests = 0;
+
+		for (ServerThread st : this.clients)
+		{
+			if (st.isLoggedIn())
+				message.append(st.getPlayer().getName() + ", ");
+			else
+				guests++;
+		}
+
+		// remove trailing comma
+		if (message.length() > 0)
+			message.substring(0, message.length() - 2);
+		else
+			message.append("no users");
+
+		// add guests to that this
+		if (guests > 0)
+			message.append(" and " + guests + ((guests == 1) ? " guest" : " guests"));
+
+		return message.toString();
 	}
 
 	/**

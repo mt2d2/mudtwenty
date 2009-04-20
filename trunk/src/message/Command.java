@@ -35,7 +35,11 @@ public enum Command
 	/**
 	 * 
 	 */
-	UNKNOWN((byte) 5, "all unrecognized commands are unknown, and you'll be told so");
+	WHO((byte) 5, "lists all users online, both users and guests"),
+	/**
+	 * 
+	 */
+	UNKNOWN((byte) 6, "all unrecognized commands are unknown, and you'll be told so");
 
 	// --------------------------------------------------
 
