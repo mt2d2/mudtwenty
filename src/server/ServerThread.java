@@ -119,7 +119,7 @@ public class ServerThread implements Runnable
 				{
 					String input = this.textIn.readLine();
 
-					if (input == null || input.length() == 0)
+					if (input == null)
 					{
 						this.terminateConnection();
 						break;
@@ -290,6 +290,14 @@ public class ServerThread implements Runnable
 	 */
 	public boolean isLoggedIn()
 	{
-		return this.player == null;
+		return this.player != null;
+	}
+
+	/**
+	 * @return Server parent of this sub-thread
+	 */
+	public Server getServer()
+	{
+		return this.server;
 	}
 }
