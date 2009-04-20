@@ -16,6 +16,7 @@ import message.ClientMessage;
 import message.Command;
 import server.response.EchoResponse;
 import server.response.ExitResponse;
+import server.response.HelpResponse;
 import server.response.ServerResponse;
 import server.response.UnknownResponse;
 
@@ -101,6 +102,7 @@ public class Server
 		this.actions.put(Command.ECHO, new EchoResponse());
 		this.actions.put(Command.UNKNOWN, new UnknownResponse());
 		this.actions.put(Command.EXIT, new ExitResponse());
+		this.actions.put(Command.HELP, new HelpResponse());
 	}
 
 	/**
