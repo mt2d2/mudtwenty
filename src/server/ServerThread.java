@@ -107,6 +107,8 @@ public class ServerThread implements Runnable
 	{
 		while (this.getState() == State.OK)
 		{
+			ServerMessage message = null;
+
 			if (this.isTextMode())
 			{
 				try
@@ -120,38 +122,20 @@ public class ServerThread implements Runnable
 					}
 					else
 					{
-						final ServerMessage message = InputParser.parse(input.trim());
-
-						try
-						{
-							this.sendMessage(this.server.getServerResponse(message.getCommand()).respond(this, message.getArguments()).getPayload());
-						}
-						catch (NullPointerException e)
-						{
-							// TODO this is really hacky ignoring this exception
-							// pass, ignore sending null when exiting
-						}
+						message = InputParser.parse(input.trim());
 					}
 				}
 				catch (IOException e)
 				{
-					this.terminateConnection();
-					break;
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 			else
 			{
 				try
 				{
-					ServerMessage input = (ServerMessage) this.in.readObject();
-
-					if (input == null)
-					{
-						this.terminateConnection();
-						break;
-					}
-					else
-						this.sendMessage(this.server.getServerResponse(input.getCommand()).respond(this, input.getArguments()));
+					message = (ServerMessage) this.in.readObject();
 				}
 				catch (IOException e)
 				{
@@ -163,6 +147,16 @@ public class ServerThread implements Runnable
 					this.terminateConnection();
 					break;
 				}
+			}
+
+			if (message == null)
+			{
+				this.terminateConnection();
+				break;
+			}
+			else
+			{
+				this.sendMessage(this.server.getServerResponse(message.getCommand()).respond(this, message.getArguments()));
 			}
 		}
 	}
@@ -232,7 +226,15 @@ public class ServerThread implements Runnable
 	{
 		if (this.isTextMode())
 		{
-			this.sendMessage(message.getPayload());
+			try
+			{
+				this.sendMessage(message.getPayload());
+			}
+			catch (NullPointerException e)
+			{
+				// user no longer active, terminate connection
+				this.terminateConnection();
+			}
 		}
 		else
 		{
@@ -242,7 +244,8 @@ public class ServerThread implements Runnable
 			}
 			catch (IOException e)
 			{
-				// pass, ignore sending null when exiting
+				// user no longer active, terminate connection
+				this.terminateConnection();
 			}
 		}
 	}
