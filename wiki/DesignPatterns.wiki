@@ -6,50 +6,40 @@ We have to use 6 patterns, and any more patterns are extra credit. Therefore, we
 
 = Creational Patterns =
 
-== Prototype ==
+== [http://en.wikipedia.org/wiki/Prototype_Pattern Prototype] ==
 We could use prototypes to make new types of objects. For example, we could have a sword prototype, and create lots of different swords by cloning this prototypical sword and setting its attributes (description, damage, weight, value, etc.)
 
 This would prevent us having to create lots of subclasses for different types of items, and doing things this way allows us to create unique items easily.
 
-== Singleton ==
+== [http://en.wikipedia.org/wiki/Singleton_Pattern Singleton] ==
 The Universe could be a singleton -- there is only ever going to be one Universe object existing on the server at any given time, and we don't want any part of our code to make a second Universe.
-
-== Abstract Factory ==
-== Builder ==
 
 = Structural Patterns = 
 
-== Composite ==
+== [http://en.wikipedia.org/wiki/Composite_Pattern Composite] ==
 We could use this pattern with items in the world. In order to properly use it, we would have to have an interface (like item) that is extended by leafs (like ordinary items) and composites (like bags, containers, etc.)
 
-== Template ==
+== [http://en.wikipedia.org/wiki/Template_pattern Template] ==
 Creature could be an abstract class that relies on functionality implemented in MOB and Player?
 
-== Flyweight ==
+== [http://en.wikipedia.org/wiki/Flyweight_Pattern  Flyweight] ==
 Dialogs and CombatStrategies of MOBs could be flyweight -- there will be a few different types, and many MOBs will share the same strategy in common, but it would take a lot of memory to give them each different objects.
-
-== Facade ==
-== Adapter ==
-== Decorator ==
-== Proxy ==
 
 = Behavioral Patterns =
 
-== Command ==
+== [http://en.wikipedia.org/wiki/Command_Pattern Command] ==
 Our Interaction class represents actions/events with objects, so it is using the command pattern.
 
-== Interpreter ==
+== [http://en.wikipedia.org/wiki/Interpreter_Pattern Interpreter] ==
 Our command parser could fit this pattern?
 
-== Strategy ==
+== [http://en.wikipedia.org/wiki/Strategy_Pattern Strategy] ==
 Jan hinted in class that it would be obvious what pattern to use for the AI of MOBs ... this is it. There could be, like, a `CombatStrategy` class, a `DialogStrategy` class, etc. and different MOBs could use and change to different strategies at different times.
 
 For example, there might be classes `AggressiveStrategy` and `RetreatStrategy`, and a MOB will switch from one to the other if it gets very hurt.
 
-== MVC ==
+== [http://en.wikipedia.org/wiki/MVC_Pattern MVC] ==
 Perhaps the client could be considered the view, something else (parser stuff, possibly server?) could be considered controller, and universe could be considered model?
 
-== Observer ==
+== [http://en.wikipedia.org/wiki/Observer_Pattern Observer] ==
 Any way that this could be used? How might it be used in the server or client?
-
-== Iterator ==
