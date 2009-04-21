@@ -8,10 +8,14 @@ import java.io.ObjectOutput;
 /**
  * This is the default communication protocol between the Client and Server.
  * This abstract class provides basic functionality, including a timestamp and
- * status of a message. Further, it implements Externalizable to avoid the
- * expensive introspection of Serializable. In the future, this entire object
- * hierarchy could be replaced with a third-party message library, specifically
- * Google's Protocol Buffers.
+ * status of a message.
+ *
+ * Further, it implements Externalizable (which is like Serializable except it
+ * leaves the details of reading/writing to the class itself) to avoid the
+ * expensive introspection of Serializable. (This is for efficiency).
+ *
+ * In the future, this entire object hierarchy could be replaced with a third-party
+ * message library, specifically Google's Protocol Buffers.
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
@@ -33,7 +37,8 @@ public abstract class MessageProtocol implements Externalizable
 	}
 
 	/**
-	 * @return timestamp of this message.
+	 * @return timestamp of this message. The timestamp is a long: the time
+	 * in milliseconds since 1970.
 	 */
 	public long getTime()
 	{
@@ -41,7 +46,7 @@ public abstract class MessageProtocol implements Externalizable
 	}
 
 	/**
-	 * @return status of this message.
+	 * @return status (an enum) of this message.
 	 */
 	public Status getStatus()
 	{
@@ -51,7 +56,6 @@ public abstract class MessageProtocol implements Externalizable
 	/* (non-Javadoc)
 	 * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
 	 */
-	@Override
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
 	{
 		this.time = in.readLong();
@@ -61,7 +65,6 @@ public abstract class MessageProtocol implements Externalizable
 	/* (non-Javadoc)
 	 * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
 	 */
-	@Override
 	public void writeExternal(ObjectOutput out) throws IOException
 	{
 		out.writeLong(this.time);

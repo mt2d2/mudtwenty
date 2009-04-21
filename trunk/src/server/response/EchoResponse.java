@@ -18,7 +18,6 @@ public class EchoResponse implements ServerResponse
 	 * @see server.response.ServerResponse#respond(server.ServerThread,
 	 * java.util.List)
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		return new ClientMessage("Echo says: " + joinArguments(arguments, "/"));

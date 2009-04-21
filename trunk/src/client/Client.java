@@ -160,6 +160,7 @@ public class Client extends JFrame
 		// disable textField and grab input
 		String input = this.textField.getText();
 
+		// don't do anything if the user didn't type any input.
 		if (input.length() == 0)
 			return;
 
@@ -183,7 +184,6 @@ public class Client extends JFrame
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem about = new JMenuItem("About");
 		about.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				Client.this.handleAboutEvent();
@@ -193,7 +193,6 @@ public class Client extends JFrame
 		fileMenu.add(about);
 		JMenuItem exit = new JMenuItem("Exit");
 		exit.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				Client.this.handleExitEvent();
@@ -255,7 +254,6 @@ public class Client extends JFrame
 	 */
 	private class SendEventListener implements ActionListener
 	{
-		@Override
 		public void actionPerformed(ActionEvent e)
 		{
 			Client.this.handleSendEvent();
@@ -294,7 +292,6 @@ public class Client extends JFrame
 		}
 
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run()
 			{
 				new Client().setVisible(true);

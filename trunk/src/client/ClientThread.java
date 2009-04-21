@@ -20,7 +20,9 @@ import message.InputParser;
 /**
  * This class is responsible for initiating a socket connection to the given
  * server, sending messages, and recieving messages from Server.
- * 
+ *
+ * The ClientThread is created and controlled by {@link Client}, which is the GUI.
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class ClientThread implements Runnable
@@ -122,7 +124,6 @@ public class ClientThread implements Runnable
 	 * 
 	 * @see java.lang.Runnable#run()
 	 */
-	@Override
 	public void run()
 	{
 		while (!this.done)
@@ -152,7 +153,6 @@ public class ClientThread implements Runnable
 	private void displayServerMessage(final String input, final Color color)
 	{
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run()
 			{
 				ClientThread.this.client.appendServerText(input, color);
@@ -161,7 +161,7 @@ public class ClientThread implements Runnable
 	}
 
 	/**
-	 * Closes the connection to the server. The Input- and OutputStreams are
+	 * Closes the connection to the server. The InputStreams and OutputStreams are
 	 * closed, and finally the socket is closed.
 	 */
 	public void closeConnection()

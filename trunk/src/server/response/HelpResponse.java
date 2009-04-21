@@ -18,7 +18,6 @@ public class HelpResponse implements ServerResponse
 	/* (non-Javadoc)
 	 * @see server.response.ServerResponse#respond(server.ServerThread, java.util.List)
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		StringBuilder message = new StringBuilder();
