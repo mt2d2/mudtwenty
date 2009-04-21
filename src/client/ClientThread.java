@@ -55,7 +55,8 @@ public class ClientThread implements Runnable
 		}
 		catch (ConnectException e)
 		{
-			JOptionPane.showMessageDialog(this.client, "A problem connecting to the server was encourtered");
+			JOptionPane.showMessageDialog(this.client,
+				"A problem connecting to the server was encountered");
 		}
 		catch (UnknownHostException e)
 		{
