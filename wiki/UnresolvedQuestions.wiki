@@ -1,4 +1,4 @@
-#summary unresolved questions needing answers
+#summary Unresolved questions needing answers
 
 There's more than one thing that needs to be discussed. List any questions that are unresolved here.
 
@@ -16,3 +16,6 @@ It might be convenient to discuss major issues on a newsgroup, like the one at <
    * Where should what methods be?
  * `Map<String,Int>` or `List<Skill>` for skills?
  * String or enum for direction?
+ * For sending colored messages to clients: should we use the current method (`Color` class) or send ANSI colored text?
+   * The spec suggests ANSI, this is how other MUDs do it, and it would work if we sent it to a client connected through another MUD cient.
+   * See [http://www.topmudsites.com/forums/mud-coding/413-java-ansi.html this discussion].
