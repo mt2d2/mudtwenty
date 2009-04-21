@@ -7,6 +7,8 @@ import java.io.ObjectOutput;
 
 /**
  * This extends MessageProtocol, providing data useful for a Client to receive.
+ * That is, a server might send a ClientMessage to a server -- this is not a message
+ * that a client might create.
  * In this message, the client receives a payload response from the server in a
  * specific color.
  * 
@@ -42,7 +44,7 @@ public class ClientMessage extends MessageProtocol
 	 * Constructs with a payload message and a color.
 	 * 
 	 * @param payload
-	 *            message that will be sent to the user
+	 *            message string that will be sent to the user
 	 * @param color
 	 *            color of payload
 	 */
@@ -55,7 +57,7 @@ public class ClientMessage extends MessageProtocol
 	}
 
 	/**
-	 * @return message payload visible to the user
+	 * @return The message payload visible to the user
 	 */
 	public String getPayload()
 	{
@@ -63,19 +65,16 @@ public class ClientMessage extends MessageProtocol
 	}
 
 	/**
-	 * @return color of payload visible to the user
+	 * @return Color of payload visible to the user
 	 */
 	public Color getColor()
 	{
 		return this.color;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see message.MessageProtocol#readExternal(java.io.ObjectInput)
 	 */
-	@Override
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
 	{
 		// properties of message
@@ -87,12 +86,9 @@ public class ClientMessage extends MessageProtocol
 			this.color = new Color(in.readInt());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see message.MessageProtocol#writeExternal(java.io.ObjectOutput)
 	 */
-	@Override
 	public void writeExternal(ObjectOutput out) throws IOException
 	{
 		// properties of message

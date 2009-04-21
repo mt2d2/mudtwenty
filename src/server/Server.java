@@ -186,7 +186,7 @@ public class Server
 		for (ServerThread st : this.clients)
 		{
 			if (st.isLoggedIn())
-				message.append(st.getPlayer().getName() + ", ");
+				message.append(st.getPlayer().getUsername() + ", ");
 			else
 				guests++;
 		}
@@ -197,7 +197,7 @@ public class Server
 		else
 			message.append("no users");
 
-		// add guests to that this
+		// add guests to the message
 		if (guests > 0)
 			message.append(" and " + guests + ((guests == 1) ? " guest" : " guests"));
 
@@ -213,12 +213,9 @@ public class Server
 	 */
 	private class ReaperTask extends TimerTask
 	{
-		/*
-		 * (non-Javadoc)
-		 * 
+		/* (non-Javadoc)
 		 * @see java.util.TimerTask#run()
 		 */
-		@Override
 		public void run()
 		{
 			List<ServerThread> toRemove = new ArrayList<ServerThread>();
@@ -237,11 +234,11 @@ public class Server
 	}
 
 	/**
-	 * Main entrance to the Server. This creates a new Server, catching severe
-	 * exceptions.
+	 * Main entrance to the Server. This creates a new Server object
+	 * (which starts running the server). This also catches severe exceptions.
 	 * 
 	 * @param args
-	 *            there are no arguments for Server
+	 *            there are no arguments for Server (this parameter is ignored)
 	 */
 	public static void main(String[] args)
 	{

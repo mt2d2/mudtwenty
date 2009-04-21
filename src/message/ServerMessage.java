@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * This extends MessageProtocol, providing data useful for a Server to receive.
+ * That is, a client might send a ServerMessage to a server -- this is not a message
+ * that a server might create.
  * In this message, the server receives a command and a List<String> arguments.
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
@@ -63,7 +65,6 @@ public class ServerMessage extends MessageProtocol
 	/* (non-Javadoc)
 	 * @see message.MessageProtocol#readExternal(java.io.ObjectInput)
 	 */
-	@Override
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
 	{
 		// properties of message
@@ -84,11 +85,9 @@ public class ServerMessage extends MessageProtocol
 		}
 	}
 
-
 	/* (non-Javadoc)
 	 * @see message.MessageProtocol#writeExternal(java.io.ObjectOutput)
 	 */
-	@Override
 	public void writeExternal(ObjectOutput out) throws IOException
 	{
 		// properties of message

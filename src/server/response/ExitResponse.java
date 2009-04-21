@@ -19,7 +19,6 @@ public class ExitResponse implements ServerResponse
 	 * @see server.response.ServerResponse#respond(server.ServerThread,
 	 * java.util.List)
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		serverThread.terminateConnection();

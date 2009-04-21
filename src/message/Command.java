@@ -5,43 +5,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A simple list of acceptable commands in the MUD. User input must match one of
- * these options; all recognized input is directed to UNKNOWN.
+ * An enum representing acceptable commands that clients can send.
+ * User input must match one of these options;
+ * all recognized input is directed to UNKNOWN.
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public enum Command
 {
-	/**
-	 * 
-	 */
 	ECHO((byte) 0, "echos what you say, back to you"),
-	/**
-	 * 
-	 */
 	EXIT((byte) 1, "saves your state and exits the mud"),
-	/**
-	 * 
-	 */
 	LOOK((byte) 2, "allows you to view the world around you"),
-	/**
-	 * 
-	 */
 	OOC((byte) 3, "send a message to all users connected to the mud"),
-	/**
-	 * 
-	 */
-	HELP((byte) 4, "lists all available commands and general system help"),
-	/**
-	 * 
-	 */
+	HELP((byte) 4, "lists all available commands and general system help"),	
 	WHO((byte) 5, "lists all users online, both users and guests"),
-	/**
-	 * 
-	 */
 	UNKNOWN((byte) 6, "all unrecognized commands are unknown, and you'll be told so");
-
-	// --------------------------------------------------
 
 	private byte	code;
 	private String	description;
@@ -59,7 +37,7 @@ public enum Command
 	}
 
 	/**
-	 * @return brief, user-visible description of the command enum
+	 * @return brief, user-visible description of the command enum.
 	 */
 	public String getDescription()
 	{
@@ -67,7 +45,7 @@ public enum Command
 	}
 
 	/**
-	 * @return the byte associated with an enum
+	 * @return The byte associated with this enum.
 	 */
 	public byte getCode()
 	{
@@ -76,8 +54,8 @@ public enum Command
 
 	/**
 	 * @param code
-	 *            byte associated with an enum
-	 * @return associated enum member associated with code
+	 *            The byte associated with an enum
+	 * @return The associated enum member associated with code.
 	 */
 	public static Command get(byte code)
 	{
@@ -91,7 +69,7 @@ public enum Command
 	 */
 	private static final Map<Byte, Command>	lookup	= new HashMap<Byte, Command>();
 
-	// give each enum a mapping
+	// Put each enum number into the lookup map.
 	static
 	{
 		for (Command s : EnumSet.allOf(Command.class))

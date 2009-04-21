@@ -1,6 +1,3 @@
-/**
- * 
- */
 package server.response;
 
 import java.util.List;
@@ -23,7 +20,6 @@ public class WhoResponse implements ServerResponse
 	 * @see server.response.ServerResponse#respond(server.ServerThread,
 	 * java.util.List)
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		return new ClientMessage(serverThread.getServer().getUsersOnline());

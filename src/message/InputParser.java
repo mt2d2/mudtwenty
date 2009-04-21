@@ -6,8 +6,7 @@ import message.Command;
 import message.ServerMessage;
 
 /**
- * Simple utility that parses a user's input into a ClientMessage that can be
- * sent to the Server.
+ * A collection of static methods that can be used to parse a user's input
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
@@ -19,24 +18,24 @@ public class InputParser
 	 * message.
 	 * 
 	 * @param input
-	 *            user-provided input
+	 *            user-provided input (the string sent from the client)
 	 * @return message which can be sent to the server.
 	 */
 	public static final ServerMessage parse(String input)
 	{
-		String[] chunks = input.split(" ");
+		String[] words = input.split(" ");
 		Command command = null;
 
 		try
 		{
-			command = Command.valueOf(chunks[0].toUpperCase());
+			command = Command.valueOf(words[0].toUpperCase());
 		}
 		catch (IllegalArgumentException e)
 		{
 			command = Command.UNKNOWN;
 		}
 
-		return new ServerMessage(command, Arrays.asList(removeElement(chunks, 0)));
+		return new ServerMessage(command, Arrays.asList(removeElement(words, 0)));
 	}
 
 	/**

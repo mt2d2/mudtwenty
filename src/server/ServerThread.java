@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import message.ClientMessage;
 import message.InputParser;
 import message.ServerMessage;
-import base.Player;
+import server.universe.Player;
 
 /**
  * Handles each client in a non-blocking fashion, reading input and responding
@@ -106,7 +106,6 @@ public class ServerThread implements Runnable
 	 * 
 	 * @see java.lang.Runnable#run()
 	 */
-	@Override
 	public void run()
 	{
 		while (this.getState() == State.OK)
