@@ -39,7 +39,7 @@ public class InputParser
 		if (command == Command.LOGIN || command == Command.REGISTER)
 		{
 			// remove the first string, that's the command
-			String[] args = removeElement(words, 0);
+			String[] args = ArrayUtil.removeElement(words, 0);
 
 			// passwords are the second (after username) argument, hash them
 			args[1] = Hasher.getDigest(args[1]);
@@ -48,29 +48,7 @@ public class InputParser
 		}
 		else
 		{
-			return new ServerMessage(command, Arrays.asList(removeElement(words, 0)));
+			return new ServerMessage(command, Arrays.asList(ArrayUtil.removeElement(words, 0)));
 		}
-	}
-
-	/**
-	 * Removes an element from a an array yielding a new array with that data.
-	 * 
-	 * @param elementData
-	 *            original array
-	 * @param index
-	 *            item to remove
-	 * @return new array sized to fit
-	 */
-	private static String[] removeElement(String[] elementData, int index)
-	{
-		int size = elementData.length;
-		String[] newData = new String[size - 1];
-
-		int numMoved = size - index - 1;
-		if (numMoved > 0)
-			System.arraycopy(elementData, index + 1, newData, index, numMoved);
-
-		elementData = null; // let the gc work
-		return newData;
 	}
 }
