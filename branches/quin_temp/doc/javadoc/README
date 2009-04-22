@@ -1,0 +1,13 @@
+Javadoc is not contained in revision control, since all Javadoc 
+is contained in the source, which itself is under revision
+control. Included in the project root is an ant buildfile that
+generates (javadoc.xml) the Javadoc for everything under src/
+To use it in Eclipse, right click and Run As -> Ant Build.
+
+In shell, in the root of mudtwenty execute:
+   ant javadoc.xml
+   
+The external program Javadoc (included in the JDK) is required
+in both cases. Also, ant is required (and is included in 
+Eclipse, but not in the JDK).
+  
