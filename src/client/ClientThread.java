@@ -14,8 +14,9 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import util.InputParser;
+
 import message.ClientMessage;
-import message.InputParser;
 
 /**
  * This class is responsible for initiating a socket connection to the given

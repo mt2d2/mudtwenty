@@ -15,10 +15,11 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import message.ClientMessage;
-import message.InputParser;
 import message.ServerMessage;
 import server.universe.InvalidLoginException;
 import server.universe.Player;
+import util.InputParser;
+import util.PropertyLoader;
 
 /**
  * Handles each client in a non-blocking fashion, reading input and responding

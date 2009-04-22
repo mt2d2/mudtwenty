@@ -1,4 +1,4 @@
-package message;
+package util;
 
 import java.util.Arrays;
 
@@ -35,7 +35,21 @@ public class InputParser
 			command = Command.UNKNOWN;
 		}
 
-		return new ServerMessage(command, Arrays.asList(removeElement(words, 0)));
+		// handle passwords differently, they need to be hashed
+		if (command == Command.LOGIN || command == Command.REGISTER)
+		{
+			// remove the first string, that's the command
+			String[] args = removeElement(words, 0);
+
+			// passwords are the second (after username) argument, hash them
+			args[1] = Hasher.getDigest(args[1]);
+
+			return new ServerMessage(command, Arrays.asList(args));
+		}
+		else
+		{
+			return new ServerMessage(command, Arrays.asList(removeElement(words, 0)));
+		}
 	}
 
 	/**
