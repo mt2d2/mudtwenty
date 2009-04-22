@@ -19,7 +19,8 @@ public enum Command
 	OOC((byte) 3, "send a message to all users connected to the mud"),
 	HELP((byte) 4, "lists all available commands and general system help"),	
 	WHO((byte) 5, "lists all users online, both users and guests"),
-	UNKNOWN((byte) 6, "all unrecognized commands are unknown, and you'll be told so");
+	LOGIN((byte) 6, "logs a user in, e.g., login <username> <password>"),
+	UNKNOWN((byte) 7, "all unrecognized commands are unknown, and you'll be told so");
 
 	private byte	code;
 	private String	description;

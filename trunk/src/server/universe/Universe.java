@@ -1,6 +1,11 @@
 package server.universe;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import server.PropertyLoader;
 
 /**
  * A Universe represents the entire state of the virtual world. A universe
@@ -8,10 +13,23 @@ import java.util.List;
  */
 public class Universe
 {
-	private List<Room>			rooms;
-	private List<Player>		players;
+	private List<Room>				rooms;
+	private List<Player>			players;
 
-	private transient Session	session;
+	/**
+	 * Server configuration and properties, used for setting up the server and
+	 * its universe.
+	 */
+	private static final Properties	conf	= PropertyLoader.loadProperties("server/configuration.properties");
+
+	/**
+	 * 
+	 */
+	public Universe()
+	{
+		this.rooms = new ArrayList<Room>();
+		this.players = new ArrayList<Player>();
+	}
 
 	/**
 	 * Create a universe with the given lists of rooms and players.
@@ -20,6 +38,27 @@ public class Universe
 	{
 		this.rooms = rooms;
 		this.players = players;
+	}
+
+	/**
+	 * @param username
+	 * @param password 
+	 * @throws InvalidLoginException
+	 */
+	public void login(String username, String password) throws InvalidLoginException
+	{
+		final String dataRoot = conf.getProperty("data.root");
+		final File sessionPath = new File(dataRoot + File.separatorChar + "sessions" + File.separatorChar + username + ".dat");
+
+		if (sessionPath.exists() && sessionPath.canRead())
+		{
+			// read the file, check password
+		}
+		else
+		{
+			throw new InvalidLoginException("invalid user, " + username + ", please use the register command instead");
+		}
+
 	}
 
 	/**
@@ -36,13 +75,5 @@ public class Universe
 	public List<Player> getPlayers()
 	{
 		return players;
-	}
-	
-	/**
-	 * @return A table of sessions, i.e., all active users in the MUD.
-	 */
-	public Session getSession()
-	{
-		return this.session;
 	}
 }

@@ -29,6 +29,4 @@ public class Exit
 	public Direction getDirection() {
 		return direction;
 	}
-
-
 }
