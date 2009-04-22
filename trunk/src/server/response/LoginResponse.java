@@ -1,8 +1,10 @@
 package server.response;
 
+import java.awt.Color;
 import java.util.List;
 
 import message.ClientMessage;
+import server.Server;
 import server.ServerThread;
 import server.universe.InvalidLoginException;
 
@@ -23,27 +25,23 @@ public class LoginResponse implements ServerResponse
 	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		StringBuilder response = new StringBuilder();
-
 		if (arguments.size() != 2)
 		{
-			response.append("invalid use of login command, the syntax is login <username> <password>");
+			return new ClientMessage("invalid use of login command, the syntax is login <username> <password>", Color.RED);
 		}
 		else
 		{
 			try
 			{
 				if (serverThread.login(arguments.get(0), arguments.get(1)))
-					response.append("login successful, you can confirm this with the who command");
+					return new ClientMessage("login successful, you can confirm this with the who command", Server.SYSTEM_TEXT_COLOR);
 				else
-					response.append("login was unsuccessful, the username is already in use");
+					return new ClientMessage("login was unsuccessful, the username is already in use", Color.RED);
 			}
 			catch (InvalidLoginException e)
 			{
-				response.append(e.getMessage());
+				return new ClientMessage(e.getMessage(), Color.RED);
 			}
 		}
-
-		return new ClientMessage(response.toString());
 	}
 }
