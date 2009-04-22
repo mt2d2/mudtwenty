@@ -1,17 +1,23 @@
 package server;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import message.ClientMessage;
 import message.InputParser;
 import message.ServerMessage;
+import server.universe.InvalidLoginException;
 import server.universe.Player;
 
 /**
@@ -31,29 +37,35 @@ public class ServerThread implements Runnable
 	 * This could be augmented by using a global properties file to localize the
 	 * error strings.
 	 */
-	private static final Logger	logger			= Logger.getLogger("mudtwenty");
+	private static final Logger		logger			= Logger.getLogger("mudtwenty");
+
+	/**
+	 * Server configuration and properties, used for setting up the server and
+	 * its universe.
+	 */
+	private static final Properties	conf			= PropertyLoader.loadProperties("server/configuration.properties");
 
 	/**
 	 * This is the default login message users see upon connecting to the
 	 * server.
 	 */
-	private static final String	WELCOME_STRING	= "welcome to mudtwenty";
+	private static final String		WELCOME_STRING	= "welcome to mudtwenty";
 
-	private Server				server;
-	private Socket				socket;
-	private State				state;
+	private Server					server;
+	private Socket					socket;
+	private State					state;
 
 	// MessageProtocol mode
-	private ObjectInputStream	in;
-	private ObjectOutputStream	out;
+	private ObjectInputStream		in;
+	private ObjectOutputStream		out;
 
 	// text mode
-	private boolean				textMode;
-	private BufferedReader		textIn;
-	private PrintWriter			textOut;
+	private boolean					textMode;
+	private BufferedReader			textIn;
+	private PrintWriter				textOut;
 
 	// user associated with this thread
-	private Player				player;
+	private Player					player;
 
 	/**
 	 * Sole constructor for this class. Takes server for reference and a
@@ -298,5 +310,119 @@ public class ServerThread implements Runnable
 	public Server getServer()
 	{
 		return this.server;
+	}
+
+	/**
+	 * Logs a user into the system. This entails a lengthy process: first, the
+	 * session data is checked to see if such a suer exists, it is loaded from
+	 * the filesystem, and finally user and password are compared. If all checks
+	 * out, the resultant Player object is associated with this ServerThread,
+	 * and the Player is added to the Universe.
+	 * 
+	 * @param username
+	 *            user input for username
+	 * @param password
+	 *            user input for password, MD5-hased
+	 * @return <code>true</code> if login were successful or <code>false</code>
+	 * @throws InvalidLoginException
+	 *             thrown to provide helpful error messages to the user, i.e.,
+	 *             user doesn't exist or invalid password
+	 */
+	public boolean login(String username, String password) throws InvalidLoginException
+	{
+		final String dataRoot = conf.getProperty("data.root");
+		final File sessionPath = new File(dataRoot + File.separatorChar + "sessions" + File.separatorChar + username + ".dat");
+
+		if (sessionPath.canRead())
+		{
+			try
+			{
+				ObjectInputStream is = new ObjectInputStream(new FileInputStream(sessionPath));
+				Player player = (Player) is.readObject();
+
+				if (player.getUsername().equals(username) && player.confirmPasswordHash(password))
+				{
+					// add this player to the universe
+					this.server.getUniverse().addPlayer(player);
+
+					// associate this player with this thread
+					this.player = player;
+
+					return true;
+				}
+				else
+				{
+					throw new InvalidLoginException("the username or password was invalid");
+				}
+			}
+			catch (FileNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (ClassNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			throw new InvalidLoginException("invalid user, " + username + ", please use the register command instead");
+		}
+
+		return false;
+	}
+
+	/**
+	 * Registers a user in the system. This first checks to see if the username
+	 * is already taken, then writes a new Player to disk with the new username
+	 * and password.
+	 * 
+	 * @param username
+	 *            user input of the username
+	 * @param password
+	 *            password user input of the password, MD5-hashed
+	 * @return <code>true</code> if the registration were successful or
+	 *         <code>false</code>, i.e., the username is already in use.
+	 */
+	public boolean register(String username, String password)
+	{
+		final String dataRoot = conf.getProperty("data.root");
+		final File sessionPath = new File(dataRoot + File.separatorChar + "sessions" + File.separatorChar + username + ".dat");
+
+		if (!sessionPath.exists())
+		{
+			Player newPlayer = new Player(username, password);
+
+			try
+			{
+				sessionPath.createNewFile();
+				ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(sessionPath));
+				os.writeObject(newPlayer);
+				os.close();
+
+				// there was success in writing
+				return true;
+			}
+
+			catch (FileNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return false;
 	}
 }

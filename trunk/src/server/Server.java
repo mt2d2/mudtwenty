@@ -19,6 +19,7 @@ import server.response.EchoResponse;
 import server.response.ExitResponse;
 import server.response.HelpResponse;
 import server.response.LoginResponse;
+import server.response.RegisterResponse;
 import server.response.ServerResponse;
 import server.response.UnknownResponse;
 import server.response.WhoResponse;
@@ -121,6 +122,7 @@ public class Server
 		this.actions.put(Command.HELP, new HelpResponse());
 		this.actions.put(Command.WHO, new WhoResponse());
 		this.actions.put(Command.LOGIN, new LoginResponse());
+		this.actions.put(Command.REGISTER, new RegisterResponse());
 	}
 
 	/**
@@ -209,13 +211,17 @@ public class Server
 
 		// remove trailing comma
 		if (message.length() > 0)
-			message.substring(0, message.length() - 2);
+			message.replace(message.length() - 2, message.length(), "");
 		else
 			message.append("no users");
 
+		message.append(" and ");
+		
 		// add guests to the message
 		if (guests > 0)
-			message.append(" and " + guests + ((guests == 1) ? " guest" : " guests"));
+			message.append(guests + ((guests == 1) ? " guest" : " guests"));
+		else
+			message.append("no guests");
 
 		return message.toString();
 	}

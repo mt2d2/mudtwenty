@@ -20,7 +20,8 @@ public enum Command
 	HELP((byte) 4, "lists all available commands and general system help"),	
 	WHO((byte) 5, "lists all users online, both users and guests"),
 	LOGIN((byte) 6, "logs a user in, e.g., login <username> <password>"),
-	UNKNOWN((byte) 7, "all unrecognized commands are unknown, and you'll be told so");
+	REGISTER((byte) 7, "registers a user, e.g., register <username> <password"),
+	UNKNOWN((byte) 8, "all unrecognized commands are unknown, and you'll be told so");
 
 	private byte	code;
 	private String	description;

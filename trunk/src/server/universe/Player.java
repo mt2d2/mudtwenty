@@ -1,13 +1,34 @@
 package server.universe;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * The Player class represents a player's character. It should keep track of all
  * of the player's stats.
  */
-public class Player extends Creature
+public class Player extends Creature implements Serializable
 {
+	private static final long	serialVersionUID	= 1L;
+
+	private String	name;
+	private String	passwordHash;
+
+	/**
+	 * Constructs a user with a username and password. This is used during
+	 * registration.
+	 * 
+	 * @param name
+	 *            name of the user, i.e., their username
+	 * @param passwordHash
+	 *            users MD5-hased password
+	 */
+	public Player(String name, String passwordHash)
+	{
+		this.name = name;
+		this.passwordHash = passwordHash;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -24,7 +45,7 @@ public class Player extends Creature
 	 */
 	public String getUsername()
 	{
-		return null;
+		return this.name;
 	}
 
 	/**
@@ -35,7 +56,7 @@ public class Player extends Creature
 	 */
 	public boolean confirmPasswordHash(String hash)
 	{
-		return false;
+		return this.passwordHash.equals(hash);
 	}
 
 }
