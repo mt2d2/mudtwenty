@@ -85,6 +85,7 @@ public class ServerThread implements Runnable
 		this.socket = socket;
 		this.state = State.OK;
 		this.textMode = false;
+		this.player = null;
 
 		try
 		{
@@ -154,13 +155,13 @@ public class ServerThread implements Runnable
 				}
 				catch (IOException e)
 				{
-					this.terminateConnection();
-					break;
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				catch (ClassNotFoundException e)
 				{
-					this.terminateConnection();
-					break;
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 
@@ -404,9 +405,9 @@ public class ServerThread implements Runnable
 		final File sessionPath = new File(dataRoot + File.separatorChar + "sessions" + File.separatorChar + username + ".dat");
 
 		if (!sessionPath.exists())
-		{
-			Player newPlayer = new Player(username, password);
-			this.savePlayerToDisk(newPlayer);
+		{			
+			if (this.savePlayerToDisk(new Player(username, password)))
+				return true;
 		}
 
 		return false;
@@ -421,9 +422,12 @@ public class ServerThread implements Runnable
 	 *         <code>false</code>
 	 */
 	private boolean savePlayerToDisk(Player player)
-	{
+	{	
 		final File sessionPath = new File(conf.getProperty("data.root") + File.separatorChar + "sessions" + File.separatorChar + player.getUsername() + ".dat");
 
+		logger.info("saving " + player.getUsername() + " to disk");
+		logger.fine("saving to file: " + sessionPath.getAbsolutePath());
+		
 		if (!sessionPath.canWrite())
 		{
 			try
