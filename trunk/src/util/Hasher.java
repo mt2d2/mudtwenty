@@ -3,8 +3,6 @@ package util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import sun.misc.BASE64Encoder;
-
 /**
  * Simple utility class that calculates the SHA-1 hash of various inputs. For
  * password, getting the digest of a String is very convenient.
@@ -36,7 +34,7 @@ public class Hasher
 	public static String getDigest(String s)
 	{
 		md.update(s.getBytes(), 0, s.getBytes().length);
-		final String encodedAndHashedString = new BASE64Encoder().encode(md.digest());
+		final String encodedAndHashedString = Base64.encodeBytes(md.digest());
 
 		md.reset();
 
