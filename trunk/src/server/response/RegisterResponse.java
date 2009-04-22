@@ -3,9 +3,11 @@
  */
 package server.response;
 
+import java.awt.Color;
 import java.util.List;
 
 import message.ClientMessage;
+import server.Server;
 import server.ServerThread;
 
 /**
@@ -24,20 +26,16 @@ public class RegisterResponse implements ServerResponse
 	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		StringBuilder response = new StringBuilder();
-
 		if (arguments.size() != 2)
 		{
-			response.append("invalid use of register command, the syntax is register <username> <password>");
+			return new ClientMessage("invalid use of register command, the syntax is register <username> <password>", Color.RED);
 		}
 		else
 		{
 			if (serverThread.register(arguments.get(0), arguments.get(1)))
-				response.append("success in registering, please use the login command to login");
+				return new ClientMessage("success in registering, please use the login command to login", Server.SYSTEM_TEXT_COLOR);
 			else
-				response.append("there was an error in registering, contact the administrator");
+				return new ClientMessage("there was an error in registering, the provided name is already in use", Color.RED);
 		}
-
-		return new ClientMessage(response.toString());
 	}
 }
