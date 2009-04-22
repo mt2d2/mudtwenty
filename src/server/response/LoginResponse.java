@@ -33,7 +33,10 @@ public class LoginResponse implements ServerResponse
 		{
 			try
 			{
-				serverThread.getServer().getUniverse().login(arguments.get(0), arguments.get(1));
+				if (serverThread.login(arguments.get(0), arguments.get(1)))
+					response.append("login successful, you can confirm this with the who command");
+				else
+					response.append("login was unsuccessful, the username is already in use");
 			}
 			catch (InvalidLoginException e)
 			{

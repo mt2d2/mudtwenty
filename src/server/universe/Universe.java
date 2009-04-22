@@ -1,11 +1,7 @@
 package server.universe;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-
-import server.PropertyLoader;
 
 /**
  * A Universe represents the entire state of the virtual world. A universe
@@ -14,16 +10,10 @@ import server.PropertyLoader;
 public class Universe
 {
 	private List<Room>				rooms;
-	private List<Player>			players;
+	private transient List<Player>	players;
 
 	/**
-	 * Server configuration and properties, used for setting up the server and
-	 * its universe.
-	 */
-	private static final Properties	conf	= PropertyLoader.loadProperties("server/configuration.properties");
-
-	/**
-	 * 
+	 * Generates the default world, primarily for testing now.
 	 */
 	public Universe()
 	{
@@ -41,27 +31,6 @@ public class Universe
 	}
 
 	/**
-	 * @param username
-	 * @param password 
-	 * @throws InvalidLoginException
-	 */
-	public void login(String username, String password) throws InvalidLoginException
-	{
-		final String dataRoot = conf.getProperty("data.root");
-		final File sessionPath = new File(dataRoot + File.separatorChar + "sessions" + File.separatorChar + username + ".dat");
-
-		if (sessionPath.exists() && sessionPath.canRead())
-		{
-			// read the file, check password
-		}
-		else
-		{
-			throw new InvalidLoginException("invalid user, " + username + ", please use the register command instead");
-		}
-
-	}
-
-	/**
 	 * @return A list of all of the rooms in the universe.
 	 */
 	public List<Room> getRooms()
@@ -76,4 +45,13 @@ public class Universe
 	{
 		return players;
 	}
+	
+	/**
+	 * @param player
+	 */
+	public void addPlayer(Player player)
+	{
+		this.players.add(player);
+	}
+
 }
