@@ -205,6 +205,13 @@ public class ServerThread implements Runnable
 		logger.info("client terminated connection: " + this);
 
 		this.setState(State.DONE);
+
+		if (this.isLoggedIn())
+		{
+			// remove the player from the unvierse
+			this.savePlayerToDisk(this.player);
+			this.server.getUniverse().removePlayer(this.getPlayer());
+		}
 	}
 
 	/**
@@ -399,12 +406,31 @@ public class ServerThread implements Runnable
 		if (!sessionPath.exists())
 		{
 			Player newPlayer = new Player(username, password);
+			this.savePlayerToDisk(newPlayer);
+		}
 
+		return false;
+	}
+
+	/**
+	 * Saves a given Player to disk. This is useful during registration, when
+	 * the player is exiting, but also because the server will periodically save
+	 * all players to disk.
+	 * 
+	 * @return <code>true</code> if the save were successful or
+	 *         <code>false</code>
+	 */
+	private boolean savePlayerToDisk(Player player)
+	{
+		final File sessionPath = new File(conf.getProperty("data.root") + File.separatorChar + "sessions" + File.separatorChar + player.getUsername() + ".dat");
+
+		if (!sessionPath.canWrite())
+		{
 			try
 			{
 				sessionPath.createNewFile();
 				ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(sessionPath));
-				os.writeObject(newPlayer);
+				os.writeObject(player);
 				os.close();
 
 				// there was success in writing

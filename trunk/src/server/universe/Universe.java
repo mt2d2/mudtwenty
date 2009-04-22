@@ -45,13 +45,28 @@ public class Universe
 	{
 		return players;
 	}
-	
+
 	/**
+	 * Adds a player to this Universe. Currently only adds the player to the list
+	 * of players, but this could be useful to start the player off in a default
+	 * room or something.
+	 * 
 	 * @param player
+	 *            to add
 	 */
 	public void addPlayer(Player player)
 	{
 		this.players.add(player);
 	}
 
+	/**
+	 * Removes a player from this Universe.
+	 * 
+	 * @param player
+	 *            to remove
+	 */
+	public void removePlayer(Player player)
+	{
+		this.players.remove(player);
+	}
 }
