@@ -20,6 +20,7 @@ import server.response.ExitResponse;
 import server.response.HelpResponse;
 import server.response.LoginResponse;
 import server.response.RegisterResponse;
+import server.response.SayResponse;
 import server.response.ServerResponse;
 import server.response.UnknownResponse;
 import server.response.WhoResponse;
@@ -43,17 +44,28 @@ public class Server
 	public static final Color				SYSTEM_TEXT_COLOR	= new Color(0, 51, 0);
 
 	/**
+	 * Error messages ought to be red, it's what people expect.
+	 */
+	public static final Color				ERROR_TEXT_COLOR	= Color.RED;
+
+	/**
+	 * Messages from other users should appear blue. It'll balance the world
+	 * out.
+	 */
+	public static final Color				MESSAGE_TEXT_COLOR	= Color.BLUE;
+
+	/**
 	 * Logging utility, globally addressed in entire program as "mudtwenty".
 	 * This could be augmented by using a global properties file to localize the
 	 * error strings.
 	 */
 	private static final Logger				logger				= Logger.getLogger("mudtwenty");
-	
+
 	/**
 	 * Server configuration and properties, used for setting up the server and
 	 * its universe.
 	 */
-	private static final Properties	conf	= PropertyLoader.loadProperties("server/configuration.properties");
+	private static final Properties			conf				= PropertyLoader.loadProperties("server/configuration.properties");
 
 	/**
 	 * Port the server will run on this local host. In the future, this could be
@@ -98,7 +110,7 @@ public class Server
 
 		// spawn reaper thread
 		timer.schedule(new ReaperTask(), 0, 1000);
-		
+
 		// setup the universe
 		this.universe = new Universe();
 
@@ -124,6 +136,7 @@ public class Server
 		this.actions.put(Command.WHO, new WhoResponse());
 		this.actions.put(Command.LOGIN, new LoginResponse());
 		this.actions.put(Command.REGISTER, new RegisterResponse());
+		this.actions.put(Command.SAY, new SayResponse());
 	}
 
 	/**
@@ -140,18 +153,6 @@ public class Server
 	}
 
 	/**
-	 * Sends a message to all clients. This is a convince method for defaulting
-	 * to the default color.
-	 * 
-	 * @param message
-	 *            message to be sent to clients
-	 */
-	public void sendMessageToAllClients(String message)
-	{
-		this.sendMessageToAllClients(message, null);
-	}
-
-	/**
 	 * Sends a message to all clients in a given color.
 	 * 
 	 * @param message
@@ -159,10 +160,27 @@ public class Server
 	 * @param color
 	 *            color clients will see the message in
 	 */
-	public void sendMessageToAllClients(String message, Color color)
+	public void sendMessageToAllClients(ClientMessage message)
 	{
 		for (ServerThread st : this.clients)
-			st.sendMessage(new ClientMessage(message, color));
+			st.sendMessage(message);
+	}
+
+	/**
+	 * Sends a message to a specific player. This player is identified by his
+	 * username only, which might be kind of brittle.
+	 * 
+	 * @param username
+	 *            Player that this message will be sent is represented by this
+	 *            String, his username
+	 * @param message
+	 *            message that will be sent player ot player
+	 */
+	public void sendMessageToPlayer(String username, ClientMessage message)
+	{
+		for (ServerThread st : this.clients)
+			if (st.isLoggedIn() && st.getPlayer().getUsername().equals(username))
+				st.sendMessage(message);
 	}
 
 	/**
@@ -217,7 +235,7 @@ public class Server
 			message.append("no users");
 
 		message.append(" and ");
-		
+
 		// add guests to the message
 		if (guests > 0)
 			message.append(guests + ((guests == 1) ? " guest" : " guests"));
@@ -234,7 +252,7 @@ public class Server
 	{
 		return this.universe;
 	}
-	
+
 	/**
 	 * An extension of TimerTask that periodically prunes finished clients. That
 	 * is, this removes clients whose State is DONE from the list of active
@@ -260,7 +278,7 @@ public class Server
 			Server.this.clients.removeAll(toRemove);
 
 			for (ServerThread st : toRemove)
-				Server.this.sendMessageToAllClients("client terminated connection: " + st, Server.SYSTEM_TEXT_COLOR);
+				Server.this.sendMessageToAllClients(new ClientMessage("client terminated connection: " + st, Server.SYSTEM_TEXT_COLOR));
 
 			toRemove.clear();
 		}
