@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
@@ -17,9 +18,11 @@ import message.Command;
 import server.response.EchoResponse;
 import server.response.ExitResponse;
 import server.response.HelpResponse;
+import server.response.LoginResponse;
 import server.response.ServerResponse;
 import server.response.UnknownResponse;
 import server.response.WhoResponse;
+import server.universe.Universe;
 
 /**
  * This is the Server of mudtwenty. It handles incoming socket connections on
@@ -43,18 +46,27 @@ public class Server
 	 * error strings.
 	 */
 	private static final Logger				logger				= Logger.getLogger("mudtwenty");
+	
+	/**
+	 * Server configuration and properties, used for setting up the server and
+	 * its universe.
+	 */
+	private static final Properties	conf	= PropertyLoader.loadProperties("server/configuration.properties");
 
 	/**
 	 * Port the server will run on this local host. In the future, this could be
 	 * read from a configuration file.
 	 */
-	private static final int				PORT				= 8080;
+	private static final int				PORT				= Integer.parseInt(conf.getProperty("server.port"));
 
 	private List<ServerThread>				clients;
 	private ServerSocket					serverSocket;
 	private boolean							done;
 	private Map<Command, ServerResponse>	actions;
 	private Timer							timer;
+
+	// universe
+	private Universe						universe;
 
 	/**
 	 * Default constructor for Server. It attempts to establish a ServerSocket
@@ -84,6 +96,9 @@ public class Server
 
 		// spawn reaper thread
 		timer.schedule(new ReaperTask(), 0, 1000);
+		
+		// setup the universe
+		this.universe = new Universe();
 
 		// main loop accepts clients, spawns new threads to handle each
 		this.acceptClients();
@@ -105,6 +120,7 @@ public class Server
 		this.actions.put(Command.EXIT, new ExitResponse());
 		this.actions.put(Command.HELP, new HelpResponse());
 		this.actions.put(Command.WHO, new WhoResponse());
+		this.actions.put(Command.LOGIN, new LoginResponse());
 	}
 
 	/**
@@ -205,6 +221,14 @@ public class Server
 	}
 
 	/**
+	 * @return universe associated with this server
+	 */
+	public Universe getUniverse()
+	{
+		return this.universe;
+	}
+	
+	/**
 	 * An extension of TimerTask that periodically prunes finished clients. That
 	 * is, this removes clients whose State is DONE from the list of active
 	 * clients.
@@ -213,7 +237,9 @@ public class Server
 	 */
 	private class ReaperTask extends TimerTask
 	{
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.TimerTask#run()
 		 */
 		public void run()
@@ -234,8 +260,8 @@ public class Server
 	}
 
 	/**
-	 * Main entrance to the Server. This creates a new Server object
-	 * (which starts running the server). This also catches severe exceptions.
+	 * Main entrance to the Server. This creates a new Server object (which
+	 * starts running the server). This also catches severe exceptions.
 	 * 
 	 * @param args
 	 *            there are no arguments for Server (this parameter is ignored)
