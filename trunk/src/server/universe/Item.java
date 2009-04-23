@@ -5,7 +5,7 @@ package server.universe;
  * anything that has no intelligence or ability to do thing like talking and
  * fighting.
  */
-public interface Item
+public interface Item extends Entity
 {
 	/**
 	 * @return price of an item, in the standard money system

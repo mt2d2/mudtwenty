@@ -5,19 +5,21 @@ import java.util.List;
 
 /**
  * The Player class represents a player's character. It should keep track of all
- * of the player's stats.
+ * of the player's stats, password hash, and other such things.
  */
 public class Player extends Creature implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
-
-	private String	name;
 	private String	passwordHash;
 
 	/**
-	 * Constructs a user with a username and password. This is used during
-	 * registration.
-	 * 
+	 * Constructs a Player with a username and password. This is used during
+	 * registration of new players.
+	 *
+	 * There can only be one player with a given name. This method will assume
+	 * that the given name is unique -- this should be checked BEFORE the player
+	 * is created.
+	 *
 	 * @param name
 	 *            name of the user, i.e., their username
 	 * @param passwordHash
@@ -25,32 +27,13 @@ public class Player extends Creature implements Serializable
 	 */
 	public Player(String name, String passwordHash)
 	{
-		this.name = name;
+		super(name);
 		this.passwordHash = passwordHash;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.universe.Creature#getItems()
-	 */
-	public List<Item> getItems()
-	{
-		return null;
-	}
-
-	/**
-	 * @return the username (i.e., login) associated with this player. It is
-	 *         used in the confirmation of a clients identity.
-	 */
-	public String getUsername()
-	{
-		return this.name;
 	}
 
 	/**
 	 * This allows for easy login procedures.
-	 * 
+	 *
 	 * @return <code>true</code> if the provided input matches the remembered
 	 *         hash of a player.
 	 */
