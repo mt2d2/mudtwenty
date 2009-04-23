@@ -28,7 +28,7 @@ import util.PropertyLoader;
  * the event that an ObjectStream cannot be established, the system falls back
  * on basic text streams. This makes connecting to and using the server via
  * telnet possible.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class ServerThread implements Runnable
@@ -73,7 +73,7 @@ public class ServerThread implements Runnable
 	 * connecting client on socket. After the welcome message is sent to the
 	 * user. At this point, the mode of communication is established (either via
 	 * MessageProtocol or text streams) and the thread enters its run loop.
-	 * 
+	 *
 	 * @param server
 	 *            Server parent of this thread, useful for getting a list of
 	 *            other, connected clients
@@ -111,59 +111,26 @@ public class ServerThread implements Runnable
 				logger.throwing("ServerThread", "ServerThread", ex);
 			}
 		}
-
-		this.sendMessage(new ClientMessage(WELCOME_STRING, Server.SYSTEM_TEXT_COLOR));
+		ClientMessage welcomeMessage = new ClientMessage(WELCOME_STRING, Server.SYSTEM_TEXT_COLOR);
+		this.sendMessage(welcomeMessage);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run()
 	{
 		while (this.getState() == State.OK)
 		{
-			ServerMessage message = null;
-
-			if (this.isTextMode())
+			if (this.textMode)
 			{
-				try
-				{
-					String input = this.textIn.readLine();
-
-					if (input == null)
-					{
-						this.terminateConnection();
-						break;
-					}
-					else
-					{
-						message = InputParser.parse(input.trim());
-					}
-				}
-				catch (IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				ServerMessage toServer = getMessageTextMode();
 			}
 			else
 			{
-				try
-				{
-					message = (ServerMessage) this.in.readObject();
-				}
-				catch (IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				catch (ClassNotFoundException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				ServerMessage toServer = getMessageProtocolMode();
 			}
 
 			if (message == null)
@@ -173,8 +140,55 @@ public class ServerThread implements Runnable
 			}
 			else
 			{
-				this.sendMessage(this.server.getServerResponse(message.getCommand()).respond(this, message.getArguments()));
+				ServerResponse response = this.server.getServerResponse(message.getCommand());
+				ClientMessage toClient = response.respond(this, message.getArguments());
+				this.sendMessage(toClient);
 			}
+		}
+	}
+
+	/**
+	 * Get and return a message to the server in text mode. Return null if something went wrong.
+	 */
+	private ServerMessage getMessageTextMode
+	{
+		try
+		{
+			String input = this.textIn.readLine();
+			if (input == null)
+			{
+				return null;
+			}
+			else
+			{
+				return InputParser.parse(input.trim());
+			}
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Get and return a message to the server in MessageProtocol mode. Return null if something went wrong.
+	 */
+	private ServerMessage getMessageProtocolMode
+	{
+		try
+		{
+			return (ServerMessage) this.in.readObject();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -186,7 +200,7 @@ public class ServerThread implements Runnable
 	{
 		try
 		{
-			if (this.isTextMode())
+			if (this.textMode)
 			{
 				this.textIn.close();
 				this.textOut.close();
@@ -227,7 +241,7 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Sets the state of the thread.
-	 * 
+	 *
 	 * @param state
 	 *            new state for this thread
 	 */
@@ -241,63 +255,58 @@ public class ServerThread implements Runnable
 	 * method of communicating with the client. That means that it will
 	 * automatically choose the correct OutputStream for the current mode of
 	 * operation, either via MessageProtocol or text.
-	 * 
+	 *
 	 * @param message
 	 *            this message will be sent to the client, but when running in
 	 *            text mode, only the ClientMessage's payload will be sent.
 	 */
 	public void sendMessage(ClientMessage message)
 	{
-		if (this.isTextMode())
+		if (this.textMode)
 		{
-			try
-			{
-				this.sendMessage(message.getPayload());
-			}
-			catch (NullPointerException e)
-			{
-				// user no longer active, terminate connection
-				this.terminateConnection();
-			}
+			sendMessageTextMode(message);
 		}
 		else
 		{
-			try
-			{
-				this.out.writeObject(message);
-			}
-			catch (IOException e)
-			{
-				// user no longer active, terminate connection
-				this.terminateConnection();
-			}
+			sendMessageProtocolMode(message);
 		}
 	}
 
 	/**
-	 * Convenience method to send a string to the client when running in text
-	 * mode. This method should not be used; it is instead preferred that
-	 * ClientMessage be sent.
-	 * 
-	 * @see #sendMessage(ClientMessage)
-	 * @param message
-	 *            string will be sent to the client running in text mode
+	 * Sends a message to the client in text mode.
 	 */
-	private void sendMessage(String message)
+	private void sendMessageTextMode(ClientMessage message)
 	{
-		this.textOut.println(message);
+		try
+		{
+			this.textOut.println(message.getPayload());
+		}
+		catch (NullPointerException e)
+		{
+			// user no longer active, terminate connection
+			this.terminateConnection();
+		}
 	}
 
 	/**
-	 * @return <code>true</code> if the client is running using text mode, or
-	 *         <code>false</code>
+	 * Sends a message to the client in MessageProtocol mode.
 	 */
-	private boolean isTextMode()
-	{
-		return this.textMode;
+	 private void sendMessageProtocolMode(ClientMessage message)
+	 {
+		try
+		{
+			this.out.writeObject(message);
+		}
+		catch (IOException e)
+		{
+			// user no longer active, terminate connection
+			this.terminateConnection();
+		}
 	}
 
 	/**
+	 * Return the player associated with this thread, if possible. If no player has logged in, this returns null.
+	 *
 	 * @return Player associated with this ServerThread
 	 */
 	public Player getPlayer()
@@ -327,7 +336,7 @@ public class ServerThread implements Runnable
 	 * the filesystem, and finally user and password are compared. If all checks
 	 * out, the resultant Player object is associated with this ServerThread,
 	 * and the Player is added to the Universe.
-	 * 
+	 *
 	 * @param username
 	 *            user input for username
 	 * @param password
@@ -392,7 +401,7 @@ public class ServerThread implements Runnable
 	 * Registers a user in the system. This first checks to see if the username
 	 * is already taken, then writes a new Player to disk with the new username
 	 * and password.
-	 * 
+	 *
 	 * @param username
 	 *            user input of the username
 	 * @param password
@@ -406,7 +415,7 @@ public class ServerThread implements Runnable
 		final File sessionPath = new File(dataRoot + File.separatorChar + "sessions" + File.separatorChar + username + ".dat");
 
 		if (!sessionPath.exists())
-		{			
+		{
 			if (this.savePlayerToDisk(new Player(username, password)))
 				return true;
 		}
@@ -418,17 +427,17 @@ public class ServerThread implements Runnable
 	 * Saves a given Player to disk. This is useful during registration, when
 	 * the player is exiting, but also because the server will periodically save
 	 * all players to disk.
-	 * 
+	 *
 	 * @return <code>true</code> if the save were successful or
 	 *         <code>false</code>
 	 */
 	private boolean savePlayerToDisk(Player player)
-	{	
+	{
 		final File sessionPath = new File(conf.getProperty("data.root") + File.separatorChar + "sessions" + File.separatorChar + player.getUsername() + ".dat");
 
 		logger.info("saving " + player.getUsername() + " to disk");
 		logger.fine("saving to file: " + sessionPath.getAbsolutePath());
-		
+
 		if (!sessionPath.canWrite())
 		{
 			try
