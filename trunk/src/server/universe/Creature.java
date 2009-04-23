@@ -4,14 +4,17 @@ import java.util.List;
 
 /**
  * The Creature interface represents any living or life-like agent in the
- * universe. Creatures can move between rooms, get hurt, and attack others.
+ * universe. Creatures can move between rooms, get hurt, and have items.
+ *
+ * This abstract class deals with all of this simple behavior that is common
+ * to both MOBs and Players.
  */
 public abstract class Creature
 {
-	protected int			maxHealth;
-	protected int			health;
-	protected List<Item>	items;
-	protected List<Skill>	skills;
+	private int			maxHealth;
+	private int			health;
+	private List<Item>	items;
+	private List<Skill>	skills;
 
 	/**
 	 * @return The maximum health of the creature.
@@ -51,6 +54,22 @@ public abstract class Creature
 	public void addItem(Item item)
 	{
 		items.add(item);
+	}
+
+	/**
+	 * Add an item to the creature's inventory.
+	 */
+	public void removeItem(Item item)
+	{
+		items.add(item);
+	}
+
+	/**
+	 * Increase the creature's health by some amount.
+	 */
+	public void increaseHealth(int amount)
+	{
+		health += amount;
 	}
 
 }

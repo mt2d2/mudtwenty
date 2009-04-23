@@ -21,6 +21,8 @@ public class Skill
 	}
 
 	/**
+	 * Return the name of the skill.
+	 *
 	 * @return The name of the skill.
 	 */
 	public String getName()
@@ -29,7 +31,9 @@ public class Skill
 	}
 
 	/**
-	 * @return The current value of the skill. //TODO what units?
+	 * Return the value of the skill.
+	 *
+	 * @return int The current value of the skill.
 	 */
 	public int getValue()
 	{
@@ -38,14 +42,11 @@ public class Skill
 
 	/**
 	 * Practice the skill. This has a chance of increasing the value of the
-	 * skill.
+	 * skill. The result of practicing a skill should depend on the current
+	 * skill level and it should have a chance of increasing the skill.
 	 */
 	public void practice()
 	{
-		/*
-		 * TODO The result of practicing a skill should depend on the current
-		 * skill level and it should have a chance of increasing the skill.
-		 */
 	}
 
 }
