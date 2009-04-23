@@ -4,6 +4,13 @@ import java.util.List;
 
 /**
  * A Room represents a location in the universe.
+ *
+ * Thus quoteth The Spec:
+ *
+ * "Rooms in a MUD should be thought of as locations rather than an indoor area with walls and a ceiling
+ * (A "room" could be a clearing in the woods with a path leading to the north and another to the west,
+ * or the middle of a field with paths leading in all directions). Rooms have exits that connect them to
+ * other rooms, descriptions, and contents (including items, players and MOBs)."
  */
 public class Room
 {
@@ -33,6 +40,24 @@ public class Room
 	public List<Item> getItems()
 	{
 		return items;
+	}
+
+	/**
+	 * Add an item to the room.
+	 * Rooms can contain infinitely many items!!
+	 * Or rather, Room storage capacity is bounded by computer memory.
+	 */
+	public void addItem(Item item)
+	{
+		this.items.add(item);
+	}
+
+	/**
+	 * Remove an item from the room.
+	 */
+	public void removeItem(Item item)
+	{
+		this.items.remove(item);
 	}
 
 }

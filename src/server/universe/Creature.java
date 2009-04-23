@@ -9,14 +9,14 @@ import java.util.Map;
 /**
  * The Creature interface represents any living or life-like agent in the
  * universe. Creatures can move between rooms, get hurt, and have items.
- * 
+ *
  * This abstract class deals with all of this simple behavior that is common to
  * both MOBs and Players.
  */
 public abstract class Creature implements Entity, Serializable
 {
 	private static final long	serialVersionUID	= 1L;
-	
+
 	private String				name;
 	private String				description;
 	private int					maxHealth;
@@ -127,7 +127,7 @@ public abstract class Creature implements Entity, Serializable
 	/**
 	 * Check the value of a skill. If the skill is not in the map of skills, it
 	 * is zero.
-	 * 
+	 *
 	 * @return The value of the given skill.
 	 */
 	public int getSkillValue(Skill skill)
@@ -139,7 +139,7 @@ public abstract class Creature implements Entity, Serializable
 	 * Practice the skill. This has a chance of increasing the value of the
 	 * skill. The result of practicing a skill should depend on the current
 	 * skill level and it should have a chance of increasing the skill.
-	 * 
+	 *
 	 * If the skill is not in the map, it is zero. If it becomes nonzero through
 	 * practice, put it into the map with the new value.
 	 */
@@ -178,17 +178,21 @@ public abstract class Creature implements Entity, Serializable
 	{
 		items.remove(item);
 	}
-	
+
 	/**
+	 * Get an item with the specified name from the Creature's inventory.
+	 *
 	 * @param itemName the name of an item
-	 * @return Item represented by its name
+	 * @return Item represented by its name (or null if nonexistent).
 	 */
 	public Item getItem(String itemName)
 	{
+		// TODO This only returns the first item with this name.
+		// Is this what we want?
 		for (Item item : this.items)
 			if (item.getName().equals(itemName))
 				return item;
-		
+
 		return null;
 	}
 }

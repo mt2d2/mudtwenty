@@ -171,8 +171,6 @@ public class Server
 	 * 
 	 * @param message
 	 *            message to be sent to clients
-	 * @param color
-	 *            color clients will see the message in
 	 */
 	public void sendMessageToAllClients(ClientMessage message)
 	{

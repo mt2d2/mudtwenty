@@ -1,4 +1,4 @@
-package server.universe;
+package server;
 
 /**
  * This exception is thrown in the event that a user provides an invalid
