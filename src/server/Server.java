@@ -40,7 +40,7 @@ import util.PropertyLoader;
  * PORT and delegates each client to a separate thread. Server maintains a list
  * of associated clients (which it periodically prunes) to allow messages to be
  * send to each connected client.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class Server
@@ -76,8 +76,7 @@ public class Server
 	private static final Properties			conf				= PropertyLoader.loadProperties("server/configuration.properties");
 
 	/**
-	 * Port the server will run on this local host. In the future, this could be
-	 * read from a configuration file.
+	 * Port the server will run on this local host.
 	 */
 	private static final int				PORT				= Integer.parseInt(conf.getProperty("server.port"));
 
@@ -91,10 +90,13 @@ public class Server
 	private Universe						universe;
 
 	/**
-	 * Default constructor for Server. It attempts to establish a ServerSocket
-	 * on PORT, and will throw an IOException in the case that this is
-	 * impossible. After, it enters a blocking loop waiting for connections.
-	 * 
+	 * Default constructor for Server. It attempts to establish a ServerSocket,
+	 * and will throw an IOException in the case that this is
+	 * impossible. It also makes sure the universe is up and lodead and
+	 * starts anything else that the server needs to have started (eg ReaperTask)
+	 *
+	 * After that, it enters a blocking loop waiting for connections.
+	 *
 	 * @throws IOException
 	 *             indicates problem starting server, most likely a different
 	 *             service running on the same port
@@ -156,7 +158,7 @@ public class Server
 	/**
 	 * Returns a ServerResponse appropriate to a given Command. This is useful
 	 * for quickly parsing incoming ClientMessages for its appropriate action.
-	 * 
+	 *
 	 * @param input
 	 *            selected command
 	 * @return input's associated ServerResponse
@@ -168,7 +170,7 @@ public class Server
 
 	/**
 	 * Sends a message to all clients in a given color.
-	 * 
+	 *
 	 * @param message
 	 *            message to be sent to clients
 	 */
@@ -180,7 +182,9 @@ public class Server
 
 	/**
 	 * Sends a message to all players in a room.
-	 * 
+	 *
+	 * This should also send to MOBs -- and it should be renamed.
+	 *
 	 * @param room
 	 *            room to target
 	 * @param message
@@ -189,7 +193,7 @@ public class Server
 	public void sendMessageToAllClientsInRoom(Room room, ClientMessage message)
 	{
 		final List<Player> creaturesInRoom = this.universe.getPlayersInRoom(room);
-		
+
 		for (ServerThread st : this.clients)
 			if (creaturesInRoom.contains(st.getPlayer()))
 				st.sendMessage(message);
@@ -198,7 +202,7 @@ public class Server
 	/**
 	 * Sends a message to a specific player. This player is identified by his
 	 * username only, which might be kind of brittle.
-	 * 
+	 *
 	 * @param username
 	 *            Player that this message will be sent is represented by this
 	 *            String, his username
@@ -244,6 +248,11 @@ public class Server
 	 * @return description of users on the MUD server, including the users and
 	 *         guests logged in
 	 */
+	 // This method should not be here.
+	 // A list of online players can be got from Universe
+	 // and a method that generates a string from that should be
+	 // in something like WhoResponse.
+
 	public String getUsersOnline()
 	{
 		StringBuilder message = new StringBuilder();
@@ -286,16 +295,11 @@ public class Server
 	 * An extension of TimerTask that periodically prunes finished clients. That
 	 * is, this removes clients whose State is DONE from the list of active
 	 * clients.
-	 * 
+	 *
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
 	private class ReaperTask extends TimerTask
 	{
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.util.TimerTask#run()
-		 */
 		public void run()
 		{
 			List<ServerThread> toRemove = new ArrayList<ServerThread>();
@@ -316,7 +320,7 @@ public class Server
 	/**
 	 * Main entrance to the Server. This creates a new Server object (which
 	 * starts running the server). This also catches severe exceptions.
-	 * 
+	 *
 	 * @param args
 	 *            there are no arguments for Server (this parameter is ignored)
 	 */
