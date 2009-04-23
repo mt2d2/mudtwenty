@@ -6,7 +6,7 @@ We only have four weeks to plan, design, code, test, and deploy this monstrosity
 
 = Meetings =
   * First checkpoint, *13 April 2009*, Gould Simpson 701
-  * Second meeting, *24 - 27 April 2009*
+  * Second meeting, *24 pril 2009, Gould Simpson 701, 4:00 - 5:00 PM*
   * Review meeting, *8-10 May 2009*
 
 = Project Schedule =
