@@ -16,7 +16,7 @@ import util.ArrayUtil;
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
-public class SayResponse implements ServerResponse
+public class TellResponse implements ServerResponse
 {
 	/*
 	 * (non-Javadoc)

@@ -19,9 +19,10 @@ import server.response.EchoResponse;
 import server.response.ExitResponse;
 import server.response.HelpResponse;
 import server.response.LoginResponse;
+import server.response.OocResponse;
 import server.response.RegisterResponse;
-import server.response.SayResponse;
 import server.response.ServerResponse;
+import server.response.TellResponse;
 import server.response.UnknownResponse;
 import server.response.WhoResponse;
 import server.universe.Universe;
@@ -136,7 +137,8 @@ public class Server
 		this.actions.put(Command.WHO, new WhoResponse());
 		this.actions.put(Command.LOGIN, new LoginResponse());
 		this.actions.put(Command.REGISTER, new RegisterResponse());
-		this.actions.put(Command.SAY, new SayResponse());
+		this.actions.put(Command.TELL, new TellResponse());
+		this.actions.put(Command.OOC, new OocResponse());
 	}
 
 	/**

@@ -1,9 +1,10 @@
 package server.universe;
 
-import java.util.List;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Creature interface represents any living or life-like agent in the
@@ -12,8 +13,10 @@ import java.util.HashMap;
  * This abstract class deals with all of this simple behavior that is common to
  * both MOBs and Players.
  */
-public abstract class Creature implements Entity
+public abstract class Creature implements Entity, Serializable
 {
+	private static final long	serialVersionUID	= 1L;
+	
 	private String				name;
 	private String				description;
 	private int					maxHealth;
@@ -25,6 +28,11 @@ public abstract class Creature implements Entity
 	 * We should change this later.
 	 */
 	private static final int	defaultMaxHealth	= 100;
+
+	public Creature()
+	{
+		// required for serializable to work
+	}
 
 	/**
 	 * Construct a creature with the given name. Other attributes of the
