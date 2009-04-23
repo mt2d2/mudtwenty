@@ -21,6 +21,7 @@ import server.response.HelpResponse;
 import server.response.LoginResponse;
 import server.response.OocResponse;
 import server.response.RegisterResponse;
+import server.response.SayResponse;
 import server.response.ServerResponse;
 import server.response.TellResponse;
 import server.response.UnknownResponse;
@@ -139,6 +140,7 @@ public class Server
 		this.actions.put(Command.REGISTER, new RegisterResponse());
 		this.actions.put(Command.TELL, new TellResponse());
 		this.actions.put(Command.OOC, new OocResponse());
+		this.actions.put(Command.SAY, new SayResponse());
 	}
 
 	/**

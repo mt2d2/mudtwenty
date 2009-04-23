@@ -22,7 +22,8 @@ public enum Command
 	LOGIN((byte) 6, "logs a user in, e.g., login <username> <password>"),
 	REGISTER((byte) 7, "registers a user, e.g., register <username> <password"),
 	TELL((byte) 8, "sends a private message to a user, e.g., say <username> <message>"),
-	UNKNOWN((byte) 9, "all unrecognized commands are unknown, and you'll be told so");
+	SAY((byte) 9, "sends a message to everyone in the same room, e.g., say <message>"),
+	UNKNOWN((byte) 10, "all unrecognized commands are unknown, and you'll be told so");
 
 	private byte	code;
 	private String	description;
