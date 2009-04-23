@@ -178,5 +178,17 @@ public abstract class Creature implements Entity, Serializable
 	{
 		items.remove(item);
 	}
-
+	
+	/**
+	 * @param itemName the name of an item
+	 * @return Item represented by its name
+	 */
+	public Item getItem(String itemName)
+	{
+		for (Item item : this.items)
+			if (item.getName().equals(itemName))
+				return item;
+		
+		return null;
+	}
 }
