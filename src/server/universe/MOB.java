@@ -5,5 +5,9 @@ package server.universe;
  */
 public class MOB extends Creature
 {
-
+	public MOB(String name)
+	{
+		super(name);
+		// TODO Auto-generated constructor stub
+	}
 }

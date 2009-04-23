@@ -179,7 +179,7 @@ public class Server
 	public void sendMessageToPlayer(String username, ClientMessage message)
 	{
 		for (ServerThread st : this.clients)
-			if (st.isLoggedIn() && st.getPlayer().getUsername().equals(username))
+			if (st.isLoggedIn() && st.getPlayer().getName().equals(username))
 				st.sendMessage(message);
 	}
 
@@ -223,7 +223,7 @@ public class Server
 		for (ServerThread st : this.clients)
 		{
 			if (st.isLoggedIn())
-				message.append(st.getPlayer().getUsername() + ", ");
+				message.append(st.getPlayer().getName() + ", ");
 			else
 				guests++;
 		}

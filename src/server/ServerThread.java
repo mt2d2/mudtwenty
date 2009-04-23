@@ -360,7 +360,7 @@ public class ServerThread implements Runnable
 				ObjectInputStream is = new ObjectInputStream(new FileInputStream(sessionPath));
 				Player player = (Player) is.readObject();
 
-				if (player.getUsername().equals(username) && player.confirmPasswordHash(password))
+				if (player.getName().equals(username) && player.confirmPasswordHash(password))
 				{
 					// add this player to the universe
 					this.server.getUniverse().addPlayer(player);
@@ -435,9 +435,9 @@ public class ServerThread implements Runnable
 	 */
 	private boolean savePlayerToDisk(Player player)
 	{
-		final File sessionPath = new File(conf.getProperty("data.root") + File.separatorChar + "sessions" + File.separatorChar + player.getUsername() + ".dat");
+		final File sessionPath = new File(conf.getProperty("data.root") + File.separatorChar + "sessions" + File.separatorChar + player.getName() + ".dat");
 
-		logger.info("saving " + player.getUsername() + " to disk");
+		logger.info("saving " + player.getName() + " to disk");
 		logger.fine("saving to file: " + sessionPath.getAbsolutePath());
 
 		if (!sessionPath.canWrite())
