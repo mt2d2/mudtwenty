@@ -21,6 +21,20 @@ It might be convenient to discuss major issues on a newsgroup, like the one at <
 
 ----
 
+ * ServerThread.savePlayerToDisk is no longer necessary when Universe keeps track of
+all players including logged-out players.
+
+----
+
+Where should the universe be loaded from a file?
+
+It seems like it should be loaded by the Server once it starts,
+but it might also make sense for it to be loaded in new Universe()
+because Universe is singleton and new Universe() is called when
+no universe is currently loaded.
+
+----
+
 Items and creatures both implement Entity, and this makes sense, because all entities have certain things in common:
 A name, a description, and a location. For certain things, such as "look", all we need is a name and description so "look" should be able to be used on any Entity.
 
