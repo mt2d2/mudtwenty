@@ -15,7 +15,7 @@ public class Universe
 {
 	private Map<Creature,Room> creatureToRoom;
 	private Map<Room,Creature> roomToCreature;
-	private Universe theUniverse;
+	private static Universe theUniverse;
 	private List players;
 	private List rooms;
 
@@ -33,7 +33,7 @@ public class Universe
 	/**
 	 * Get the single instance of Universe.
 	 */
-	public Universe getInstance()
+	public static Universe getInstance()
 	{
 		if (theUniverse == null)
 		{
