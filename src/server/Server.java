@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 import message.ClientMessage;
 import message.Command;
 import server.response.EchoResponse;
-import server.response.ExitResponse;
+import server.response.QuitResponse;
 import server.response.HelpResponse;
 import server.response.LoginResponse;
 import server.response.OocResponse;
@@ -133,7 +133,7 @@ public class Server
 		this.actions = new HashMap<Command, ServerResponse>();
 		this.actions.put(Command.ECHO, new EchoResponse());
 		this.actions.put(Command.UNKNOWN, new UnknownResponse());
-		this.actions.put(Command.EXIT, new ExitResponse());
+		this.actions.put(Command.QUIT, new QuitResponse());
 		this.actions.put(Command.HELP, new HelpResponse());
 		this.actions.put(Command.WHO, new WhoResponse());
 		this.actions.put(Command.LOGIN, new LoginResponse());
