@@ -5,6 +5,8 @@ package server.universe;
  */
 public class MOB extends Creature
 {
+	private static final long	serialVersionUID	= 1L;
+
 	public MOB(String name)
 	{
 		super(name);
