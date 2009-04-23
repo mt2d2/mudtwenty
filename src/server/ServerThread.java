@@ -18,6 +18,7 @@ import message.ClientMessage;
 import message.ServerMessage;
 import server.universe.InvalidLoginException;
 import server.universe.Player;
+import server.response.ServerResponse;
 import util.InputParser;
 import util.PropertyLoader;
 
@@ -124,24 +125,25 @@ public class ServerThread implements Runnable
 	{
 		while (this.getState() == State.OK)
 		{
+			ServerMessage toServer;
 			if (this.textMode)
 			{
-				ServerMessage toServer = getMessageTextMode();
+				toServer = getMessageTextMode();
 			}
 			else
 			{
-				ServerMessage toServer = getMessageProtocolMode();
+				toServer = getMessageProtocolMode();
 			}
 
-			if (message == null)
+			if (toServer == null)
 			{
 				this.terminateConnection();
 				break;
 			}
 			else
 			{
-				ServerResponse response = this.server.getServerResponse(message.getCommand());
-				ClientMessage toClient = response.respond(this, message.getArguments());
+				ServerResponse response = this.server.getServerResponse(toServer.getCommand());
+				ClientMessage toClient = response.respond(this, toServer.getArguments());
 				this.sendMessage(toClient);
 			}
 		}
@@ -150,18 +152,15 @@ public class ServerThread implements Runnable
 	/**
 	 * Get and return a message to the server in text mode. Return null if something went wrong.
 	 */
-	private ServerMessage getMessageTextMode
+	private ServerMessage getMessageTextMode()
 	{
+		ServerMessage message = null;
 		try
 		{
 			String input = this.textIn.readLine();
-			if (input == null)
+			if (input != null)
 			{
-				return null;
-			}
-			else
-			{
-				return InputParser.parse(input.trim());
+				message = InputParser.parse(input.trim());
 			}
 		}
 		catch (IOException e)
@@ -169,16 +168,18 @@ public class ServerThread implements Runnable
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return message;
 	}
 
 	/**
 	 * Get and return a message to the server in MessageProtocol mode. Return null if something went wrong.
 	 */
-	private ServerMessage getMessageProtocolMode
+	private ServerMessage getMessageProtocolMode()
 	{
+	ServerMessage message = null;
 		try
 		{
-			return (ServerMessage) this.in.readObject();
+			message = (ServerMessage) this.in.readObject();
 		}
 		catch (IOException e)
 		{
@@ -190,6 +191,7 @@ public class ServerThread implements Runnable
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	return message;
 	}
 
 	/**
