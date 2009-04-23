@@ -15,16 +15,20 @@ import java.util.logging.Logger;
 
 import message.ClientMessage;
 import message.Command;
+import server.response.DropResponse;
 import server.response.EchoResponse;
-import server.response.QuitResponse;
 import server.response.HelpResponse;
+import server.response.InventoryResponse;
 import server.response.LoginResponse;
+import server.response.LookResponse;
 import server.response.OocResponse;
+import server.response.QuitResponse;
 import server.response.RegisterResponse;
 import server.response.SayResponse;
 import server.response.ServerResponse;
 import server.response.TellResponse;
 import server.response.UnknownResponse;
+import server.response.UseResponse;
 import server.response.WhoResponse;
 import server.universe.Universe;
 import util.PropertyLoader;
@@ -141,6 +145,10 @@ public class Server
 		this.actions.put(Command.TELL, new TellResponse());
 		this.actions.put(Command.OOC, new OocResponse());
 		this.actions.put(Command.SAY, new SayResponse());
+		this.actions.put(Command.DROP, new DropResponse());
+		this.actions.put(Command.USE, new UseResponse());
+		this.actions.put(Command.LOOK, new LookResponse());
+		this.actions.put(Command.INVENTORY, new InventoryResponse());
 	}
 
 	/**
