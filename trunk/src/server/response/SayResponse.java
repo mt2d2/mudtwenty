@@ -38,7 +38,7 @@ public class SayResponse implements ServerResponse
 			final String message = ArrayUtil.joinArguments(arguments, " ");
 
 			serverThread.getServer().sendMessageToPlayer(reciever,
-					new ClientMessage(serverThread.getPlayer().getUsername() + " says: " + message, Server.MESSAGE_TEXT_COLOR));
+					new ClientMessage(serverThread.getPlayer().getName() + " says: " + message, Server.MESSAGE_TEXT_COLOR));
 			return new ClientMessage("you said \"" + message + "\" to " + reciever);
 		}
 	}

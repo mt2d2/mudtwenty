@@ -8,28 +8,28 @@ import java.util.HashMap;
 /**
  * The Creature interface represents any living or life-like agent in the
  * universe. Creatures can move between rooms, get hurt, and have items.
- *
- * This abstract class deals with all of this simple behavior that is common
- * to both MOBs and Players.
+ * 
+ * This abstract class deals with all of this simple behavior that is common to
+ * both MOBs and Players.
  */
 public abstract class Creature implements Entity
 {
-	private String name;
-	private String description;
-	private int			maxHealth;
-	private int			health;
-	private List<Item>	items;
-	private Map<Skill,Integer> skills;
+	private String				name;
+	private String				description;
+	private int					maxHealth;
+	private int					health;
+	private List<Item>			items;
+	private Map<Skill, Integer>	skills;
 
 	/**
 	 * We should change this later.
 	 */
-	private static final int defaultMaxHealth = 100;
+	private static final int	defaultMaxHealth	= 100;
 
 	/**
-	 * Construct a creature with the given name.
-	 * Other attributes of the creature that are not specified in the constructor can
-	 * be set with mutator methods.
+	 * Construct a creature with the given name. Other attributes of the
+	 * creature that are not specified in the constructor can be set with
+	 * mutator methods.
 	 */
 	protected Creature(String name)
 	{
@@ -38,8 +38,9 @@ public abstract class Creature implements Entity
 		this.maxHealth = defaultMaxHealth;
 		this.health = maxHealth;
 		this.items = new ArrayList<Item>();
-		// TODO replace type of map with EnumMap because it's a lot more efficient.
-		this.skills = new HashMap<Skill,Integer>();
+		// TODO replace type of map with EnumMap because it's a lot more
+		// efficient.
+		this.skills = new HashMap<Skill, Integer>();
 	}
 
 	/**
@@ -75,8 +76,8 @@ public abstract class Creature implements Entity
 	}
 
 	/**
-	 * Set the maximum health of the Creature to the given amount.
-	 * If current health is less than this, the creature might die?
+	 * Set the maximum health of the Creature to the given amount. If current
+	 * health is less than this, the creature might die?
 	 */
 	public void setMaxHealth(int amount)
 	{
@@ -102,13 +103,13 @@ public abstract class Creature implements Entity
 		}
 		else
 		{
-		health += amount;
+			health += amount;
 		}
 	}
 
 	/**
-	 * Decrease the creature's health by some amount.
-	 * If health goes to zero, the Creature should die?
+	 * Decrease the creature's health by some amount. If health goes to zero,
+	 * the Creature should die?
 	 */
 	public void decreaseHealth(int amount)
 	{
@@ -116,8 +117,9 @@ public abstract class Creature implements Entity
 	}
 
 	/**
-	 * Check the value of a skill. If the skill is not in the map of skills, it is zero.
-
+	 * Check the value of a skill. If the skill is not in the map of skills, it
+	 * is zero.
+	 * 
 	 * @return The value of the given skill.
 	 */
 	public int getSkillValue(Skill skill)
@@ -129,7 +131,7 @@ public abstract class Creature implements Entity
 	 * Practice the skill. This has a chance of increasing the value of the
 	 * skill. The result of practicing a skill should depend on the current
 	 * skill level and it should have a chance of increasing the skill.
-	 *
+	 * 
 	 * If the skill is not in the map, it is zero. If it becomes nonzero through
 	 * practice, put it into the map with the new value.
 	 */
@@ -138,7 +140,8 @@ public abstract class Creature implements Entity
 	}
 
 	/**
-	 * Set the value of a skill. If the skill is not in the map, create it with the given value.
+	 * Set the value of a skill. If the skill is not in the map, create it with
+	 * the given value.
 	 */
 	public void setSkill(Skill skill)
 	{
