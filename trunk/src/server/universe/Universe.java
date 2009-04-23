@@ -16,17 +16,16 @@ import java.util.HashMap;
 public class Universe implements Serializable
 {
 	/**
-	 * A map to get a list of <b>all players, even logged-out players,</b> in a given room.
+	 * A map of <b>all players, even logged-out players,</b> to their locations.
 	 */
-	private Map<Room, List<Player>> roomToPlayers;
+	private Map<Player, Room> playerToRoom;
 
 	/**
-	 * A map to get a list of mobs in a given room.
+	 * A map of MOBs to their locations.
 	 */
-	private Map<Room, List<MOB>> roomToMOBs;
-
+	private Map<MOB, Room> mobToRoom;
 	private static Universe		theUniverse;
-	private List<Player>		players;
+	private List<Player>		loggedInPlayers;
 	private List<Room>			rooms;
 
 	/**
@@ -36,10 +35,10 @@ public class Universe implements Serializable
 	 */
 	private Universe()
 	{
-		this.roomToPlayers = new HashMap<Room, List<Player>>();
-		this.roomToMOBs = new HashMap<Room, List<MOB>>();
+		this.playerToRoom  = new HashMap<Player, Room>();
+		this.mobToRoom  = new HashMap<MOB, Room>();
 		this.rooms = new ArrayList<Room>();
-		this.players = new ArrayList<Player>();
+		this.loggedInPlayers = new ArrayList<Player>();
 	}
 
 	/**
@@ -68,7 +67,7 @@ public class Universe implements Serializable
 	/**
 	 * Return a list of all MOBs in a room.
 	 */
-	public List<Player> getMOBsInRoom(Room room)
+	public List<MOB> getMOBsInRoom(Room room)
 	{
 		return null;
 	}
@@ -76,7 +75,7 @@ public class Universe implements Serializable
 	/**
 	 * Return a list of all <i>currently logged in</i> players in a room.
 	 */
-	public List<Player> getRoomOfCreature(Creature creature)
+	public Room getRoomOfCreature(Creature creature)
 	{
 		return null;
 	}
@@ -92,17 +91,17 @@ public class Universe implements Serializable
 	}
 
 	/**
-	 * Return a list of players.
+	 * Return a list of players that are currently logged in.
 	 *
 	 * @return A list of all of the players currently logged in to the universe.
 	 */
 	public List<Player> getPlayers()
 	{
-		return players;
+		return loggedInPlayers;
 	}
 
 	/**
-	 * Adds a player to this Universe. Currently only adds the player to the
+	 * Adds a player to the list of logged-in players in the Universe. Currently only adds the player to the
 	 * list of players, but this could be useful to start the player off in a
 	 * default room or something.
 	 *
@@ -111,7 +110,7 @@ public class Universe implements Serializable
 	 */
 	public void addPlayer(Player player)
 	{
-		this.players.add(player);
+		this.loggedInPlayers.add(player);
 	}
 
 	/**
@@ -122,6 +121,6 @@ public class Universe implements Serializable
 	 */
 	public void removePlayer(Player player)
 	{
-		this.players.remove(player);
+		this.loggedInPlayers.remove(player);
 	}
 }
