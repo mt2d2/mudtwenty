@@ -50,8 +50,11 @@ public class Universe implements Serializable
 
 	/**
 	 * In this private constructor, a simple default universe might be made.
+	 *
 	 * This constructor will only be called if a Universe could not be loaded
-	 * from a file?
+	 * from a file? Or does this constructor potentially load from a file?
+	 * If it does load from a file, it should get the proper filename from
+	 * the configuration.properties file.
 	 */
 	private Universe()
 	{
