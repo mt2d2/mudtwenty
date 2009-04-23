@@ -14,7 +14,7 @@ import java.util.Map;
 public enum Command
 {
 	ECHO((byte) 0, "echos what you say, back to you"),
-	EXIT((byte) 1, "saves your state and exits the mud"),
+	QUIT((byte) 1, "saves your state and exits the mud"),
 	LOOK((byte) 2, "sends a message to all users connected to the server, e.g., ooc <message>"),
 	OOC((byte) 3, "send a message to all users connected to the mud"),
 	HELP((byte) 4, "lists all available commands and general system help"),	

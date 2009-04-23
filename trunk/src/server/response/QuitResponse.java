@@ -11,7 +11,7 @@ import server.ServerThread;
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
-public class ExitResponse implements ServerResponse
+public class QuitResponse implements ServerResponse
 {
 	/*
 	 * (non-Javadoc)
