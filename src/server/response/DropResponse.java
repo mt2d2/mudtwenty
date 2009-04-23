@@ -1,6 +1,3 @@
-/**
- * 
- */
 package server.response;
 
 import java.util.List;
@@ -8,6 +5,7 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
+import server.universe.Item;
 
 /**
  * Responds to the drop command as input by the user. Drops a specified item
@@ -26,6 +24,24 @@ public class DropResponse implements ServerResponse
 	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		return new ClientMessage("NOT IMPLEMENTED", Server.ERROR_TEXT_COLOR);
+		if (arguments.size() != 1)
+		{
+			return new ClientMessage("the proper syntax for drop is drop <item name>", Server.ERROR_TEXT_COLOR);
+		}
+		else
+		{
+			Item item = serverThread.getPlayer().getItem(arguments.get(0));
+
+			if (item != null)
+			{
+				serverThread.getPlayer().removeItem(item);
+				return new ClientMessage("the item, " + arguments.get(0) + " was removed from your inventory");
+			}
+			else
+			{
+				return new ClientMessage("that item name was unrecognized, use the inventory command to see what you have");
+			}
+
+		}
 	}
 }
