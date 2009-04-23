@@ -2,35 +2,52 @@ package server.universe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A Universe represents the entire state of the virtual world. A universe
- * consists of a set of rooms and a set of players.
+ * contains Rooms and Entities. Universe is a singleton class -- there is no
+ * public constructor, but
+ *
+ * The Universe keeps track
  */
 public class Universe
 {
-	private List<Room>				rooms;
-	private transient List<Player>	players;
+	private Map<Creature,Room> creatureToRoom;
+	private Map<Room,Creature> roomToCreature;
+	private Universe theUniverse;
+	private List players;
+	private List rooms;
 
 	/**
-	 * Generates the default world, primarily for testing now.
+	 * In this private constructor, the universe should be
+	 * loaded from a file if there is one. Otherwise, a default
+	 * simple universe should be made.
 	 */
-	public Universe()
+	private Universe()
 	{
 		this.rooms = new ArrayList<Room>();
 		this.players = new ArrayList<Player>();
 	}
 
 	/**
-	 * Create a universe with the given lists of rooms and players.
+	 * Get the single instance of Universe.
 	 */
-	public Universe(List<Room> rooms, List<Player> players)
+	public Universe getInstance()
 	{
-		this.rooms = rooms;
-		this.players = players;
+		if (theUniverse == null)
+		{
+			return new Universe();
+		}
+		else
+		{
+			return theUniverse;
+		}
 	}
 
 	/**
+	 * Return a list of all rooms in the universe.
+	 *
 	 * @return A list of all of the rooms in the universe.
 	 */
 	public List<Room> getRooms()
@@ -39,6 +56,8 @@ public class Universe
 	}
 
 	/**
+	 * Return a list of players.
+	 *
 	 * @return A list of all of the players currently logged in to the universe.
 	 */
 	public List<Player> getPlayers()
@@ -50,7 +69,7 @@ public class Universe
 	 * Adds a player to this Universe. Currently only adds the player to the list
 	 * of players, but this could be useful to start the player off in a default
 	 * room or something.
-	 * 
+	 *
 	 * @param player
 	 *            to add
 	 */
@@ -60,8 +79,8 @@ public class Universe
 	}
 
 	/**
-	 * Removes a player from this Universe.
-	 * 
+	 * Removes a player from the list of currently logged-in players.
+	 *
 	 * @param player
 	 *            to remove
 	 */
