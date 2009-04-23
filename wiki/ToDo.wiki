@@ -16,6 +16,6 @@ A user must be able to connect to the server, create a character, and use that c
 
  * We need to decide where and how Universe is going to be loaded.
    * It makes sense that it should be loaded in Server when it starts, but Universe is singleton so there might be an issue.
-   * Maybe universe should not be singleton, but then it would be harder to access the Universe's player<->room map.
+   * Maybe universe should not be singleton, but then it would be harder to access the Universe's player to room map.
    * Maybe Universe should try loading the world itself when new Universe() is called. This seems the simplest option to me.
  * A default universe (consisting of a couple rooms with simple names/descriptions) should be created.
