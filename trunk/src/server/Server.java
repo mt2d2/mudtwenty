@@ -30,6 +30,8 @@ import server.response.TellResponse;
 import server.response.UnknownResponse;
 import server.response.UseResponse;
 import server.response.WhoResponse;
+import server.universe.Player;
+import server.universe.Room;
 import server.universe.Universe;
 import util.PropertyLoader;
 
@@ -38,7 +40,7 @@ import util.PropertyLoader;
  * PORT and delegates each client to a separate thread. Server maintains a list
  * of associated clients (which it periodically prunes) to allow messages to be
  * send to each connected client.
- *
+ * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class Server
@@ -92,7 +94,7 @@ public class Server
 	 * Default constructor for Server. It attempts to establish a ServerSocket
 	 * on PORT, and will throw an IOException in the case that this is
 	 * impossible. After, it enters a blocking loop waiting for connections.
-	 *
+	 * 
 	 * @throws IOException
 	 *             indicates problem starting server, most likely a different
 	 *             service running on the same port
@@ -154,7 +156,7 @@ public class Server
 	/**
 	 * Returns a ServerResponse appropriate to a given Command. This is useful
 	 * for quickly parsing incoming ClientMessages for its appropriate action.
-	 *
+	 * 
 	 * @param input
 	 *            selected command
 	 * @return input's associated ServerResponse
@@ -166,7 +168,7 @@ public class Server
 
 	/**
 	 * Sends a message to all clients in a given color.
-	 *
+	 * 
 	 * @param message
 	 *            message to be sent to clients
 	 * @param color
@@ -179,9 +181,26 @@ public class Server
 	}
 
 	/**
+	 * Sends a message to all players in a room.
+	 * 
+	 * @param room
+	 *            room to target
+	 * @param message
+	 *            message to send
+	 */
+	public void sendMessageToAllClientsInRoom(Room room, ClientMessage message)
+	{
+		final List<Player> creaturesInRoom = this.universe.getPlayersInRoom(room);
+		
+		for (ServerThread st : this.clients)
+			if (creaturesInRoom.contains(st.getPlayer()))
+				st.sendMessage(message);
+	}
+
+	/**
 	 * Sends a message to a specific player. This player is identified by his
 	 * username only, which might be kind of brittle.
-	 *
+	 * 
 	 * @param username
 	 *            Player that this message will be sent is represented by this
 	 *            String, his username
@@ -269,14 +288,14 @@ public class Server
 	 * An extension of TimerTask that periodically prunes finished clients. That
 	 * is, this removes clients whose State is DONE from the list of active
 	 * clients.
-	 *
+	 * 
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
 	private class ReaperTask extends TimerTask
 	{
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see java.util.TimerTask#run()
 		 */
 		public void run()
@@ -299,7 +318,7 @@ public class Server
 	/**
 	 * Main entrance to the Server. This creates a new Server object (which
 	 * starts running the server). This also catches severe exceptions.
-	 *
+	 * 
 	 * @param args
 	 *            there are no arguments for Server (this parameter is ignored)
 	 */
