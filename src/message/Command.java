@@ -15,7 +15,7 @@ public enum Command
 {
 	ECHO((byte) 0, "echos what you say, back to you"),
 	QUIT((byte) 1, "saves your state and exits the mud"),
-	LOOK((byte) 2, "sends a message to all users connected to the server, e.g., ooc <message>"),
+	SCORE((byte) 2, "gives detailed information about your player"),
 	OOC((byte) 3, "send a message to all users connected to the mud"),
 	HELP((byte) 4, "lists all available commands and general system help"),	
 	WHO((byte) 5, "lists all users online, both users and guests"),
@@ -23,7 +23,11 @@ public enum Command
 	REGISTER((byte) 7, "registers a user, e.g., register <username> <password"),
 	TELL((byte) 8, "sends a private message to a user, e.g., say <username> <message>"),
 	SAY((byte) 9, "sends a message to everyone in the same room, e.g., say <message>"),
-	UNKNOWN((byte) 10, "all unrecognized commands are unknown, and you'll be told so");
+	LOOK((byte) 10, "looks around at the current room you occupy, giving your information about yoru surroundings"),
+	INVENTORY((byte) 11, "lists all the items you are currently carrying"),
+	DROP((byte) 12, "drops a specified item from your inventory, e.g., drop <item name>"),
+	USE((byte) 13, "use a specified item from your inventory, e.g., use <item name>"),
+	UNKNOWN((byte) 14, "all unrecognized commands are unknown, and you'll be told so");
 
 	private byte	code;
 	private String	description;
