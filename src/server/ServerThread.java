@@ -359,7 +359,7 @@ public class ServerThread implements Runnable
 			{
 				ObjectInputStream is = new ObjectInputStream(new FileInputStream(sessionPath));
 				Player player = (Player) is.readObject();
-
+				
 				if (player.getName().equals(username) && player.confirmPasswordHash(password))
 				{
 					// add this player to the universe

@@ -10,7 +10,7 @@ public class Player extends Creature implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
 	private String	passwordHash;
-
+	
 	/**
 	 * Constructs a Player with a username and password. This is used during
 	 * registration of new players.

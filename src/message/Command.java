@@ -15,13 +15,13 @@ public enum Command
 {
 	ECHO((byte) 0, "echos what you say, back to you"),
 	EXIT((byte) 1, "saves your state and exits the mud"),
-	LOOK((byte) 2, "allows you to view the world around you"),
+	LOOK((byte) 2, "sends a message to all users connected to the server, e.g., ooc <message>"),
 	OOC((byte) 3, "send a message to all users connected to the mud"),
 	HELP((byte) 4, "lists all available commands and general system help"),	
 	WHO((byte) 5, "lists all users online, both users and guests"),
 	LOGIN((byte) 6, "logs a user in, e.g., login <username> <password>"),
 	REGISTER((byte) 7, "registers a user, e.g., register <username> <password"),
-	SAY((byte) 8, "sends a private message to a user, e.g., say <username> <message>"),
+	TELL((byte) 8, "sends a private message to a user, e.g., say <username> <message>"),
 	UNKNOWN((byte) 9, "all unrecognized commands are unknown, and you'll be told so");
 
 	private byte	code;

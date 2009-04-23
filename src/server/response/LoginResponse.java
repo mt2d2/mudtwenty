@@ -36,7 +36,7 @@ public class LoginResponse implements ServerResponse
 				if (serverThread.login(arguments.get(0), arguments.get(1)))
 					return new ClientMessage("login successful, you can confirm this with the who command", Server.SYSTEM_TEXT_COLOR);
 				else
-					return new ClientMessage("login was unsuccessful, the username is already in use", Color.RED);
+					return new ClientMessage("login was unsuccessful, contact administrator", Color.RED);
 			}
 			catch (InvalidLoginException e)
 			{
