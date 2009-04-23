@@ -3,7 +3,10 @@ package server.response;
 import java.util.List;
 
 import message.ClientMessage;
+import server.Server;
 import server.ServerThread;
+import server.universe.Room;
+import util.ArrayUtil;
 
 /**
  * Responds to the say command from the user. This sends a message to everyone
@@ -22,6 +25,18 @@ public class SayResponse implements ServerResponse
 	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{	
+		if (arguments.size() < 1)
+		{
+			return new ClientMessage("proper syntax of say is say <message>", Server.ERROR_TEXT_COLOR);
+		}
+		else
+		{
+			final Room roomOfPlayer = serverThread.getServer().getUniverse().getRoomOfCreature(serverThread.getPlayer());
+			final String message = ArrayUtil.joinArguments(arguments, " ");
+			
+			serverThread.getServer().sendMessageToAllClientsInRoom(roomOfPlayer, new ClientMessage(message, Server.MESSAGE_TEXT_COLOR));
+		}
+		
 		// TODO Auto-generated method stub
 		return null;
 	}
