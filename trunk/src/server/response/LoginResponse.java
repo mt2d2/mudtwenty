@@ -6,19 +6,19 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
-import server.universe.InvalidLoginException;
+import server.InvalidLoginException;
 
 /**
  * Handles the login request from a user. This command requires two arguments, a
  * username and password.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class LoginResponse implements ServerResponse
 {
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see server.response.ServerResponse#respond(server.ServerThread,
 	 * java.util.List)
 	 */
