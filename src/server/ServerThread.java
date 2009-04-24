@@ -116,13 +116,18 @@ public class ServerThread implements Runnable
 		this.sendMessage(welcomeMessage);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Runnable#run()
+	/**
+	 * The run method of the thread. In this method, the ServerThread should
+	 * get the name of the user and login or register a player, and then
+	 * start the main loop, where it waits for input and responds.
 	 */
 	public void run()
 	{
+		// Get the user's input.
+
+		// Log in or register the player.
+
+		// Enter the main input-getting loop of the server
 		while (this.getState() == State.OK)
 		{
 			ServerMessage toServer;

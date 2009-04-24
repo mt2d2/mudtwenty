@@ -11,7 +11,7 @@ import java.util.HashMap;
  * A Universe represents the entire state of the virtual world. A universe
  * contains Rooms and Entities. Universe is a singleton class -- there is no
  * public constructor; instances are gotten with getInstance().
- * 
+ *
  * The Universe keeps track of all the creatures and their locations, including
  * the players, and whether the players are logged in or not.
  */
@@ -27,10 +27,10 @@ public class Universe implements Serializable
 
 	/**
 	 * A map of <b>all players, even logged-out players,</b> to their locations.
-	 * 
+	 *
 	 * Rationale: The Universe keeps track of logged-out players so that players
 	 * can easily be loaded into the correct Room when they log back in.
-	 * 
+	 *
 	 * Also, the logged-out players are still sort-of part of the Universe, even
 	 * if they are not currently in the game.
 	 */
@@ -52,11 +52,9 @@ public class Universe implements Serializable
 
 	/**
 	 * In this private constructor, a simple default universe might be made.
-	 * 
-	 * This constructor will only be called if a Universe could not be loaded
-	 * from a file? Or does this constructor potentially load from a file? If it
-	 * does load from a file, it should get the proper filename from the
-	 * configuration.properties file.
+	 *
+	 * This constructor will either load the Universe from a file (getting
+	 * the filename from the conf file) or create a default one, failing that.
 	 */
 	private Universe()
 	{
@@ -130,7 +128,7 @@ public class Universe implements Serializable
 
 	/**
 	 * Return a list of players that are currently logged in.
-	 * 
+	 *
 	 * @return A list of all of the players currently logged in to the universe.
 	 */
 	public List<Player> getLoggedInPlayers()
@@ -141,7 +139,7 @@ public class Universe implements Serializable
 	/**
 	 * Return a list of all players that are registered in the Universe, either
 	 * logged in or not.
-	 * 
+	 *
 	 * @return A list of all of the players, included logged-out players.
 	 */
 	public List<Player> getAllPlayers()
@@ -155,10 +153,10 @@ public class Universe implements Serializable
 	 * Adds a player to the list of logged-in players in the Universe. Tell the
 	 * server that a user is now logged in. The Universe can now find a rightful
 	 * place for the user.
-	 * 
+	 *
 	 * If the Player was not previously in the list of players on the server, it
 	 * will now be added and put into the starting room.
-	 * 
+	 *
 	 * @param player
 	 *            to add
 	 */
@@ -170,7 +168,7 @@ public class Universe implements Serializable
 	/**
 	 * Register a new Player. Add them to the list of Players and assign them a
 	 * location, but do not yet
-	 * 
+	 *
 	 * @param player
 	 *            to add
 	 */
@@ -181,11 +179,11 @@ public class Universe implements Serializable
 
 	/**
 	 * Removes a player from the list of currently logged-in players.
-	 * 
+	 *
 	 * This removes the player from the world, but it doesn't lose track of the
 	 * player's location. It does not delete a Player from the list of Players
 	 * in the Universe.
-	 * 
+	 *
 	 * @param player
 	 *            to remove
 	 */
