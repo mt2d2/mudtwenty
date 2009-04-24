@@ -27,7 +27,8 @@ public enum Command
 	INVENTORY((byte) 11, "lists all the items you are currently carrying"),
 	DROP((byte) 12, "drops a specified item from your inventory, e.g., drop <item name>"),
 	USE((byte) 13, "use a specified item from your inventory, e.g., use <item name>"),
-	UNKNOWN((byte) 14, "all unrecognized commands are unknown, and you'll be told so");
+	MOVE((byte) 14, "moves you to through your specified exit, e.g., move <exit name>"),
+	UNKNOWN((byte) 15, "all unrecognized commands are unknown, and you'll be told so");
 
 	private byte	code;
 	private String	description;

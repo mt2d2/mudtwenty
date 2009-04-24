@@ -21,6 +21,7 @@ import server.response.HelpResponse;
 import server.response.InventoryResponse;
 import server.response.LoginResponse;
 import server.response.LookResponse;
+import server.response.MoveResponse;
 import server.response.OocResponse;
 import server.response.QuitResponse;
 import server.response.RegisterResponse;
@@ -31,10 +32,10 @@ import server.response.TellResponse;
 import server.response.UnknownResponse;
 import server.response.UseResponse;
 import server.response.WhoResponse;
+import server.universe.DefaultUniverse;
 import server.universe.Player;
 import server.universe.Room;
 import server.universe.Universe;
-import server.universe.DefaultUniverse;
 import util.PropertyLoader;
 
 /**
@@ -156,6 +157,7 @@ public class Server
 		this.actions.put(Command.LOOK, new LookResponse());
 		this.actions.put(Command.INVENTORY, new InventoryResponse());
 		this.actions.put(Command.SCORE, new ScoreResponse());
+		this.actions.put(Command.MOVE, new MoveResponse());
 	}
 
 	/**
