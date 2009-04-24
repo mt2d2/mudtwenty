@@ -247,45 +247,6 @@ public class Server
 	}
 
 	/**
-	 * @return description of users on the MUD server, including the users and
-	 *         guests logged in
-	 */
-	 // This method should not be here.
-	 // A list of online players can be got from Universe
-	 // and a method that generates a string from that should be
-	 // in something like WhoResponse.
-
-	public String getUsersOnline()
-	{
-		StringBuilder message = new StringBuilder();
-		int guests = 0;
-
-		for (ServerThread st : this.clients)
-		{
-			if (st.isLoggedIn())
-				message.append(st.getPlayer().getName() + ", ");
-			else
-				guests++;
-		}
-
-		// remove trailing comma
-		if (message.length() > 0)
-			message.replace(message.length() - 2, message.length(), "");
-		else
-			message.append("no users");
-
-		message.append(" and ");
-
-		// add guests to the message
-		if (guests > 0)
-			message.append(guests + ((guests == 1) ? " guest" : " guests"));
-		else
-			message.append("no guests");
-
-		return message.toString();
-	}
-
-	/**
 	 * @return universe associated with this server
 	 */
 	public Universe getUniverse()
