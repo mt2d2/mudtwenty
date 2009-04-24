@@ -1,10 +1,14 @@
 package server.universe;
 
+import java.io.Serializable;
+
 /**
  * An Exit is a way to get from one Room to another.
  */
-public class Exit implements Entity
+public class Exit implements Entity, Serializable
 {
+	private static final long	serialVersionUID	= 1L;
+	
 	private String		name;
 	private String		description;
 	private Direction	direction;
@@ -12,10 +16,13 @@ public class Exit implements Entity
 
 	/**
 	 * Create a new Exit with the given attributes.
-	 *
-	 * @param name user-selectable name of the exit
-	 * @param description description of the exit, i.e., where it goes
-	 * @param direction the direction the exit is situated in the room
+	 * 
+	 * @param name
+	 *            user-selectable name of the exit
+	 * @param description
+	 *            description of the exit, i.e., where it goes
+	 * @param direction
+	 *            the direction the exit is situated in the room
 	 */
 	public Exit(String name, String description, Direction direction, Room room)
 	{
