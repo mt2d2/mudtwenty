@@ -34,6 +34,7 @@ public class MoveResponse implements ServerResponse
 		{
 			List<Exit> exits = serverThread.getServer().getUniverse().getRoomOfCreature(serverThread.getPlayer()).getExits();
 			Room newRoom = null;
+			Room oldRoom = serverThread.getServer().getUniverse().getRoomOfCreature(serverThread.getPlayer());
 			
 			for (Exit e : exits)
 				if (e.getName().equals(arguments.get(0)))
@@ -42,6 +43,9 @@ public class MoveResponse implements ServerResponse
 			if (newRoom != null)
 			{
 				serverThread.getServer().getUniverse().changeRoomOfCreature(serverThread.getPlayer(), newRoom);
+				serverThread.getServer().sendMessageToAllClientsInRoom(oldRoom, new ClientMessage(serverThread.getPlayer().getName() + " has left the room"));
+				serverThread.getServer().sendMessageToAllClientsInRoom(newRoom, new ClientMessage(serverThread.getPlayer().getName() + " has entered the room"));
+				
 				return new ClientMessage("you have been moved to " + arguments.get(0));
 			}
 			else
