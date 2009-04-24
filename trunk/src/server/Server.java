@@ -127,7 +127,7 @@ public class Server
 
 		// setup the universe
 		loadUniverse();
-		logger.info("universe has been loaded");
+		logger.info("loading universe");
 
 		// schedule tasks
 		timer.schedule(new ReaperTask(), 0, 1000);

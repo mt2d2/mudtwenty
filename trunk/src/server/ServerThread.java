@@ -475,19 +475,20 @@ public class ServerThread implements Runnable
 			ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream(playerFile));
 			fileOut.writeObject(player);
 			fileOut.close();
-
+			
 			// there was success in writing
 			return true;
 		}
-
 		catch (FileNotFoundException e)
 		{
+			System.out.println("here in filenotfound");
+			
 			// The player file didn't previously exist?
 			// This is not a problem, and user file should still be saved.
 			// TODO fix this.
 		}
 		catch (IOException e)
-		{
+		{			
 			logger.throwing("ServerThread", "savePlayerToDisk", e);
 		}
 
