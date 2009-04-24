@@ -1,7 +1,13 @@
 package server;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -12,14 +18,6 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import message.ClientMessage;
 import message.Command;
@@ -51,7 +49,7 @@ import util.PropertyLoader;
  * PORT and delegates each client to a separate thread. Server maintains a list
  * of associated clients (which it periodically prunes) to allow messages to be
  * send to each connected client.
- *
+ * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class Server
@@ -102,12 +100,12 @@ public class Server
 
 	/**
 	 * Default constructor for Server. It attempts to establish a ServerSocket,
-	 * and will throw an IOException in the case that this is
-	 * impossible. It also makes sure the universe is up and lodead and
-	 * starts anything else that the server needs to have started (eg ReaperTask)
-	 *
+	 * and will throw an IOException in the case that this is impossible. It
+	 * also makes sure the universe is up and lodead and starts anything else
+	 * that the server needs to have started (eg ReaperTask)
+	 * 
 	 * After that, it enters a blocking loop waiting for connections.
-	 *
+	 * 
 	 * @throws IOException
 	 *             indicates problem starting server, most likely a different
 	 *             service running on the same port
@@ -121,7 +119,7 @@ public class Server
 		this.clients = new ArrayList<ServerThread>();
 		this.serverSocket = new ServerSocket(PORT);
 		this.done = false;
-		this.timer = new Timer(true);
+		this.timer = new Timer();
 
 		// prefer latency over bandwith, over connection time
 		this.serverSocket.setPerformancePreferences(0, 2, 1);
@@ -132,7 +130,6 @@ public class Server
 		// spawn reaper thread
 		timer.schedule(new ReaperTask(), 0, 1000);
 		timer.schedule(new UniverseSaver(), 0, 3000);
-
 
 		// setup the universe
 		loadUniverse();
@@ -154,7 +151,7 @@ public class Server
 			try
 			{
 				ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
-				Universe universe = (Universe) stream.readObject();
+				this.universe = (Universe) stream.readObject();
 			}
 			catch (FileNotFoundException e)
 			{
@@ -231,7 +228,7 @@ public class Server
 	/**
 	 * Returns a ServerResponse appropriate to a given Command. This is useful
 	 * for quickly parsing incoming ClientMessages for its appropriate action.
-	 *
+	 * 
 	 * @param input
 	 *            selected command
 	 * @return input's associated ServerResponse
@@ -243,7 +240,7 @@ public class Server
 
 	/**
 	 * Sends a message to all clients in a given color.
-	 *
+	 * 
 	 * @param message
 	 *            message to be sent to clients
 	 */
@@ -255,9 +252,9 @@ public class Server
 
 	/**
 	 * Sends a message to all players in a room.
-	 *
+	 * 
 	 * This should also send to MOBs -- and it should be renamed.
-	 *
+	 * 
 	 * @param room
 	 *            room to target
 	 * @param message
@@ -275,7 +272,7 @@ public class Server
 	/**
 	 * Sends a message to a specific player. This player is identified by his
 	 * username only, which might be kind of brittle.
-	 *
+	 * 
 	 * @param username
 	 *            Player that this message will be sent is represented by this
 	 *            String, his username
@@ -329,7 +326,7 @@ public class Server
 	 * An extension of TimerTask that periodically prunes finished clients. That
 	 * is, this removes clients whose State is DONE from the list of active
 	 * clients.
-	 *
+	 * 
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
 	private class ReaperTask extends TimerTask
@@ -351,6 +348,9 @@ public class Server
 		}
 	}
 
+	/**
+	 * Periodically saves the universe as a TimerTask.
+	 */
 	private class UniverseSaver extends TimerTask
 	{
 		public void run()
@@ -362,7 +362,7 @@ public class Server
 	/**
 	 * Main entrance to the Server. This creates a new Server object (which
 	 * starts running the server). This also catches severe exceptions.
-	 *
+	 * 
 	 * @param args
 	 *            there are no arguments for Server (this parameter is ignored)
 	 */
@@ -379,4 +379,3 @@ public class Server
 		}
 	}
 }
-

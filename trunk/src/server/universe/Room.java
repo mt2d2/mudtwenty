@@ -1,20 +1,23 @@
 package server.universe;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * A Room represents a location in the universe.
- *
+ * 
  * Thus quoteth The Spec:
- *
+ * 
  * "Rooms in a MUD should be thought of as locations rather than an indoor area
  * with walls and a ceiling (A "room" could be a clearing in the woods with a
  * path leading to the north and another to the west, or the middle of a field
  * with paths leading in all directions). Rooms have exits that connect them to
  * other rooms, descriptions, and contents (including items, players and MOBs)."
  */
-public class Room implements Entity
+public class Room implements Entity, Serializable
 {
+	private static final long	serialVersionUID	= 1L;
+
 	private List<Exit>	exits;
 	private List<Item>	items;
 	private String		name;
@@ -22,7 +25,7 @@ public class Room implements Entity
 
 	/**
 	 * Create a new room with the given attributes.
-	 *
+	 * 
 	 * @param name
 	 *            name of the room users will see and reference to
 	 * @param blurb
