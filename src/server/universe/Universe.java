@@ -28,13 +28,13 @@ public class Universe implements Serializable
 	/**
 	 * In this constructor, a simple default universe might be made.
 	 */
-	public Universe()
+	public Universe(Room startRoom)
 	{
-// 		this.playerToRoom = new HashMap<Player, Room>();
-// 		this.mobToRoom = new HashMap<MOB, Room>();
-// 		this.rooms = new ArrayList<Room>();
-// 		this.loggedInPlayers = new ArrayList<Player>();
-// 		this.startRoom = new;
+		this.playerToRoom = new HashMap<Player, Room>();
+		this.mobToRoom = new HashMap<MOB, Room>();
+		this.rooms = new ArrayList<Room>();
+		this.loggedInPlayers = new ArrayList<Player>();
+		this.startRoom = startRoom;
 	}
 
 	/**
