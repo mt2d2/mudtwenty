@@ -1,6 +1,8 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import message.Command;
 import message.ServerMessage;
@@ -48,7 +50,11 @@ public class InputParser
 		}
 		else
 		{
-			return new ServerMessage(command, Arrays.asList(ArrayUtil.removeElement(words, 0)));
+			List<String> arguments = new ArrayList<String>();
+			for (String arg : ArrayUtil.removeElement(words, 0))
+				arguments.add(arg);
+			
+			return new ServerMessage(command, arguments);
 		}
 	}
 }
