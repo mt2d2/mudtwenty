@@ -101,8 +101,8 @@ public class Server
 	/**
 	 * Default constructor for Server. It attempts to establish a ServerSocket,
 	 * and will throw an IOException in the case that this is impossible. It
-	 * also makes sure the universe is up and lodead and starts anything else
-	 * that the server needs to have started (eg ReaperTask)
+	 * also makes sure the universe is up and loaded and starts anything else
+	 * that the server needs to have started (e.g., ReaperTask)
 	 * 
 	 * After that, it enters a blocking loop waiting for connections.
 	 * 

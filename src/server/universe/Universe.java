@@ -1,29 +1,45 @@
 package server.universe;
 
-import server.universe.Universe;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A Universe represents the entire state of the virtual world. A universe
  * contains Rooms and Entities. Universe is a singleton class -- there is no
  * public constructor; instances are gotten with getInstance().
- *
+ * 
  * The Universe keeps track of all the creatures and their locations, including
  * the players, and whether the players are logged in or not.
  */
 public class Universe implements Serializable
 {
-	private static final long		serialVersionUID	= 1L;
+	private static final long			serialVersionUID	= 1L;
 
-	private Map<String, Room>		nameToRoom; // A map of all players' names, including logged-out players, to rooms.
-	private transient Map<Player, Room>		playerToRoom; //A map of only logged-in players to their locations.
-	private Map<MOB, Room>			mobToRoom; // A map of MOBs to their locations.
-	private List<Room>				rooms;
-	private Room					startRoom;
+	private Map<String, Room>			nameToRoom;				// A map of
+	// all
+	// players'
+	// names,
+	// including
+	// logged-out
+	// players,
+	// to rooms.
+	private transient Map<Player, Room>	playerToRoom;				// A map of
+	// only
+	// logged-in
+	// players
+	// to their
+	// locations.
+	private Map<MOB, Room>				mobToRoom;					// A map of
+	// MOBs to
+	// their
+	// locations.
+	private List<Room>					rooms;
+	private Room						startRoom;
 
 	/**
 	 * In this constructor, a simple default universe might be made.
@@ -88,7 +104,7 @@ public class Universe implements Serializable
 
 	/**
 	 * Return a list of players that are currently logged in.
-	 *
+	 * 
 	 * @return A list of all of the players currently logged in to the universe.
 	 */
 	public List<Player> getLoggedInPlayers()
@@ -116,8 +132,8 @@ public class Universe implements Serializable
 	}
 
 	/**
-	 * Remove a player from the list of registered players. If the player with the
-	 * given name is in the game right now, boot them.
+	 * Remove a player from the list of registered players. If the player with
+	 * the given name is in the game right now, boot them.
 	 */
 	public void unregister(String name)
 	{
@@ -128,10 +144,10 @@ public class Universe implements Serializable
 	 * Adds a player to the list of logged-in players in the Universe. Tell the
 	 * server that a user is now logged in. The Universe can now find a rightful
 	 * place for the user.
-	 *
+	 * 
 	 * If the Player was not previously in the list of players on the server, it
 	 * will now be added and put into the starting room.
-	 *
+	 * 
 	 * @param player
 	 *            to add
 	 */
@@ -143,16 +159,30 @@ public class Universe implements Serializable
 
 	/**
 	 * Removes a player from the list of currently logged-in players.
-	 *
+	 * 
 	 * This removes the player from the world, but it doesn't lose track of the
 	 * player's location. It does not delete a Player from the list of Players
 	 * in the Universe.
-	 *
+	 * 
 	 * @param player
 	 *            to remove
 	 */
 	public void logout(Player player)
 	{
 		this.playerToRoom.remove(player);
+	}
+
+	/**
+	 * Called by Java during deserialization. This helps in restoring transient
+	 * fields.
+	 * 
+	 * @param stream
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException
+	{
+		stream.defaultReadObject();
+		this.playerToRoom = new HashMap<Player, Room>();
 	}
 }
