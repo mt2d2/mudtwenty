@@ -123,7 +123,7 @@ public class Server
 		timer.schedule(new ReaperTask(), 0, 1000);
 
 		// setup the universe
-		this.universe = Universe.getInstance();
+		//this.universe = Universe.getInstance();
 
 		// main loop accepts clients, spawns new threads to handle each
 		this.acceptClients();

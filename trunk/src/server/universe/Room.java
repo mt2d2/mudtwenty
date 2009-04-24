@@ -4,9 +4,9 @@ import java.util.List;
 
 /**
  * A Room represents a location in the universe.
- * 
+ *
  * Thus quoteth The Spec:
- * 
+ *
  * "Rooms in a MUD should be thought of as locations rather than an indoor area
  * with walls and a ceiling (A "room" could be a clearing in the woods with a
  * path leading to the north and another to the west, or the middle of a field
@@ -22,7 +22,7 @@ public class Room implements Entity
 
 	/**
 	 * Create a new room with the given attributes.
-	 * 
+	 *
 	 * @param name
 	 *            name of the room users will see and reference to
 	 * @param blurb

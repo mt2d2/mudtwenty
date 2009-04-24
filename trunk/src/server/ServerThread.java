@@ -242,7 +242,7 @@ public class ServerThread implements Runnable
 
 			//this.savePlayerToDisk(this.player);
 
-			Universe.getInstance().removePlayer(this.getPlayer());
+			this.server.getUniverse().logout(this.getPlayer());
 		}
 	}
 
@@ -378,7 +378,7 @@ public class ServerThread implements Runnable
 				if (player.getName().equals(username) && player.confirmPasswordHash(password))
 				{
 					// add this player to the universe
-					this.server.getUniverse().addPlayer(player);
+					this.server.getUniverse().login(player);
 
 					// associate this player with this thread
 					this.player = player;
