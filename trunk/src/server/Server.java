@@ -49,7 +49,7 @@ import util.PropertyLoader;
  * PORT and delegates each client to a separate thread. Server maintains a list
  * of associated clients (which it periodically prunes) to allow messages to be
  * send to each connected client.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class Server
@@ -94,8 +94,6 @@ public class Server
 	private boolean							done;
 	private Map<Command, ServerResponse>	actions;
 	private Timer							timer;
-
-	// universe
 	private Universe						universe;
 
 	/**
@@ -103,9 +101,9 @@ public class Server
 	 * and will throw an IOException in the case that this is impossible. It
 	 * also makes sure the universe is up and loaded and starts anything else
 	 * that the server needs to have started (e.g., ReaperTask)
-	 * 
+	 *
 	 * After that, it enters a blocking loop waiting for connections.
-	 * 
+	 *
 	 * @throws IOException
 	 *             indicates problem starting server, most likely a different
 	 *             service running on the same port
@@ -121,21 +119,19 @@ public class Server
 		this.done = false;
 		this.timer = new Timer();
 
-		// prefer latency over bandwith, over connection time
+		// Prefer latency over bandwith, over connection time
 		this.serverSocket.setPerformancePreferences(0, 2, 1);
 
 		// install responses
 		this.installServerResponses();
-		
+
 		// setup the universe
 		loadUniverse();
 		logger.info("universe has been loaded");
 
-		// spawn reaper thread
+		// schedule tasks
 		timer.schedule(new ReaperTask(), 0, 1000);
-		timer.schedule(new UniverseSaver(), 0, 3000);
-
-
+		timer.schedule(new UniverseSaveTask(), 0, 3000);
 
 		// main loop accepts clients, spawns new threads to handle each
 		this.acceptClients();
@@ -144,20 +140,24 @@ public class Server
 		this.serverSocket.close();
 	}
 
+	/**
+	 * Initialize the universe. If the universe can be read from a file, do so.
+	 * Otherwise, create a default universe as a fallback.
+	 */
 	private void loadUniverse()
 	{
 		String dataRoot = conf.getProperty("data.root");
-		File file = new File(dataRoot + File.separatorChar + "universe.dat");
+		File universeFile = new File(dataRoot + File.separatorChar + "universe.dat");
 
 		try
 		{
-			ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
-			this.universe = (Universe) stream.readObject();
+			ObjectInputStream fileIn = new ObjectInputStream(new FileInputStream(universeFile));
+			this.universe = (Universe) fileIn.readObject();
+			fileIn.close();
 		}
 		catch (FileNotFoundException e)
 		{
-			// don't throw, this is expected on first ever startup
-			//logger.throwing("Server", "loadUniverse", e);
+			// This is expected on first ever startup
 			this.universe = new DefaultUniverse();
 		}
 		catch (IOException e)
@@ -169,32 +169,31 @@ public class Server
 		{
 			logger.throwing("Server", "loadUniverse", e);
 			this.universe = new DefaultUniverse();
-		}	
+		}
 	}
 
+	/**
+	 * Try to save the universe to a file.
+	 */
 	private void saveUniverse()
 	{
 		String dataRoot = conf.getProperty("data.root");
-		File file = new File(dataRoot + File.separatorChar + "universe.dat");
-		logger.fine("the universe is being saved");
+		File universeFile = new File(dataRoot + File.separatorChar + "universe.dat");
 		try
 		{
-			file.createNewFile();
-			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
-			os.writeObject(this.universe);
-			os.close();
+			universeFile.createNewFile();
+			ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream(universeFile));
+			fileOut.writeObject(this.universe);
+			fileOut.close();
 		}
 		catch (FileNotFoundException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.throwing("Server", "saveUniverse", e);
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.throwing("Server", "saveUniverse", e);
 		}
-
 	}
 
 	/**
@@ -226,7 +225,7 @@ public class Server
 	/**
 	 * Returns a ServerResponse appropriate to a given Command. This is useful
 	 * for quickly parsing incoming ClientMessages for its appropriate action.
-	 * 
+	 *
 	 * @param input
 	 *            selected command
 	 * @return input's associated ServerResponse
@@ -238,7 +237,7 @@ public class Server
 
 	/**
 	 * Sends a message to all clients in a given color.
-	 * 
+	 *
 	 * @param message
 	 *            message to be sent to clients
 	 */
@@ -250,9 +249,9 @@ public class Server
 
 	/**
 	 * Sends a message to all players in a room.
-	 * 
+	 *
 	 * This should also send to MOBs -- and it should be renamed.
-	 * 
+	 *
 	 * @param room
 	 *            room to target
 	 * @param message
@@ -260,17 +259,17 @@ public class Server
 	 */
 	public void sendMessageToAllClientsInRoom(Room room, ClientMessage message)
 	{
-		final List<Player> creaturesInRoom = this.universe.getPlayersInRoom(room);
+		final List<Player> playersInRoom = this.universe.getPlayersInRoom(room);
 
 		for (ServerThread st : this.clients)
-			if (creaturesInRoom.contains(st.getPlayer()))
+			if (playersInRoom.contains(st.getPlayer()))
 				st.sendMessage(message);
 	}
 
 	/**
 	 * Sends a message to a specific player. This player is identified by his
 	 * username only, which might be kind of brittle.
-	 * 
+	 *
 	 * @param username
 	 *            Player that this message will be sent is represented by this
 	 *            String, his username
@@ -313,6 +312,8 @@ public class Server
 	}
 
 	/**
+	 * Get the Universe object that the server has loaded.
+	 *
 	 * @return universe associated with this server
 	 */
 	public Universe getUniverse()
@@ -324,7 +325,7 @@ public class Server
 	 * An extension of TimerTask that periodically prunes finished clients. That
 	 * is, this removes clients whose State is DONE from the list of active
 	 * clients.
-	 * 
+	 *
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
 	private class ReaperTask extends TimerTask
@@ -347,12 +348,13 @@ public class Server
 	}
 
 	/**
-	 * Periodically saves the universe as a TimerTask.
+	 * A TimerTask that saves the universe.
 	 */
-	private class UniverseSaver extends TimerTask
+	private class UniverseSaveTask extends TimerTask
 	{
 		public void run()
 		{
+			logger.fine("the universe is being saved");
 			saveUniverse();
 		}
 	}
@@ -360,7 +362,7 @@ public class Server
 	/**
 	 * Main entrance to the Server. This creates a new Server object (which
 	 * starts running the server). This also catches severe exceptions.
-	 * 
+	 *
 	 * @param args
 	 *            there are no arguments for Server (this parameter is ignored)
 	 */
