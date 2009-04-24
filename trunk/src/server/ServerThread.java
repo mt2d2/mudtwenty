@@ -457,29 +457,26 @@ public class ServerThread implements Runnable
 		logger.info("saving " + player.getName() + " to disk");
 		logger.fine("saving to file: " + sessionPath.getAbsolutePath());
 
-		if (!sessionPath.canWrite())
+		try
 		{
-			try
-			{
-				sessionPath.createNewFile();
-				ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(sessionPath));
-				os.writeObject(player);
-				os.close();
+			sessionPath.createNewFile();
+			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(sessionPath));
+			os.writeObject(player);
+			os.close();
 
-				// there was success in writing
-				return true;
-			}
+			// there was success in writing
+			return true;
+		}
 
-			catch (FileNotFoundException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		catch (FileNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return false;
