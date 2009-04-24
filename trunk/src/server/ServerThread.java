@@ -19,7 +19,6 @@ import message.ClientMessage;
 import message.ServerMessage;
 import server.response.ServerResponse;
 import server.universe.Player;
-import server.universe.Universe;
 import util.InputParser;
 import util.PropertyLoader;
 
