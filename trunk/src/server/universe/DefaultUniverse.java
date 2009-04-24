@@ -1,11 +1,6 @@
 package server.universe;
 
-import server.universe.Universe;
-import java.io.Serializable;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * A simple default universe that can be loaded for a demo, or when the universe file isn't there.
@@ -21,7 +16,7 @@ public class DefaultUniverse extends Universe
 	 */
 	public DefaultUniverse()
 	{
-	super(new Room("room", "an empty room", new ArrayList(), new ArrayList()));
+		super(new Room("room", "an empty room", new ArrayList<Exit>(), new ArrayList<Item>()));
 	}
 
 }
