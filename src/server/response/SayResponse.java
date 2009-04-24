@@ -37,7 +37,6 @@ public class SayResponse implements ServerResponse
 			serverThread.getServer().sendMessageToAllClientsInRoom(roomOfPlayer, new ClientMessage(message, Server.MESSAGE_TEXT_COLOR));
 		}
 		
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
