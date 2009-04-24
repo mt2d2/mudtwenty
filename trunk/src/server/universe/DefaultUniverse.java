@@ -24,16 +24,21 @@ public class DefaultUniverse extends Universe
 	 * Assembles a simple Universe, returning a reference to the start room.
 	 */
 	private static Room assemble() {
-		Exit toNorth = new Exit("north", "A passageway to the North", Direction.NORTH);
-		Exit toSouth = new Exit("south", "A passageway to the South", Direction.SOUTH);
 		List<Exit> northRoomExits = new ArrayList<Exit>();
 		List<Exit> southRoomExits = new ArrayList<Exit>();
-		northRoomExits.add(toSouth);
-		southRoomExits.add(toNorth);
+
 		List<Item> northRoomItems = new ArrayList<Item>();
 		List<Item> southRoomItems = new ArrayList<Item>();
+
 		Room northRoom = new Room("North Room", "An other boring place.", northRoomExits, northRoomItems);
 		Room southRoom = new Room("South Room", "A boring, empty place.", southRoomExits, southRoomItems);
+
+		Exit toNorth = new Exit("north", "A passageway to the North", Direction.NORTH, northRoom);
+		Exit toSouth = new Exit("south", "A passageway to the South", Direction.SOUTH, southRoom);
+
+		northRoomExits.add(toSouth);
+		southRoomExits.add(toNorth);
+
 		return southRoom;
 	}
 

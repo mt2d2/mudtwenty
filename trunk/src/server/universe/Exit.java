@@ -12,16 +12,17 @@ public class Exit implements Entity
 
 	/**
 	 * Create a new Exit with the given attributes.
-	 * 
+	 *
 	 * @param name user-selectable name of the exit
 	 * @param description description of the exit, i.e., where it goes
 	 * @param direction the direction the exit is situated in the room
 	 */
-	public Exit(String name, String description, Direction direction)
+	public Exit(String name, String description, Direction direction, Room room)
 	{
 		this.name = name;
 		this.description = description;
 		this.direction = direction;
+		this.room = room;
 	}
 
 	/**
