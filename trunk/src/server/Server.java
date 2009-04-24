@@ -34,6 +34,7 @@ import server.response.WhoResponse;
 import server.universe.Player;
 import server.universe.Room;
 import server.universe.Universe;
+import server.universe.DefaultUniverse;
 import util.PropertyLoader;
 
 /**
@@ -123,7 +124,7 @@ public class Server
 		timer.schedule(new ReaperTask(), 0, 1000);
 
 		// setup the universe
-		//this.universe = Universe.getInstance();
+		this.universe = new DefaultUniverse();
 
 		// main loop accepts clients, spawns new threads to handle each
 		this.acceptClients();
@@ -300,3 +301,4 @@ public class Server
 		}
 	}
 }
+
