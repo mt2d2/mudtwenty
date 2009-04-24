@@ -97,19 +97,6 @@ public class Universe implements Serializable
 	}
 
 	/**
-	 * Return a list of all players that are registered in the Universe, either
-	 * logged in or not.
-	 *
-	 * @return A list of all of the players, included logged-out players.
-	 */
-	public List<Player> getAllPlayers()
-	{
-		List<Player> list = new ArrayList<Player>();
-		list.addAll(this.playerToRoom.keySet());
-		return list;
-	}
-
-	/**
 	 * Check whether a player name is registered.
 	 */
 	public boolean isRegistered(String name)
