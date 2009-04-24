@@ -29,7 +29,7 @@ import util.PropertyLoader;
  * the event that an ObjectStream cannot be established, the system falls back
  * on basic text streams. This makes connecting to and using the server via
  * telnet possible.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class ServerThread implements Runnable
@@ -74,7 +74,7 @@ public class ServerThread implements Runnable
 	 * connecting client on socket. After the welcome message is sent to the
 	 * user. At this point, the mode of communication is established (either via
 	 * MessageProtocol or text streams) and the thread enters its run loop.
-	 * 
+	 *
 	 * @param server
 	 *            Server parent of this thread, useful for getting a list of
 	 *            other, connected clients
@@ -256,7 +256,7 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Sets the state of the thread.
-	 * 
+	 *
 	 * @param state
 	 *            new state for this thread
 	 */
@@ -270,7 +270,7 @@ public class ServerThread implements Runnable
 	 * method of communicating with the client. That means that it will
 	 * automatically choose the correct OutputStream for the current mode of
 	 * operation, either via MessageProtocol or text.
-	 * 
+	 *
 	 * @param message
 	 *            this message will be sent to the client, but when running in
 	 *            text mode, only the ClientMessage's payload will be sent.
@@ -322,7 +322,7 @@ public class ServerThread implements Runnable
 	/**
 	 * Return the player associated with this thread, if possible. If no player
 	 * has logged in, this returns null.
-	 * 
+	 *
 	 * @return Player associated with this ServerThread
 	 */
 	public Player getPlayer()
@@ -352,7 +352,7 @@ public class ServerThread implements Runnable
 	 * the filesystem, and finally user and password are compared. If all checks
 	 * out, the resultant Player object is associated with this ServerThread,
 	 * and the Player is added to the Universe.
-	 * 
+	 *
 	 * @param username
 	 *            user input for username
 	 * @param password
@@ -417,7 +417,7 @@ public class ServerThread implements Runnable
 	 * Registers a new Player in the system. This first checks to see if the
 	 * name is already taken before it does anything. Then, it adds the new
 	 * Player to the Universe. When the Universe is saved, so is the new Player.
-	 * 
+	 *
 	 * @param username
 	 *            user input of the username
 	 * @param password
@@ -446,7 +446,7 @@ public class ServerThread implements Runnable
 	 * Saves a given Player to disk. This is useful during registration, when
 	 * the player is exiting, but also because the server will periodically save
 	 * all players to disk.
-	 * 
+	 *
 	 * @return <code>true</code> if the save were successful or
 	 *         <code>false</code>
 	 */
