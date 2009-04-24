@@ -33,7 +33,7 @@ public class LookResponse implements ServerResponse
 		
 		// add players
 		message.append("\tPlayers in this room: ");
-		final List<Player> loggedInPlayers = serverThread.getServer().getUniverse().getLoggedInPlayers();
+		final List<Player> loggedInPlayers = serverThread.getServer().getUniverse().getPlayersInRoom(serverThread.getServer().getUniverse().getRoomOfCreature(serverThread.getPlayer()));
 		
 		for (Player p : loggedInPlayers)
 			message.append(p.getName() + ", ");

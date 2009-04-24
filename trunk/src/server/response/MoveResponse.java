@@ -5,6 +5,8 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
+import server.universe.Exit;
+import server.universe.Room;
 
 /**
  * Responds to the move command as input by the user. Specifically, this will
@@ -30,8 +32,22 @@ public class MoveResponse implements ServerResponse
 		}
 		else
 		{
-			return null;
+			List<Exit> exits = serverThread.getServer().getUniverse().getRoomOfCreature(serverThread.getPlayer()).getExits();
+			Room newRoom = null;
+			
+			for (Exit e : exits)
+				if (e.getName().equals(arguments.get(0)))
+					newRoom = e.getRoom();
+			
+			if (newRoom != null)
+			{
+				serverThread.getServer().getUniverse().changeRoomOfCreature(serverThread.getPlayer(), newRoom);
+				return new ClientMessage("you have been moved to " + arguments.get(0));
+			}
+			else
+			{
+				return new ClientMessage("that room name was not recognized", Server.ERROR_TEXT_COLOR);
+			}
 		}
 	}
-
 }
