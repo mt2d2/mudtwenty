@@ -32,7 +32,7 @@ public class InventoryResponse implements ServerResponse
 		for (Item item : serverThread.getPlayer().getItems())
 			items.append(item.toString() + " ");
 		
-		return new ClientMessage("You have the following items: " + items);
+		return new ClientMessage("You have " + (items.length() != 0 ? "the following items: " + items : "no items"));
 		
 	}
 
