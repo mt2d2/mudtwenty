@@ -12,6 +12,14 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import message.ClientMessage;
 import message.Command;
@@ -113,7 +121,7 @@ public class Server
 		this.clients = new ArrayList<ServerThread>();
 		this.serverSocket = new ServerSocket(PORT);
 		this.done = false;
-		this.timer = new Timer();
+		this.timer = new Timer(true);
 
 		// prefer latency over bandwith, over connection time
 		this.serverSocket.setPerformancePreferences(0, 2, 1);
@@ -123,15 +131,75 @@ public class Server
 
 		// spawn reaper thread
 		timer.schedule(new ReaperTask(), 0, 1000);
+		timer.schedule(new UniverseSaver(), 0, 3000);
+
 
 		// setup the universe
-		this.universe = new DefaultUniverse();
+		loadUniverse();
+		logger.info("universe should be loaded now");
 
 		// main loop accepts clients, spawns new threads to handle each
 		this.acceptClients();
 
 		// close the server socket when finished
 		this.serverSocket.close();
+	}
+
+	private void loadUniverse()
+	{
+		String dataRoot = conf.getProperty("data.root");
+		File file = new File(dataRoot + File.separatorChar + "universe.dat");
+		if (file.canRead())
+		{
+			try
+			{
+				ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
+				Universe universe = (Universe) stream.readObject();
+			}
+			catch (FileNotFoundException e)
+			{
+				this.universe = new DefaultUniverse();
+			}
+			catch (IOException e)
+			{
+				this.universe = new DefaultUniverse();
+			}
+			catch (ClassNotFoundException e)
+			{
+				this.universe = new DefaultUniverse();
+			}
+		}
+		else
+		{
+			logger.info("the default universe is being loaded");
+			this.universe = new DefaultUniverse();
+		}
+
+	}
+
+	private void saveUniverse()
+	{
+		String dataRoot = conf.getProperty("data.root");
+		File file = new File(dataRoot + File.separatorChar + "universe.dat");
+		logger.fine("the universe is being saved");
+		try
+		{
+			file.createNewFile();
+			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
+			os.writeObject(this.universe);
+			os.close();
+		}
+		catch (FileNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -280,6 +348,14 @@ public class Server
 				Server.this.sendMessageToAllClients(new ClientMessage("client terminated connection: " + st, Server.SYSTEM_TEXT_COLOR));
 
 			toRemove.clear();
+		}
+	}
+
+	private class UniverseSaver extends TimerTask
+	{
+		public void run()
+		{
+			saveUniverse();
 		}
 	}
 
