@@ -12,7 +12,7 @@ import java.util.Map;
  * A Universe represents the entire state of the virtual world. A universe
  * contains Rooms and Entities. Universe is a singleton class -- there is no
  * public constructor; instances are gotten with getInstance().
- * 
+ *
  * The Universe keeps track of all the creatures and their locations, including
  * the players, and whether the players are logged in or not.
  */
@@ -103,8 +103,28 @@ public class Universe implements Serializable
 	}
 
 	/**
+	 * Change current location of a creature. This doesn't check whether the
+	 * new room is adjacent or anything, it just does it.
+	 */
+	public void changeRoomOfCreature(Creature creature, Room room)
+	{
+		if (creature instanceof Player)
+		{
+			Player player = (Player) creature;
+			this.playerToRoom.remove(player);
+			this.playerToRoom.put(player, room);
+		}
+		else
+		{
+			MOB mob = (MOB) creature;
+			this.mobToRoom.remove(mob);
+			this.mobToRoom.put(mob, room);
+		}
+	}
+
+	/**
 	 * Return a list of players that are currently logged in.
-	 * 
+	 *
 	 * @return A list of all of the players currently logged in to the universe.
 	 */
 	public List<Player> getLoggedInPlayers()
@@ -144,10 +164,10 @@ public class Universe implements Serializable
 	 * Adds a player to the list of logged-in players in the Universe. Tell the
 	 * server that a user is now logged in. The Universe can now find a rightful
 	 * place for the user.
-	 * 
+	 *
 	 * If the Player was not previously in the list of players on the server, it
 	 * will now be added and put into the starting room.
-	 * 
+	 *
 	 * @param player
 	 *            to add
 	 */
@@ -159,11 +179,11 @@ public class Universe implements Serializable
 
 	/**
 	 * Removes a player from the list of currently logged-in players.
-	 * 
+	 *
 	 * This removes the player from the world, but it doesn't lose track of the
 	 * player's location. It does not delete a Player from the list of Players
 	 * in the Universe.
-	 * 
+	 *
 	 * @param player
 	 *            to remove
 	 */
@@ -175,7 +195,7 @@ public class Universe implements Serializable
 	/**
 	 * Called by Java during deserialization. This helps in restoring transient
 	 * fields.
-	 * 
+	 *
 	 * @param stream
 	 * @throws IOException
 	 * @throws ClassNotFoundException
