@@ -76,11 +76,13 @@ public class Universe implements Serializable
 	{
 		if (creature instanceof Player)
 		{
-			return this.playerToRoom.get(creature);
+			Player player = (Player) creature;
+			return this.playerToRoom.get(player);
 		}
 		else
 		{
-			return this.mobToRoom.get(creature);
+			MOB mob = (MOB) creature;
+			return this.mobToRoom.get(mob);
 		}
 	}
 
