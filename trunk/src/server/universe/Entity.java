@@ -6,6 +6,12 @@ package server.universe;
  * Thus, all entities can be looked at and such.
  */
 public interface Entity {
+	
+	/**
+	 * A creature can call interact() on any exit, item, or creature
+	 * to start interacting with them.
+	 */
+	public boolean interact(Creature creature);
 
 	/**
 	 * Return the name of the entity. Names are not necessarily unique.
