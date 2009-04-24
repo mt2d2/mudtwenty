@@ -80,7 +80,7 @@ public class Client extends JFrame
 
 		// spawn the ClientThread to communicate with the server
 		// TODO move to ActionListener on Button from connector screen
-		this.clientThread = new ClientThread(this, "localhost", 8080);
+		this.clientThread = new ClientThread(this, "localhost", 4000);
 		new Thread(this.clientThread).start();
 
 		// request focus on the input as default
