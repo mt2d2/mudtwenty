@@ -1,13 +1,10 @@
-/**
- * 
- */
 package server.response;
 
 import java.util.List;
 
 import message.ClientMessage;
-import server.Server;
 import server.ServerThread;
+import server.universe.Room;
 
 /**
  * Responds to the look command as issued by the user. This provides detailed
@@ -27,6 +24,7 @@ public class LookResponse implements ServerResponse
 	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		return new ClientMessage("NOT IMPLEMENTED", Server.ERROR_TEXT_COLOR);
+		Room userRoom = serverThread.getServer().getUniverse().getRoomOfCreature(serverThread.getPlayer());
+		return new ClientMessage(userRoom.getDescription());
 	}
 }
