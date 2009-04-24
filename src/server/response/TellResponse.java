@@ -31,7 +31,7 @@ public class TellResponse implements ServerResponse
 		else
 		{
 			final String reciever = arguments.get(0);
-			arguments.remove(0);
+			arguments.remove(0);	
 			final String message = ArrayUtil.joinArguments(arguments, " ");
 
 			serverThread.getServer().sendMessageToPlayer(reciever,
