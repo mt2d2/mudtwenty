@@ -19,64 +19,22 @@ public class Universe implements Serializable
 {
 	private static final long		serialVersionUID	= 1L;
 
-	/**
-	 * A list of all the players that are logged in. Every time that the
-	 * Universe is reloaded from a file, this should be empty.
-	 */
-	private transient List<Player>	loggedInPlayers;
-
-	/**
-	 * A map of <b>all players, even logged-out players,</b> to their locations.
-	 *
-	 * Rationale: The Universe keeps track of logged-out players so that players
-	 * can easily be loaded into the correct Room when they log back in.
-	 *
-	 * Also, the logged-out players are still sort-of part of the Universe, even
-	 * if they are not currently in the game.
-	 */
-	private Map<Player, Room>		playerToRoom;
-
-	/**
-	 * A map of MOBs to their locations.
-	 */
-	private Map<MOB, Room>			mobToRoom;
-
-	/**
-	 * The single Universe! It will be null when the universe is not yet
-	 * created. This is perhaps what our universe may have been -- a null
-	 * reference.
-	 */
-	private static Universe			theUniverse;
+	private Map<String, Room>		nameToRoom; // A map of all players' names, including logged-out players, to rooms.
+	private transient Map<Player, Room>		playerToRoom; //A map of only logged-in players to their locations.
+	private Map<MOB, Room>			mobToRoom; // A map of MOBs to their locations.
 	private List<Room>				rooms;
 	private Room					startRoom;
 
 	/**
-	 * In this private constructor, a simple default universe might be made.
-	 *
-	 * This constructor will either load the Universe from a file (getting
-	 * the filename from the conf file) or create a default one, failing that.
+	 * In this constructor, a simple default universe might be made.
 	 */
-	private Universe()
+	public Universe()
 	{
-		this.playerToRoom = new HashMap<Player, Room>();
-		this.mobToRoom = new HashMap<MOB, Room>();
-		this.rooms = new ArrayList<Room>();
-		this.loggedInPlayers = new ArrayList<Player>();
-	}
-
-	/**
-	 * Get the single instance of Universe.
-	 */
-	public static Universe getInstance()
-	{
-		if (theUniverse == null)
-		{
-			return new Universe();
-		}
-		else
-		{
-			return theUniverse;
-		}
+// 		this.playerToRoom = new HashMap<Player, Room>();
+// 		this.mobToRoom = new HashMap<MOB, Room>();
+// 		this.rooms = new ArrayList<Room>();
+// 		this.loggedInPlayers = new ArrayList<Player>();
+// 		this.startRoom = new;
 	}
 
 	/**
@@ -85,7 +43,7 @@ public class Universe implements Serializable
 	public List<Player> getPlayersInRoom(Room room)
 	{
 		List<Player> list = new ArrayList<Player>();
-		for (Player player : this.loggedInPlayers)
+		for (Player player : this.playerToRoom.keySet())
 		{
 			if (this.playerToRoom.get(player).equals(room))
 			{
@@ -133,7 +91,9 @@ public class Universe implements Serializable
 	 */
 	public List<Player> getLoggedInPlayers()
 	{
-		return loggedInPlayers;
+		List<Player> list = new ArrayList<Player>();
+		list.addAll(this.playerToRoom.keySet());
+		return list;
 	}
 
 	/**
@@ -150,6 +110,32 @@ public class Universe implements Serializable
 	}
 
 	/**
+	 * Check whether a player name is registered.
+	 */
+	public boolean isRegistered(String name)
+	{
+		return this.nameToRoom.keySet().contains(name);
+	}
+
+	/**
+	 * Register a player with this name. Put the player in the starting room.
+	 * But, do not log them in yet.
+	 */
+	public void register(String name)
+	{
+		this.nameToRoom.put(name, startRoom);
+	}
+
+	/**
+	 * Remove a player from the list of registered players. If the player with the
+	 * given name is in the game right now, boot them.
+	 */
+	public void unregister(String name)
+	{
+		this.nameToRoom.remove(name);
+	}
+
+	/**
 	 * Adds a player to the list of logged-in players in the Universe. Tell the
 	 * server that a user is now logged in. The Universe can now find a rightful
 	 * place for the user.
@@ -160,21 +146,10 @@ public class Universe implements Serializable
 	 * @param player
 	 *            to add
 	 */
-	public void addPlayer(Player player)
+	public void login(Player player)
 	{
-		this.loggedInPlayers.add(player);
-	}
-
-	/**
-	 * Register a new Player. Add them to the list of Players and assign them a
-	 * location, but do not yet
-	 *
-	 * @param player
-	 *            to add
-	 */
-	public void addNewPlayer(Player player)
-	{
-		this.loggedInPlayers.add(player);
+		Room room = nameToRoom.get(player.getName());
+		this.playerToRoom.put(player, room);
 	}
 
 	/**
@@ -187,8 +162,8 @@ public class Universe implements Serializable
 	 * @param player
 	 *            to remove
 	 */
-	public void removePlayer(Player player)
+	public void logout(Player player)
 	{
-		this.loggedInPlayers.remove(player);
+		this.playerToRoom.remove(player);
 	}
 }
