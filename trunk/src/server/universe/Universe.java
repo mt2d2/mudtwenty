@@ -1,7 +1,6 @@
 package server.universe;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -181,23 +180,7 @@ public class Universe implements Serializable
 	{
 		this.playerToRoom.remove(player);
 	}
-
-	/**
-	 * Finds a room based on the String name.
-	 *
-	 * @param roomName
-	 *            String name of the room
-	 * @return Room if found or null
-	 */
-	public Room getRoom(String roomName)
-	{
-		for (Room r : this.rooms)
-			if (r.getName().equals(roomName))
-				return r;
-
-		return null;
-	}
-
+ 
 	/**
 	 * Called by Java during deserialization. This helps in restoring transient
 	 * fields.
