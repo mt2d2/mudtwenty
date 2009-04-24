@@ -4,6 +4,7 @@ import java.util.List;
 
 import message.ClientMessage;
 import server.ServerThread;
+import server.universe.Player;
 import server.universe.Room;
 
 /**
@@ -24,7 +25,25 @@ public class LookResponse implements ServerResponse
 	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		Room userRoom = serverThread.getServer().getUniverse().getRoomOfCreature(serverThread.getPlayer());
-		return new ClientMessage(userRoom.getDescription());
+		StringBuilder message = new StringBuilder();
+		final Room userRoom = serverThread.getServer().getUniverse().getRoomOfCreature(serverThread.getPlayer());
+		
+		// add room 
+		message.append(userRoom.getDescription());
+		
+		// add players
+		message.append("\tPlayers in this room: ");
+		final List<Player> loggedInPlayers = serverThread.getServer().getUniverse().getLoggedInPlayers();
+		
+		for (Player p : loggedInPlayers)
+			message.append(p.getName() + ", ");
+		
+		// remove trailing comma
+		if (message.length() > 2)
+			message.replace(message.length() - 2, message.length(), " ");
+		else
+			message.append("no users online");
+		
+		return new ClientMessage(message.toString());
 	}
 }
