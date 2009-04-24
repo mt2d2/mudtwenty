@@ -30,10 +30,10 @@ public class Universe implements Serializable
 	 */
 	public Universe(Room startRoom)
 	{
+		this.nameToRoom = new HashMap<String, Room>();
 		this.playerToRoom = new HashMap<Player, Room>();
 		this.mobToRoom = new HashMap<MOB, Room>();
 		this.rooms = new ArrayList<Room>();
-		this.loggedInPlayers = new ArrayList<Player>();
 		this.startRoom = startRoom;
 	}
 

@@ -11,11 +11,9 @@ import java.util.HashMap;
  * A simple default universe that can be loaded for a demo, or when the universe file isn't there.
  * This condition is the exception. In a normal case, the universe is loaded from a file.
  */
-public class DefaultUniverse extends Universe;
+public class DefaultUniverse extends Universe
 {
 	private static final long		serialVersionUID	= 1L;
-
-	private Room startRoom = new Room("room", "an empty room", new ArrayList(), new ArrayList());
 
 	/**
 	 * This constructor assembles a room or two. No need to use any creational patterns here...
@@ -23,7 +21,7 @@ public class DefaultUniverse extends Universe;
 	 */
 	public DefaultUniverse()
 	{
-	super(startRoom);
+	super(new Room("room", "an empty room", new ArrayList(), new ArrayList()));
 	}
 
 }
