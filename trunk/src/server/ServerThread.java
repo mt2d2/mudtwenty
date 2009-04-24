@@ -29,7 +29,7 @@ import util.PropertyLoader;
  * the event that an ObjectStream cannot be established, the system falls back
  * on basic text streams. This makes connecting to and using the server via
  * telnet possible.
- *
+ * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class ServerThread implements Runnable
@@ -74,7 +74,7 @@ public class ServerThread implements Runnable
 	 * connecting client on socket. After the welcome message is sent to the
 	 * user. At this point, the mode of communication is established (either via
 	 * MessageProtocol or text streams) and the thread enters its run loop.
-	 *
+	 * 
 	 * @param server
 	 *            Server parent of this thread, useful for getting a list of
 	 *            other, connected clients
@@ -117,9 +117,9 @@ public class ServerThread implements Runnable
 	}
 
 	/**
-	 * The run method of the thread. In this method, the ServerThread should
-	 * get the name of the user and login or register a player, and then
-	 * start the main loop, where it waits for input and responds.
+	 * The run method of the thread. In this method, the ServerThread should get
+	 * the name of the user and login or register a player, and then start the
+	 * main loop, where it waits for input and responds.
 	 */
 	public void run()
 	{
@@ -239,7 +239,7 @@ public class ServerThread implements Runnable
 		{
 			// remove the player from the unvierse
 
-			//this.savePlayerToDisk(this.player);
+			// this.savePlayerToDisk(this.player);
 
 			this.server.getUniverse().logout(this.getPlayer());
 		}
@@ -256,7 +256,7 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Sets the state of the thread.
-	 *
+	 * 
 	 * @param state
 	 *            new state for this thread
 	 */
@@ -270,7 +270,7 @@ public class ServerThread implements Runnable
 	 * method of communicating with the client. That means that it will
 	 * automatically choose the correct OutputStream for the current mode of
 	 * operation, either via MessageProtocol or text.
-	 *
+	 * 
 	 * @param message
 	 *            this message will be sent to the client, but when running in
 	 *            text mode, only the ClientMessage's payload will be sent.
@@ -322,7 +322,7 @@ public class ServerThread implements Runnable
 	/**
 	 * Return the player associated with this thread, if possible. If no player
 	 * has logged in, this returns null.
-	 *
+	 * 
 	 * @return Player associated with this ServerThread
 	 */
 	public Player getPlayer()
@@ -352,7 +352,7 @@ public class ServerThread implements Runnable
 	 * the filesystem, and finally user and password are compared. If all checks
 	 * out, the resultant Player object is associated with this ServerThread,
 	 * and the Player is added to the Universe.
-	 *
+	 * 
 	 * @param username
 	 *            user input for username
 	 * @param password
@@ -414,10 +414,10 @@ public class ServerThread implements Runnable
 	}
 
 	/**
-	 * Registers a new Player in the system. This first checks to see if the name
-	 * is already taken before it does anything. Then, it adds the new Player
-	 * to the Universe. When the Universe is saved, so is the new Player.
-	 *
+	 * Registers a new Player in the system. This first checks to see if the
+	 * name is already taken before it does anything. Then, it adds the new
+	 * Player to the Universe. When the Universe is saved, so is the new Player.
+	 * 
 	 * @param username
 	 *            user input of the username
 	 * @param password
@@ -427,61 +427,61 @@ public class ServerThread implements Runnable
 	 */
 	public boolean register(String name, String passwordHash)
 	{
- 		final String dataRoot = conf.getProperty("data.root");
- 		final File sessionPath = new File(dataRoot + File.separatorChar + "sessions" + File.separatorChar + name + ".dat");
+		final String dataRoot = conf.getProperty("data.root");
+		final File sessionPath = new File(dataRoot + File.separatorChar + "sessions" + File.separatorChar + name + ".dat");
 
- 		if (!sessionPath.exists())
- 		{
- 			if (this.savePlayerToDisk(new Player(name, passwordHash)))
- 				return true;
- 		}
+		if (!sessionPath.exists())
+		{
+			if (this.savePlayerToDisk(new Player(name, passwordHash)))
+			{
+				this.server.getUniverse().register(name);
+				return true;
+			}
+		}
 
- 		return false;
+		return false;
 	}
-
-
 
 	/**
 	 * Saves a given Player to disk. This is useful during registration, when
 	 * the player is exiting, but also because the server will periodically save
 	 * all players to disk.
-	 *
+	 * 
 	 * @return <code>true</code> if the save were successful or
 	 *         <code>false</code>
 	 */
- 	private boolean savePlayerToDisk(Player player)
- 	{
- 		final File sessionPath = new File(conf.getProperty("data.root") + File.separatorChar
- 			+ "sessions" + File.separatorChar + player.getName() + ".dat");
+	private boolean savePlayerToDisk(Player player)
+	{
+		final File sessionPath = new File(conf.getProperty("data.root") + File.separatorChar + "sessions" + File.separatorChar + player.getName() + ".dat");
 
- 		logger.info("saving " + player.getName() + " to disk");
- 		logger.fine("saving to file: " + sessionPath.getAbsolutePath());
+		logger.info("saving " + player.getName() + " to disk");
+		logger.fine("saving to file: " + sessionPath.getAbsolutePath());
 
- 		if (!sessionPath.canWrite())
- 		{
- 			try
- 			{
- 				sessionPath.createNewFile();
- 				ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(sessionPath));
- 				os.writeObject(player);
- 				os.close();
+		if (!sessionPath.canWrite())
+		{
+			try
+			{
+				sessionPath.createNewFile();
+				ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(sessionPath));
+				os.writeObject(player);
+				os.close();
 
- 				// there was success in writing
- 				return true;
- 			}
+				// there was success in writing
+				return true;
+			}
 
- 			catch (FileNotFoundException e)
- 			{
- 				// TODO Auto-generated catch block
- 				e.printStackTrace();
- 			}
- 			catch (IOException e)
- 			{
- 				// TODO Auto-generated catch block
- 				e.printStackTrace();
- 			}
- 		}
+			catch (FileNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
- 		return false;
- 	}
+		return false;
+	}
 }

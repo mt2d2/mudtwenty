@@ -82,15 +82,15 @@ public class Room implements Entity
 
 		toReturn.append("Room: " + this.name + "\n");
 
-		toReturn.append("Description" + this.blurb + "\n");
+		toReturn.append("\tDescription: " + this.blurb + "\n");
 
-		toReturn.append("Exits:\n");
+		toReturn.append("\tExits:\n");
 		for (Exit e : this.exits)
-			toReturn.append("\t" + e.getDescription() + "\n");
+			toReturn.append("\t\t" + e.getDescription() + "\n");
 
-		toReturn.append("Items:\n");
+		toReturn.append("\tItems:\n");
 		for (Item i : this.items)
-			toReturn.append("\t" + i.getDescription());
+			toReturn.append("\t\t" + i.getDescription());
 
 		return toReturn.toString();
 	}
