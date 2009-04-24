@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * The Creature interface represents any living or life-like agent in the
@@ -64,7 +65,21 @@ public abstract class Creature implements Entity, Serializable
 	 */
 	public String getDescription()
 	{
-		return this.description;
+		StringBuilder toReturn = new StringBuilder();
+		
+		toReturn.append("Name: " + this.name + "\n");
+		toReturn.append("Description: " + this.description + "\n");
+		toReturn.append("Health: " + this.health + "/" + this.maxHealth + "\n");
+	
+		toReturn.append("Items:\n");
+		for (Item i : this.items)
+			toReturn.append("\t" + i.getDescription() + "\n");
+		
+		toReturn.append("Skills: ");
+		for (Entry<Skill, Integer> es : this.skills.entrySet())
+			toReturn.append(((Skill)es.getKey()).name() + ": " + es.getValue());
+		
+		return toReturn.toString();
 	}
 
 	/**

@@ -25,6 +25,7 @@ import server.response.OocResponse;
 import server.response.QuitResponse;
 import server.response.RegisterResponse;
 import server.response.SayResponse;
+import server.response.ScoreResponse;
 import server.response.ServerResponse;
 import server.response.TellResponse;
 import server.response.UnknownResponse;
@@ -153,6 +154,7 @@ public class Server
 		this.actions.put(Command.USE, new UseResponse());
 		this.actions.put(Command.LOOK, new LookResponse());
 		this.actions.put(Command.INVENTORY, new InventoryResponse());
+		this.actions.put(Command.SCORE, new ScoreResponse());
 	}
 
 	/**
