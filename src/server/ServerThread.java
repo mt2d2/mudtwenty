@@ -51,7 +51,7 @@ public class ServerThread implements Runnable
 	 * This is the default login message users see upon connecting to the
 	 * server.
 	 */
-	private static final String		WELCOME_STRING	= "welcome to mudtwenty";
+	private static final String		WELCOME_STRING	= "welcome to mudtwenty\nuse register or login to join the game";
 
 	private Server					server;
 	private Socket					socket;
