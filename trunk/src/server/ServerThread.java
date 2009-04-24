@@ -5,6 +5,7 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
@@ -386,7 +387,7 @@ public class ServerThread implements Runnable
 				}
 				else
 				{
-					throw new InvalidLoginException("the username or password was invalid");
+					throw new InvalidLoginException("the provided password was invalid");
 				}
 			}
 			catch (FileNotFoundException e)
@@ -427,40 +428,19 @@ public class ServerThread implements Runnable
 	 */
 	public boolean register(String name, String passwordHash)
 	{
-		if (this.playerNameAvailable(name))
-		{
-			Player player = new Player(name, passwordHash);
-			Universe.getInstance().addNewPlayer(player);
-			return true;
-		}
-		return false;
+ 		final String dataRoot = conf.getProperty("data.root");
+ 		final File sessionPath = new File(dataRoot + File.separatorChar + "sessions" + File.separatorChar + name + ".dat");
 
-// 		final String dataRoot = conf.getProperty("data.root");
-// 		final File sessionPath = new File(dataRoot + File.separatorChar + "sessions" + File.separatorChar + username + ".dat");
-//
-// 		if (!sessionPath.exists())
-// 		{
-// 			if (this.savePlayerToDisk(new Player(username, password)))
-// 				return true;
-// 		}
-//
-// 		return false;
+ 		if (!sessionPath.exists())
+ 		{
+ 			if (this.savePlayerToDisk(new Player(name, passwordHash)))
+ 				return true;
+ 		}
+
+ 		return false;
 	}
 
-	/**
-	 * Test whether the given name is taken by another Player in the world.
-	 */
-	private boolean playerNameAvailable(String name)
-	{
-		for (Player player : Universe.getInstance().getAllPlayers())
-		{
-			if (player.getName().equals(name))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+
 
 	/**
 	 * Saves a given Player to disk. This is useful during registration, when
@@ -470,42 +450,39 @@ public class ServerThread implements Runnable
 	 * @return <code>true</code> if the save were successful or
 	 *         <code>false</code>
 	 */
-	 // If Universe keeps track of all players and their locations, then players
-	 // shouldn't be saved individually -- but the universe should be saved every
-	 // so often and when it shuts down.
-// 	private boolean savePlayerToDisk(Player player)
-// 	{
-// 		final File sessionPath = new File(conf.getProperty("data.root") + File.separatorChar
-// 			+ "sessions" + File.separatorChar + player.getName() + ".dat");
-//
-// 		logger.info("saving " + player.getName() + " to disk");
-// 		logger.fine("saving to file: " + sessionPath.getAbsolutePath());
-//
-// 		if (!sessionPath.canWrite())
-// 		{
-// 			try
-// 			{
-// 				sessionPath.createNewFile();
-// 				ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(sessionPath));
-// 				os.writeObject(player);
-// 				os.close();
-//
-// 				// there was success in writing
-// 				return true;
-// 			}
-//
-// 			catch (FileNotFoundException e)
-// 			{
-// 				// TODO Auto-generated catch block
-// 				e.printStackTrace();
-// 			}
-// 			catch (IOException e)
-// 			{
-// 				// TODO Auto-generated catch block
-// 				e.printStackTrace();
-// 			}
-// 		}
-//
-// 		return false;
-// 	}
+ 	private boolean savePlayerToDisk(Player player)
+ 	{
+ 		final File sessionPath = new File(conf.getProperty("data.root") + File.separatorChar
+ 			+ "sessions" + File.separatorChar + player.getName() + ".dat");
+
+ 		logger.info("saving " + player.getName() + " to disk");
+ 		logger.fine("saving to file: " + sessionPath.getAbsolutePath());
+
+ 		if (!sessionPath.canWrite())
+ 		{
+ 			try
+ 			{
+ 				sessionPath.createNewFile();
+ 				ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(sessionPath));
+ 				os.writeObject(player);
+ 				os.close();
+
+ 				// there was success in writing
+ 				return true;
+ 			}
+
+ 			catch (FileNotFoundException e)
+ 			{
+ 				// TODO Auto-generated catch block
+ 				e.printStackTrace();
+ 			}
+ 			catch (IOException e)
+ 			{
+ 				// TODO Auto-generated catch block
+ 				e.printStackTrace();
+ 			}
+ 		}
+
+ 		return false;
+ 	}
 }
