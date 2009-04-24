@@ -126,14 +126,16 @@ public class Server
 
 		// install responses
 		this.installServerResponses();
+		
+		// setup the universe
+		loadUniverse();
+		logger.info("universe has been loaded");
 
 		// spawn reaper thread
 		timer.schedule(new ReaperTask(), 0, 1000);
 		timer.schedule(new UniverseSaver(), 0, 3000);
 
-		// setup the universe
-		loadUniverse();
-		logger.info("universe should be loaded now");
+
 
 		// main loop accepts clients, spawns new threads to handle each
 		this.acceptClients();
@@ -146,32 +148,28 @@ public class Server
 	{
 		String dataRoot = conf.getProperty("data.root");
 		File file = new File(dataRoot + File.separatorChar + "universe.dat");
-		if (file.canRead())
+
+		try
 		{
-			try
-			{
-				ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
-				this.universe = (Universe) stream.readObject();
-			}
-			catch (FileNotFoundException e)
-			{
-				this.universe = new DefaultUniverse();
-			}
-			catch (IOException e)
-			{
-				this.universe = new DefaultUniverse();
-			}
-			catch (ClassNotFoundException e)
-			{
-				this.universe = new DefaultUniverse();
-			}
+			ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
+			this.universe = (Universe) stream.readObject();
 		}
-		else
+		catch (FileNotFoundException e)
 		{
-			logger.info("the default universe is being loaded");
+			// don't throw, this is expected on first ever startup
+			//logger.throwing("Server", "loadUniverse", e);
 			this.universe = new DefaultUniverse();
 		}
-
+		catch (IOException e)
+		{
+			logger.throwing("Server", "loadUniverse", e);
+			this.universe = new DefaultUniverse();
+		}
+		catch (ClassNotFoundException e)
+		{
+			logger.throwing("Server", "loadUniverse", e);
+			this.universe = new DefaultUniverse();
+		}	
 	}
 
 	private void saveUniverse()
