@@ -57,16 +57,18 @@ public class ServerThread implements Runnable
 	private Socket					socket;
 	private State					state;
 
-	// MessageProtocol mode
-	private ObjectInputStream		in;
-	private ObjectOutputStream		out;
-
-	// text mode
+	// Whether the ServerThread is operating in text mode.
 	private boolean					textMode;
+
+	// MessageProtocol mode
+	private ObjectInputStream		objectIn;
+	private ObjectOutputStream		objectOut;
+
+	// Text mode
 	private BufferedReader			textIn;
 	private PrintWriter				textOut;
 
-	// user associated with this thread
+	// Player object associated with this thread
 	private Player					player;
 
 	/**
@@ -91,8 +93,8 @@ public class ServerThread implements Runnable
 
 		try
 		{
-			this.in = new ObjectInputStream(this.socket.getInputStream());
-			this.out = new ObjectOutputStream(this.socket.getOutputStream());
+			this.objectIn = new ObjectInputStream(this.socket.getInputStream());
+			this.objectOut = new ObjectOutputStream(this.socket.getOutputStream());
 		}
 		catch (IOException e)
 		{
@@ -123,10 +125,10 @@ public class ServerThread implements Runnable
 	 */
 	public void run()
 	{
-		// Get the user's input.
-
+		// Get the user's name.
+		// TODO
 		// Log in or register the player.
-
+		// TODO
 		// Enter the main input-getting loop of the server
 		while (this.getState() == State.OK)
 		{
@@ -185,21 +187,19 @@ public class ServerThread implements Runnable
 
 		try
 		{
-			message = (ServerMessage) this.in.readObject();
+			message = (ServerMessage) this.objectIn.readObject();
 		}
 		catch (EOFException e)
 		{
-			// pass
+			logger.throwing("ServerThread", "getMessageProtocolMode", e);
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.throwing("ServerThread", "getMessageProtocolMode", e);
 		}
 		catch (ClassNotFoundException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.throwing("ServerThread", "getMessageProtocolMode", e);
 		}
 
 		return message;
@@ -220,8 +220,8 @@ public class ServerThread implements Runnable
 			}
 			else
 			{
-				this.in.close();
-				this.out.close();
+				this.objectIn.close();
+				this.objectOut.close();
 			}
 
 			this.socket.close();
@@ -230,18 +230,17 @@ public class ServerThread implements Runnable
 		{
 			logger.throwing("ServerThread", "terminateConnection", e);
 		}
-
-		logger.info("client terminated connection: " + this);
-
-		this.setState(State.DONE);
-
-		if (this.isLoggedIn())
+		finally
 		{
-			// remove the player from the unvierse
+			logger.info("client terminated connection: " + this);
 
-			// this.savePlayerToDisk(this.player);
+			this.setState(State.DONE);
 
-			this.server.getUniverse().logout(this.getPlayer());
+			if (this.isLoggedIn())
+			{
+				// remove the player from the unvierse
+				this.server.getUniverse().logout(this.getPlayer());
+		}
 		}
 	}
 
@@ -310,7 +309,7 @@ public class ServerThread implements Runnable
 	{
 		try
 		{
-			this.out.writeObject(message);
+			this.objectOut.writeObject(message);
 		}
 		catch (IOException e)
 		{
@@ -353,6 +352,9 @@ public class ServerThread implements Runnable
 	 * out, the resultant Player object is associated with this ServerThread,
 	 * and the Player is added to the Universe.
 	 *
+	 * Later, this should be made private and ServerThread should have sole
+	 * responsibility for logging in and registering players.
+	 *
 	 * @param username
 	 *            user input for username
 	 * @param password
@@ -362,19 +364,20 @@ public class ServerThread implements Runnable
 	 *             thrown to provide helpful error messages to the user, i.e.,
 	 *             user doesn't exist or invalid password
 	 */
-	public boolean login(String username, String password) throws InvalidLoginException
+	public boolean login(String name, String password) throws InvalidLoginException
 	{
 		final String dataRoot = conf.getProperty("data.root");
-		final File sessionPath = new File(dataRoot + File.separatorChar + "sessions" + File.separatorChar + username + ".dat");
+		final File playerFile = new File(dataRoot + File.separatorChar + "players" + File.separatorChar + name + ".dat");
 
-		if (sessionPath.canRead())
+		if (playerFile.canRead())
 		{
 			try
 			{
-				ObjectInputStream is = new ObjectInputStream(new FileInputStream(sessionPath));
-				Player player = (Player) is.readObject();
+				ObjectInputStream fileIn = new ObjectInputStream(new FileInputStream(playerFile));
+				Player player = (Player) fileIn.readObject();
+				fileIn.close();
 
-				if (player.getName().equals(username) && player.confirmPasswordHash(password))
+				if (player.getName().equals(name) && player.confirmPasswordHash(password))
 				{
 					// add this player to the universe
 					this.server.getUniverse().login(player);
@@ -391,23 +394,25 @@ public class ServerThread implements Runnable
 			}
 			catch (FileNotFoundException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// There is no player file?
+				// TODO notify the user and unregister the user name with universe
+				logger.throwing("ServerThread", "login", e);
 			}
 			catch (IOException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// Problem reading the player file?
+				// TODO inform the user?
+				throw new InvalidLoginException("there was a problem reading the player file");
 			}
 			catch (ClassNotFoundException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// There is no Player class?
+				logger.throwing("ServerThread", "login", e);
 			}
 		}
 		else
 		{
-			throw new InvalidLoginException("invalid user, " + username + ", please use the register command instead");
+			throw new InvalidLoginException("invalid user, " + name + ", please use the register command instead");
 		}
 
 		return false;
@@ -415,8 +420,12 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Registers a new Player in the system. This first checks to see if the
-	 * name is already taken before it does anything. Then, it adds the new
-	 * Player to the Universe. When the Universe is saved, so is the new Player.
+	 * name is already taken before it does anything. Then, it registers
+	 * the player with the universe, which records the player's location
+	 * as the starting location. This does not log the user in.
+	 *
+	 * Later, this should be made private and ServerThread should have sole
+	 * responsibility for logging in and registering players.
 	 *
 	 * @param username
 	 *            user input of the username
@@ -428,11 +437,14 @@ public class ServerThread implements Runnable
 	public boolean register(String name, String passwordHash)
 	{
 		final String dataRoot = conf.getProperty("data.root");
-		final File sessionPath = new File(dataRoot + File.separatorChar + "sessions" + File.separatorChar + name + ".dat");
+		final File playerFile = new File(dataRoot + File.separatorChar + "players" + File.separatorChar + name + ".dat");
 
-		if (!sessionPath.exists())
+		// TODO check whether the player is registered with the universe
+
+		if (!playerFile.exists())
 		{
-			if (this.savePlayerToDisk(new Player(name, passwordHash)))
+			boolean saveSuccess = this.savePlayerToDisk(new Player(name, passwordHash));
+			if (saveSuccess)
 			{
 				this.server.getUniverse().register(name);
 				return true;
@@ -443,8 +455,8 @@ public class ServerThread implements Runnable
 	}
 
 	/**
-	 * Saves a given Player to disk. This is useful during registration, when
-	 * the player is exiting, but also because the server will periodically save
+	 * Saves a given Player to disk. This is useful during registration, possibly
+	 * when the player is exiting, but also because the server will periodically save
 	 * all players to disk.
 	 *
 	 * @return <code>true</code> if the save were successful or
@@ -452,17 +464,17 @@ public class ServerThread implements Runnable
 	 */
 	private boolean savePlayerToDisk(Player player)
 	{
-		final File sessionPath = new File(conf.getProperty("data.root") + File.separatorChar + "sessions" + File.separatorChar + player.getName() + ".dat");
+		final String dataRoot = conf.getProperty("data.root");
+		final File playerFile = new File(dataRoot + File.separatorChar + "players" + File.separatorChar + player.getName() + ".dat");
 
-		logger.info("saving " + player.getName() + " to disk");
-		logger.fine("saving to file: " + sessionPath.getAbsolutePath());
+		logger.info("saving " + player.getName() + " to disk at " + playerFile.getAbsolutePath());
 
 		try
 		{
-			sessionPath.createNewFile();
-			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(sessionPath));
-			os.writeObject(player);
-			os.close();
+			playerFile.createNewFile();
+			ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream(playerFile));
+			fileOut.writeObject(player);
+			fileOut.close();
 
 			// there was success in writing
 			return true;
@@ -470,13 +482,13 @@ public class ServerThread implements Runnable
 
 		catch (FileNotFoundException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// The player file didn't previously exist?
+			// This is not a problem, and user file should still be saved.
+			// TODO fix this.
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.throwing("ServerThread", "savePlayerToDisk", e);
 		}
 
 		return false;
