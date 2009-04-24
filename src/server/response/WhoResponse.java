@@ -4,6 +4,7 @@ import java.util.List;
 
 import message.ClientMessage;
 import server.ServerThread;
+import server.universe.Player;
 
 /**
  * Responds to the who command as requested by the user. That is, this returns a
@@ -13,7 +14,6 @@ import server.ServerThread;
  */
 public class WhoResponse implements ServerResponse
 {
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -22,7 +22,18 @@ public class WhoResponse implements ServerResponse
 	 */
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		return new ClientMessage(serverThread.getServer().getUsersOnline());
+		StringBuilder message = new StringBuilder();
+		final List<Player> loggedInPlayers = serverThread.getServer().getUniverse().getLoggedInPlayers();
+		
+		for (Player p : loggedInPlayers)
+			message.append(p.getName() + ", ");
+		
+		// remove trailing comma
+		if (message.length() > 2)
+			message.replace(message.length() - 2, message.length(), " ");
+		else
+			message.append("no users online");
+		
+		return new ClientMessage(message.toString());
 	}
-
 }
