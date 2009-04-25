@@ -25,16 +25,21 @@ public class WhoResponse implements ServerResponse
 	{
 		StringBuilder message = new StringBuilder();
 		final List<Player> loggedInPlayers = serverThread.getServer().getUniverse().getLoggedInPlayers();
-		
+
 		for (Player p : loggedInPlayers)
 			message.append(p.getName() + ", ");
-		
+
 		// remove trailing comma
 		if (message.length() > 2)
+		{
+			message.insert(0, "users online: ");
 			message.replace(message.length() - 2, message.length(), " ");
+		}
 		else
+		{
 			message.append("no users online");
-		
+		}
+
 		return new ClientMessage(message.toString(), Status.CHAT, null);
 	}
 }
