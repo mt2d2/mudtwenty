@@ -2,6 +2,11 @@ package util;
 
 import java.util.List;
 
+/**
+ *  Collection of helpful, static array procedures. These should be part of the JDK.  
+ * 
+ * @author Michael Tremel (mtremel@email.arizona.edu)
+ */
 public class ArrayUtil
 {
 	/**
