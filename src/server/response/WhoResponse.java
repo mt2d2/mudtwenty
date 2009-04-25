@@ -3,6 +3,7 @@ package server.response;
 import java.util.List;
 
 import message.ClientMessage;
+import message.Status;
 import server.ServerThread;
 import server.universe.Player;
 
@@ -34,6 +35,6 @@ public class WhoResponse implements ServerResponse
 		else
 			message.append("no users online");
 		
-		return new ClientMessage(message.toString());
+		return new ClientMessage(message.toString(), Status.CHAT, null);
 	}
 }

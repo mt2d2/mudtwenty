@@ -6,6 +6,7 @@ package server.response;
 import java.util.List;
 
 import message.ClientMessage;
+import message.Status;
 import server.Server;
 import server.ServerThread;
 import util.ArrayUtil;
@@ -34,8 +35,9 @@ public class OocResponse implements ServerResponse
 		else
 		{
 			final String message = ArrayUtil.joinArguments(arguments, " ");
-			serverThread.getServer().sendMessageToAllClients(new ClientMessage("Broadcast: " + message, Server.MESSAGE_TEXT_COLOR));
-		
+			serverThread.getServer().sendMessageToAllClients(
+					new ClientMessage("Broadcast from " + serverThread.getPlayer().getName() + ": " + message, Status.CHAT, Server.MESSAGE_TEXT_COLOR));
+
 			return new ClientMessage("you said \"" + message + "\" to everyone.");
 		}
 	}

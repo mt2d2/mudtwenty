@@ -12,7 +12,7 @@ import server.ServerThread;
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
-public class HelpResponse implements ServerResponse
+public class CommandsResponse implements ServerResponse
 {
 
 	/* (non-Javadoc)

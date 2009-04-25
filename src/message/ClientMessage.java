@@ -7,10 +7,9 @@ import java.io.ObjectOutput;
 
 /**
  * This extends MessageProtocol, providing data useful for a Client to receive.
- * That is, a server might send a ClientMessage to a server -- this is not a message
- * that a client might create.
- * In this message, the client receives a payload response from the server in a
- * specific color.
+ * That is, a server might send a ClientMessage to a server -- this is not a
+ * message that a client might create. In this message, the client receives a
+ * payload response from the server in a specific color.
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
@@ -33,11 +32,28 @@ public class ClientMessage extends MessageProtocol
 	 * Constructs with just a payload message, assumes a null color.
 	 * 
 	 * @param payload
+	 *            message string that will be sent to the user
+	 * @param color
+	 *            status of the message
+	 */
+	public ClientMessage(String payload, Status status, Color color)
+	{
+		super();
+		
+		this.payload = payload;
+		this.status = status;
+		this.color = color;
+	}
+
+	/**
+	 * Constructs with just a payload message, assumes a null color.
+	 * 
+	 * @param payload
 	 *            message that will be sent to the user
 	 */
 	public ClientMessage(String payload)
 	{
-		this(payload, null);
+		this(payload, Status.OK, null);
 	}
 
 	/**
@@ -50,10 +66,7 @@ public class ClientMessage extends MessageProtocol
 	 */
 	public ClientMessage(String payload, Color color)
 	{
-		super();
-
-		this.payload = payload;
-		this.color = color;
+		this(payload, Status.OK, color);
 	}
 
 	/**
@@ -72,7 +85,9 @@ public class ClientMessage extends MessageProtocol
 		return this.color;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see message.MessageProtocol#readExternal(java.io.ObjectInput)
 	 */
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
@@ -86,7 +101,9 @@ public class ClientMessage extends MessageProtocol
 			this.color = new Color(in.readInt());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see message.MessageProtocol#writeExternal(java.io.ObjectOutput)
 	 */
 	public void writeExternal(ObjectOutput out) throws IOException
