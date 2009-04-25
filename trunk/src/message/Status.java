@@ -14,7 +14,12 @@ public enum Status
 	/**
 	 * Indicates all is well for the message sender.
 	 */
-	OK((byte) 0);
+	OK((byte) 0),
+	
+	/**
+	 * Indicates that this message is bound for the chat portion of the GUI
+	 */
+	CHAT((byte) 1);
 
 	/**
 	 * Holds the mapping between a enum in Status and its associated byte.

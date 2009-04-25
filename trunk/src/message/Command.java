@@ -17,7 +17,7 @@ public enum Command
 	QUIT((byte) 1, "saves your state and exits the mud"),
 	SCORE((byte) 2, "gives detailed information about your player"),
 	OOC((byte) 3, "send a message to all users connected to the mud"),
-	HELP((byte) 4, "lists all available commands and general system help"),	
+	COMMANDS((byte) 4, "lists all available commands and general system help"),	
 	WHO((byte) 5, "lists all users online, both users and guests"),
 	LOGIN((byte) 6, "logs a user in, e.g., login <username> <password>"),
 	REGISTER((byte) 7, "registers a user, e.g., register <username> <password"),

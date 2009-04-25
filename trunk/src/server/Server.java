@@ -23,7 +23,7 @@ import message.ClientMessage;
 import message.Command;
 import server.response.DropResponse;
 import server.response.EchoResponse;
-import server.response.HelpResponse;
+import server.response.CommandsResponse;
 import server.response.InventoryResponse;
 import server.response.LoginResponse;
 import server.response.LookResponse;
@@ -207,7 +207,7 @@ public class Server
 		this.actions.put(Command.ECHO, new EchoResponse());
 		this.actions.put(Command.UNKNOWN, new UnknownResponse());
 		this.actions.put(Command.QUIT, new QuitResponse());
-		this.actions.put(Command.HELP, new HelpResponse());
+		this.actions.put(Command.COMMANDS, new CommandsResponse());
 		this.actions.put(Command.WHO, new WhoResponse());
 		this.actions.put(Command.LOGIN, new LoginResponse());
 		this.actions.put(Command.REGISTER, new RegisterResponse());

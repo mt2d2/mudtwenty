@@ -14,16 +14,17 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import util.InputParser;
-
 import message.ClientMessage;
+import message.ServerMessage;
+import message.Status;
 
 /**
  * This class is responsible for initiating a socket connection to the given
  * server, sending messages, and recieving messages from Server.
- *
- * The ClientThread is created and controlled by {@link Client}, which is the GUI.
- *
+ * 
+ * The ClientThread is created and controlled by {@link Client}, which is the
+ * GUI.
+ * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class ClientThread implements Runnable
@@ -56,8 +57,7 @@ public class ClientThread implements Runnable
 		}
 		catch (ConnectException e)
 		{
-			JOptionPane.showMessageDialog(this.client,
-				"A problem connecting to the server was encountered");
+			JOptionPane.showMessageDialog(this.client, "A problem connecting to the server was encountered");
 		}
 		catch (UnknownHostException e)
 		{
@@ -78,11 +78,11 @@ public class ClientThread implements Runnable
 	 * @param input
 	 *            user-generated input
 	 */
-	public void sendMessage(String input)
+	public void sendMessage(ServerMessage input)
 	{
 		try
 		{
-			this.out.writeObject(InputParser.parse(input));
+			this.out.writeObject(input);
 			this.out.flush();
 
 		}
@@ -134,13 +134,15 @@ public class ClientThread implements Runnable
 
 			if (message == null)
 			{
-				this.displayServerMessage("Server connection has been terminated.", Color.RED);
+				this.displayServerMessage("Server connection has been terminated.", Color.RED, Status.OK);
 				break;
 			}
 			else
+			{
 				this.displayServerMessage(
 						DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(message.getTime())) + "> " + message.getPayload().trim(), message
-								.getColor());
+								.getColor(), message.getStatus());
+			}
 		}
 	}
 
@@ -152,19 +154,22 @@ public class ClientThread implements Runnable
 	 * @param color
 	 *            color in which the message will be added
 	 */
-	private void displayServerMessage(final String input, final Color color)
+	private void displayServerMessage(final String input, final Color color, final Status status)
 	{
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{
-				ClientThread.this.client.appendServerText(input, color);
+				if (status == Status.CHAT)
+					ClientThread.this.client.appendChatText(input, color);
+				else
+					ClientThread.this.client.appendGameText(input, color);
 			}
 		});
 	}
 
 	/**
-	 * Closes the connection to the server. The InputStreams and OutputStreams are
-	 * closed, and finally the socket is closed.
+	 * Closes the connection to the server. The InputStreams and OutputStreams
+	 * are closed, and finally the socket is closed.
 	 */
 	public void closeConnection()
 	{
