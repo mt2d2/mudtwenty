@@ -358,7 +358,7 @@ public class ServerThread implements Runnable
 	 * @param username
 	 *            user input for username
 	 * @param password
-	 *            user input for password, MD5-hased
+	 *            user input for password
 	 * @return <code>true</code> if login were successful or <code>false</code>
 	 * @throws InvalidLoginException
 	 *             thrown to provide helpful error messages to the user, i.e.,
@@ -400,8 +400,6 @@ public class ServerThread implements Runnable
 			}
 			catch (IOException e)
 			{
-				// Problem reading the player file?
-				// TODO inform the user?
 				throw new InvalidLoginException("there was a problem reading the player file");
 			}
 			catch (ClassNotFoundException e)
@@ -430,7 +428,7 @@ public class ServerThread implements Runnable
 	 * @param username
 	 *            user input of the username
 	 * @param password
-	 *            password user input of the password, MD5-hashed
+	 *            password user input of the password
 	 * @return <code>true</code> if the registration were successful or
 	 *         <code>false</code>, i.e., the username is already in use.
 	 */

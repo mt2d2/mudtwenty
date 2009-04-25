@@ -1,7 +1,6 @@
 package util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import message.Command;
@@ -36,25 +35,16 @@ public class InputParser
 		{
 			command = Command.UNKNOWN;
 		}
-
-		// handle passwords differently, they need to be hashed
-		if (command == Command.LOGIN || command == Command.REGISTER)
+		
+		List<String> arguments = new ArrayList<String>();
+		String[] args = ArrayUtil.removeElement(words, 0);
+		
+		if (args.length > 0)
 		{
-			// remove the first string, that's the command
-			String[] args = ArrayUtil.removeElement(words, 0);
-
-			// passwords are the second (after username) argument, hash them
-			args[1] = Hasher.getDigest(args[1]);
-
-			return new ServerMessage(command, Arrays.asList(args));
-		}
-		else
-		{
-			List<String> arguments = new ArrayList<String>();
-			for (String arg : ArrayUtil.removeElement(words, 0))
+			for (String arg : args)
 				arguments.add(arg);
-			
-			return new ServerMessage(command, arguments);
 		}
+		
+		return new ServerMessage(command, arguments);
 	}
 }
