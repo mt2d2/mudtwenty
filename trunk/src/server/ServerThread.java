@@ -460,12 +460,12 @@ public class ServerThread implements Runnable
 	 * @return <code>true</code> if the save were successful or
 	 *         <code>false</code>
 	 */
-	private boolean savePlayerToDisk(Player player)
+	public boolean savePlayerToDisk(Player player)
 	{
 		final String dataRoot = conf.getProperty("data.root");
 		final File playerFile = new File(dataRoot + File.separatorChar + "players" + File.separatorChar + player.getName() + ".dat");
 
-		logger.info("saving " + player.getName() + " to disk at " + playerFile.getAbsolutePath());
+		logger.fine("saving " + player.getName() + " to disk at " + playerFile.getAbsolutePath());
 
 		try
 		{
