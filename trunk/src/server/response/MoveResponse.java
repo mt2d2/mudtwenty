@@ -6,24 +6,22 @@ import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
 import server.universe.Exit;
+import server.universe.Player;
 import server.universe.Room;
 
 /**
  * Responds to the move command as input by the user. Specifically, this will
  * move a user from his current room, to the room which is connected by an exit
  * the user selects.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class MoveResponse implements ServerResponse
 {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
+
+	/**
+	 * Move the player (and notify users in both the old and new room) if possible.
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		if (arguments.size() != 1)
@@ -32,26 +30,27 @@ public class MoveResponse implements ServerResponse
 		}
 		else
 		{
-			List<Exit> exits = serverThread.getServer().getUniverse().getRoomOfCreature(serverThread.getPlayer()).getExits();
+			Player player = serverThread.getPlayer();
+			Room oldRoom = Server.getUniverse().getRoomOfCreature(player);
+			List<Exit> exits = oldRoom.getExits();
+
 			Room newRoom = null;
-			Room oldRoom = serverThread.getServer().getUniverse().getRoomOfCreature(serverThread.getPlayer());
-			
-			for (Exit e : exits)
-				if (e.getName().equals(arguments.get(0)))
-					newRoom = e.getRoom();
-			
-			if (newRoom != null)
-			{
-				serverThread.getServer().getUniverse().changeRoomOfCreature(serverThread.getPlayer(), newRoom);
-				serverThread.getServer().sendMessageToAllClientsInRoom(oldRoom, new ClientMessage(serverThread.getPlayer().getName() + " has left the room"));
-				serverThread.getServer().sendMessageToAllClientsInRoom(newRoom, new ClientMessage(serverThread.getPlayer().getName() + " has entered the room"));
-				
-				return new ClientMessage("you have been moved to " + arguments.get(0));
-			}
-			else
-			{
+			for (Exit exit : exits)
+				if (exit.getName().equals(arguments.get(0)))
+					newRoom = exit.getRoom();
+
+			if (newRoom == null)
 				return new ClientMessage("that room name was not recognized", Server.ERROR_TEXT_COLOR);
-			}
+
+			Server.getUniverse().changeRoomOfCreature(serverThread.getPlayer(), newRoom);
+
+			ClientMessage leavingMessage = new ClientMessage(player.getName() + " has left the room");
+			Server.sendMessageToAllClientsInRoom(oldRoom, leavingMessage);
+
+			ClientMessage comingMessage = new ClientMessage(player.getName() + " has entered the room");
+			Server.sendMessageToAllClientsInRoom(newRoom, comingMessage);
+
+			return new ClientMessage("you have been moved to " + arguments.get(0));
 		}
 	}
 }

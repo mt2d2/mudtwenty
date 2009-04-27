@@ -9,8 +9,7 @@ import server.ServerThread;
 import server.InvalidLoginException;
 
 /**
- * Handles the login request from a user. This command requires two arguments, a
- * username and password.
+ * Handles the login request from a user. This will be unncessary when ServerThread handles all registration/logins.
  *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */

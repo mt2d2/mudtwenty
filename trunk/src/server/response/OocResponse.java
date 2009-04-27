@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package server.response;
 
@@ -12,20 +12,17 @@ import server.ServerThread;
 import util.ArrayUtil;
 
 /**
- * Responds to the ooc command as directed by the user. ooc will send a message
- * to every client which is connected to the server, regardless of status.
- * 
+ * Responds to the ooc command as directed by the user.
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class OocResponse implements ServerResponse
 {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
+
+	/**
+	 * Send a message to every client which is connected to the server,
+	 * regardless of where they are in the Universe.
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		if (arguments.size() < 1)
@@ -34,11 +31,12 @@ public class OocResponse implements ServerResponse
 		}
 		else
 		{
-			final String message = ArrayUtil.joinArguments(arguments, " ");
-			serverThread.getServer().sendMessageToAllClients(
-					new ClientMessage("Broadcast from " + serverThread.getPlayer().getName() + ": " + message, Status.CHAT, Server.MESSAGE_TEXT_COLOR));
+			final String textSaid = ArrayUtil.joinArguments(arguments, " ");
+			ClientMessage message = new ClientMessage("Broadcast from " + serverThread.getPlayer().getName() + ": "
+				+ textSaid , Status.CHAT, Server.MESSAGE_TEXT_COLOR);
+			serverThread.getServer().sendMessageToAllClients(message);
 
-			return new ClientMessage("you said \"" + message + "\" to everyone.");
+			return new ClientMessage("you said \"" + textSaid + "\" to everyone.");
 		}
 	}
 }

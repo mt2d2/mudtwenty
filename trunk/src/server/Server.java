@@ -50,7 +50,7 @@ import util.PropertyLoader;
  * PORT and delegates each client to a separate thread. Server maintains a list
  * of associated clients (which it periodically prunes) to allow messages to be
  * send to each connected client.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class Server
@@ -90,21 +90,21 @@ public class Server
 	 */
 	private static final int				PORT				= Integer.parseInt(conf.getProperty("server.port"));
 
-	private List<ServerThread>				clients;
+	private static List<ServerThread>		clients;
 	private ServerSocket					serverSocket;
 	private boolean							done;
 	private Map<Command, ServerResponse>	actions;
 	private Timer							timer;
-	private Universe						universe;
+	private static Universe					universe;
 
 	/**
 	 * Default constructor for Server. It attempts to establish a ServerSocket,
 	 * and will throw an IOException in the case that this is impossible. It
 	 * also makes sure the universe is up and loaded and starts anything else
 	 * that the server needs to have started (e.g., ReaperTask)
-	 * 
+	 *
 	 * After that, it enters a blocking loop waiting for connections.
-	 * 
+	 *
 	 * @throws IOException
 	 *             indicates problem starting server, most likely a different
 	 *             service running on the same port
@@ -115,7 +115,7 @@ public class Server
 		logger.info("booting server on localhost:" + PORT);
 
 		// Initial setup
-		this.clients = new ArrayList<ServerThread>();
+		Server.clients = new ArrayList<ServerThread>();
 		this.serverSocket = new ServerSocket(PORT);
 		this.done = false;
 		this.timer = new Timer();
@@ -123,21 +123,21 @@ public class Server
 		// Prefer latency over bandwith, over connection time
 		this.serverSocket.setPerformancePreferences(0, 2, 1);
 
-		// install responses
+		// Install responses
 		this.installServerResponses();
 
-		// setup the universe
+		// Set up the universe
 		loadUniverse();
 		logger.info("loading universe");
 
-		// schedule tasks
+		// Schedule background maintenance tasks
 		timer.schedule(new ReaperTask(), 0, 1000);
 		timer.schedule(new UniverseSaveTask(), 0, 3000);
 
-		// main loop accepts clients, spawns new threads to handle each
+		// Main loop accepts clients, spawns new threads to handle each
 		this.acceptClients();
 
-		// close the server socket when finished
+		// When the main loop finishes, close the server socket.
 		this.serverSocket.close();
 	}
 
@@ -153,23 +153,23 @@ public class Server
 		try
 		{
 			ObjectInputStream fileIn = new ObjectInputStream(new FileInputStream(universeFile));
-			this.universe = (Universe) fileIn.readObject();
+			Server.universe = (Universe) fileIn.readObject();
 			fileIn.close();
 		}
 		catch (FileNotFoundException e)
 		{
 			// This is expected on first ever startup
-			this.universe = new DefaultUniverse();
+			Server.universe = new DefaultUniverse();
 		}
 		catch (IOException e)
 		{
 			logger.throwing("Server", "loadUniverse", e);
-			this.universe = new DefaultUniverse();
+			Server.universe = new DefaultUniverse();
 		}
 		catch (ClassNotFoundException e)
 		{
 			logger.throwing("Server", "loadUniverse", e);
-			this.universe = new DefaultUniverse();
+			Server.universe = new DefaultUniverse();
 		}
 	}
 
@@ -184,7 +184,7 @@ public class Server
 		{
 			universeFile.createNewFile();
 			ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream(universeFile));
-			fileOut.writeObject(this.universe);
+			fileOut.writeObject(Server.universe);
 			fileOut.close();
 		}
 		catch (FileNotFoundException e)
@@ -227,7 +227,7 @@ public class Server
 	/**
 	 * Returns a ServerResponse appropriate to a given Command. This is useful
 	 * for quickly parsing incoming ClientMessages for its appropriate action.
-	 * 
+	 *
 	 * @param input
 	 *            selected command
 	 * @return input's associated ServerResponse
@@ -239,31 +239,31 @@ public class Server
 
 	/**
 	 * Sends a message to all clients in a given color.
-	 * 
+	 *
 	 * @param message
 	 *            message to be sent to clients
 	 */
-	public void sendMessageToAllClients(ClientMessage message)
+	public static synchronized void sendMessageToAllClients(ClientMessage message)
 	{
-		for (ServerThread st : this.clients)
+		for (ServerThread st : Server.clients)
 			st.sendMessage(message);
 	}
 
 	/**
 	 * Sends a message to all players in a room.
-	 * 
+	 *
 	 * This should also send to MOBs -- and it should be renamed.
-	 * 
+	 *
 	 * @param room
 	 *            room to target
 	 * @param message
 	 *            message to send
 	 */
-	public void sendMessageToAllClientsInRoom(Room room, ClientMessage message)
+	public static synchronized void sendMessageToAllClientsInRoom(Room room, ClientMessage message)
 	{
-		final List<Player> playersInRoom = this.universe.getPlayersInRoom(room);
+		final List<Player> playersInRoom = Server.universe.getPlayersInRoom(room);
 
-		for (ServerThread st : this.clients)
+		for (ServerThread st : Server.clients)
 			if (playersInRoom.contains(st.getPlayer()))
 				st.sendMessage(message);
 	}
@@ -271,16 +271,16 @@ public class Server
 	/**
 	 * Sends a message to a specific player. This player is identified by his
 	 * username only, which might be kind of brittle.
-	 * 
+	 *
 	 * @param username
 	 *            Player that this message will be sent is represented by this
 	 *            String, his username
 	 * @param message
 	 *            message that will be sent player ot player
 	 */
-	public void sendMessageToPlayer(String username, ClientMessage message)
+	public static synchronized void sendMessageToPlayer(String username, ClientMessage message)
 	{
-		for (ServerThread st : this.clients)
+		for (ServerThread st : Server.clients)
 			if (st.isLoggedIn() && st.getPlayer().getName().equals(username))
 				st.sendMessage(message);
 	}
@@ -300,7 +300,7 @@ public class Server
 			{
 				socket = serverSocket.accept();
 				newClient = new ServerThread(this, socket);
-				this.clients.add(newClient);
+				Server.clients.add(newClient);
 				new Thread(newClient).start();
 
 				logger.info("client connected to server: " + socket);
@@ -315,19 +315,19 @@ public class Server
 
 	/**
 	 * Get the Universe object that the server has loaded.
-	 * 
+	 *
 	 * @return universe associated with this server
 	 */
-	public Universe getUniverse()
+	public static Universe getUniverse()
 	{
-		return this.universe;
+		return Server.universe;
 	}
 
 	/**
 	 * An extension of TimerTask that periodically prunes finished clients. That
 	 * is, this removes clients whose State is DONE from the list of active
 	 * clients.
-	 * 
+	 *
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
 	private class ReaperTask extends TimerTask
@@ -336,14 +336,14 @@ public class Server
 		{
 			List<ServerThread> toRemove = new ArrayList<ServerThread>();
 
-			for (ServerThread st : Server.this.clients)
+			for (ServerThread st : Server.clients)
 				if (st.getState() == State.DONE)
 					toRemove.add(st);
 
-			Server.this.clients.removeAll(toRemove);
+			Server.clients.removeAll(toRemove);
 
 			for (ServerThread st : toRemove)
-				Server.this.sendMessageToAllClients(new ClientMessage("client terminated connection: " + st, Server.SYSTEM_TEXT_COLOR));
+				Server.sendMessageToAllClients(new ClientMessage("client terminated connection: " + st, Server.SYSTEM_TEXT_COLOR));
 
 			toRemove.clear();
 		}
@@ -358,6 +358,7 @@ public class Server
 		{
 			logger.fine("the universe is being saved");
 			Server.this.saveUniverse();
+			// TODO also save players?
 		}
 	}
 
@@ -373,7 +374,7 @@ public class Server
 		this.saveUniverse();
 
 		logger.info("saving players");
-		for (ServerThread st : this.clients)
+		for (ServerThread st : Server.clients)
 		{
 			st.savePlayerToDisk(st.getPlayer());
 			st.terminateConnection();
@@ -387,7 +388,7 @@ public class Server
 	/**
 	 * Main entrance to the Server. This creates a new Server object (which
 	 * starts running the server). This also catches severe exceptions.
-	 * 
+	 *
 	 * @param args
 	 *            there are no arguments for Server (this parameter is ignored)
 	 */
