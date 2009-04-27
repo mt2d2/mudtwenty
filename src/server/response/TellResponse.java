@@ -11,18 +11,15 @@ import util.ArrayUtil;
 /**
  * Responds to the say command as input by the user. This command sends a
  * (private) message to the specified user.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class TellResponse implements ServerResponse
 {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
+
+	/**
+	 * Send message to receiver and notify sender.
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		if (arguments.size() < 2)
@@ -31,13 +28,16 @@ public class TellResponse implements ServerResponse
 		}
 		else
 		{
+			// Get and remove the receiver from the argument list.
 			final String reciever = arguments.get(0);
-			arguments.remove(0);	
-			final String message = ArrayUtil.joinArguments(arguments, " ");
+			arguments.remove(0);
 
-			serverThread.getServer().sendMessageToPlayer(reciever,
-					new ClientMessage(serverThread.getPlayer().getName() + " says: " + message, Status.CHAT, Server.MESSAGE_TEXT_COLOR));
-			return new ClientMessage("you said \"" + message + "\" to " + reciever);
+			final String textSaid = ArrayUtil.joinArguments(arguments, " ");
+			ClientMessage message = new ClientMessage(serverThread.getPlayer().getName()
+				+ " says: " + textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR);
+			Server.sendMessageToPlayer(reciever, message);
+
+			return new ClientMessage("you said \"" + textSaid + "\" to " + reciever);
 		}
 	}
 }

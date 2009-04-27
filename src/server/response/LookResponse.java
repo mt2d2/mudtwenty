@@ -4,46 +4,42 @@ import java.util.List;
 
 import message.ClientMessage;
 import server.ServerThread;
+import server.Server;
 import server.universe.Player;
 import server.universe.Room;
 
 /**
- * Responds to the look command as issued by the user. This provides detailed
- * information about the enviroment a players character is currently in,
- * specifically about the room.
- * 
+ * Responds to the look command as issued by the user.
+ *
  * @author Michael Tremel
  */
 public class LookResponse implements ServerResponse
 {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
+
+	/**
+	 * Currently, this looks at the room. Later, it should be able to be used to look
+	 * at any entity.
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		StringBuilder message = new StringBuilder();
-		final Room userRoom = serverThread.getServer().getUniverse().getRoomOfCreature(serverThread.getPlayer());
-		
-		// add room 
-		message.append(userRoom.getDescription());
-		
-		// add players
+		final Room roomOfPlayer = Server.getUniverse().getRoomOfCreature(serverThread.getPlayer());
+
+		// Append room info.
+		message.append(roomOfPlayer.getDescription());
+
+		// Append players in room.
 		message.append("\tPlayers in this room: ");
-		final List<Player> loggedInPlayers = serverThread.getServer().getUniverse().getPlayersInRoom(serverThread.getServer().getUniverse().getRoomOfCreature(serverThread.getPlayer()));
-		
-		for (Player p : loggedInPlayers)
-			message.append(p.getName() + ", ");
-		
-		// remove trailing comma
-		if (message.length() > 2)
+		final List<Player> playersInRoom = Server.getUniverse().getPlayersInRoom(roomOfPlayer);
+		for (Player player : playersInRoom)
+			message.append(player.getName() + ", ");
+
+		// remove trailing comma or report that there are no players
+		if (playersInRoom.size() > 1)
 			message.replace(message.length() - 2, message.length(), " ");
 		else
 			message.append("no users online");
-		
+
 		return new ClientMessage(message.toString());
 	}
 }

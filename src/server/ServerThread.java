@@ -170,8 +170,7 @@ public class ServerThread implements Runnable
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.throwing("ServerThread", "getMessageTextMode", e);
 		}
 
 		return message;
@@ -245,8 +244,10 @@ public class ServerThread implements Runnable
 	}
 
 	/**
-	 * @return the State of a client. e.g., if a client is still running, then
-	 *         State.OK, or if the user has quit, State.DONE/
+	 * Get the state; if a client is still running, then
+	 * <code>State.OK</code>, or if the user has quit, <code>State.DONE</code>
+	 *
+	 * @return the State of a client.
 	 */
 	public State getState()
 	{
@@ -277,13 +278,9 @@ public class ServerThread implements Runnable
 	public void sendMessage(ClientMessage message)
 	{
 		if (this.textMode)
-		{
 			sendMessageTextMode(message);
-		}
 		else
-		{
 			sendMessageProtocolMode(message);
-		}
 	}
 
 	/**
@@ -330,19 +327,13 @@ public class ServerThread implements Runnable
 	}
 
 	/**
+	 * Test whether the user is logged on.
+	 *
 	 * @return <code>true</code> if the user is logged in, or <code>false</code>
 	 */
 	public boolean isLoggedIn()
 	{
 		return this.player != null;
-	}
-
-	/**
-	 * @return Server parent of this sub-thread
-	 */
-	public Server getServer()
-	{
-		return this.server;
 	}
 
 	/**
@@ -473,20 +464,21 @@ public class ServerThread implements Runnable
 			ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream(playerFile));
 			fileOut.writeObject(player);
 			fileOut.close();
-			
+
 			// there was success in writing
 			return true;
 		}
 		catch (FileNotFoundException e)
 		{
 			System.out.println("here in filenotfound");
-			
+
 			// The player file didn't previously exist?
 			// This is not a problem, and user file should still be saved.
+			// Wait -- this will not be thrown if the file's not found?
 			// TODO fix this.
 		}
 		catch (IOException e)
-		{			
+		{
 			logger.throwing("ServerThread", "savePlayerToDisk", e);
 		}
 
