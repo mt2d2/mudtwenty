@@ -38,6 +38,8 @@ public class DefaultUniverse extends Universe
 
 		northRoomExits.add(toSouth);
 		southRoomExits.add(toNorth);
+		
+		southRoom.addItem(new Potion());
 
 		return southRoom;
 	}
