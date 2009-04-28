@@ -42,10 +42,10 @@ import util.InputParser;
  * GUI client that can connect to the MUD Server. Allows the user to configure
  * the host and port of the server, and, if the connection were successful,
  * communicates with the server through a basic terminal emulator.
- * 
+ *
  * This is a huge work in progress. Currently, the user has no option when
  * connecting to a server. It currently only connects to localhost on port 8080.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class Client extends JFrame
@@ -116,7 +116,7 @@ public class Client extends JFrame
 	/**
 	 * Adds text to the server display window with a null color. The system will
 	 * resort to its default color.
-	 * 
+	 *
 	 * @param text
 	 *            the text to append
 	 */
@@ -127,7 +127,7 @@ public class Client extends JFrame
 
 	/**
 	 * Adds text to the server display window with a given color.
-	 * 
+	 *
 	 * @param input
 	 *            the text to append
 	 * @param color
@@ -140,7 +140,7 @@ public class Client extends JFrame
 
 	/**
 	 * Adds text to the chat display window with a given color.
-	 * 
+	 *
 	 * @param text
 	 *            the text to append
 	 * @param color
@@ -152,6 +152,8 @@ public class Client extends JFrame
 	}
 
 	/**
+	 * Append a string of text to the chat area.
+	 *
 	 * @param area
 	 * @param input
 	 * @param color
@@ -366,7 +368,7 @@ public class Client extends JFrame
 
 	/**
 	 * Invokes handleSendEvent() when an action is fired.
-	 * 
+	 *
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
 	private class SendEventListener implements ActionListener
@@ -390,7 +392,7 @@ public class Client extends JFrame
 	/**
 	 * Main entrance to the client. Attempts to set a matching plaf for the
 	 * jvm's host and makes a new Client visible.
-	 * 
+	 *
 	 * @param args
 	 *            there are no arguments to Client
 	 */

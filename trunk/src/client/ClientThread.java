@@ -21,10 +21,10 @@ import message.Status;
 /**
  * This class is responsible for initiating a socket connection to the given
  * server, sending messages, and recieving messages from Server.
- * 
+ *
  * The ClientThread is created and controlled by {@link Client}, which is the
  * GUI.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class ClientThread implements Runnable
@@ -37,7 +37,7 @@ public class ClientThread implements Runnable
 
 	/**
 	 * Sole constructor. Attempts to open a socket connection on server port.
-	 * 
+	 *
 	 * @param client
 	 *            GUI owner of this
 	 * @param server
@@ -72,9 +72,9 @@ public class ClientThread implements Runnable
 	}
 
 	/**
-	 * Sends a message to the Server, flushing after. input, which is generated
-	 * by the user, is parsed before sending the message.
-	 * 
+	 * Sends a message to the Server. Input, which is generated
+	 * by the user, must be parsed before calling this method.
+	 *
 	 * @param input
 	 *            user-generated input
 	 */
@@ -94,37 +94,29 @@ public class ClientThread implements Runnable
 	}
 
 	/**
+	 * Get a message from the server and return it. Return null if something went wrong.
+	 *
 	 * @return message sent from Server
 	 */
 	public ClientMessage getMessage()
 	{
-		// TODO some of these exceptions need to be looked at
+		// TODO some of these exceptions need to be looked at?
+		// Returning null from here terminates the connection;
+		// Some of these might not require terminating the connection?
 		try
 		{
 			return (ClientMessage) this.in.readObject();
 		}
-		catch (NullPointerException e)
+		catch (Exception e)
 		{
-			return null;
-		}
-		catch (SocketException ex)
-		{
-			return null; // Disconnected
-		}
-		catch (IOException ioe)
-		{
-			return null;
-		}
-		catch (ClassNotFoundException e)
-		{
+			// Possible exceptions:
+			// NullPointerException, SocketException, IOException, ClassNotFoundException.
 			return null;
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Runnable#run()
+	/**
+	 * Run in a loop of getting messages from the server and displaying them.
 	 */
 	public void run()
 	{
@@ -139,16 +131,16 @@ public class ClientThread implements Runnable
 			}
 			else
 			{
-				this.displayServerMessage(
-						DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(message.getTime())) + "> " + message.getPayload().trim(), message
-								.getColor(), message.getStatus());
+				String dateText = DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(message.getTime()));
+				String textToDisplay = dateText + "> " + message.getPayload().trim();
+				this.displayServerMessage(textToDisplay, message.getColor(), message.getStatus());
 			}
 		}
 	}
 
 	/**
 	 * Appends text to the terminal emulator on the EDT.
-	 * 
+	 *
 	 * @param input
 	 *            message to be added
 	 * @param color
