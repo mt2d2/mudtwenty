@@ -38,7 +38,7 @@ public class ShutdownResponse implements ServerResponse
 
 		if (admins.contains(serverThread.getPlayer().getName()))
 		{
-			serverThread.getServer().sendMessageToAllClients(new ClientMessage("the server is shutting down now", Server.ERROR_TEXT_COLOR));
+			Server.sendMessageToAllClients(new ClientMessage("the server is shutting down now", Server.ERROR_TEXT_COLOR));
 			serverThread.getServer().shutdown();
 
 			// the server is shutdown, there is no response to send
