@@ -1,25 +1,23 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Properties;
 import java.util.logging.Logger;
 
 import message.ClientMessage;
 import message.ServerMessage;
+import server.connection.Communicable;
+import server.connection.MessageConnection;
+import server.connection.TextConnection;
 import server.response.ServerResponse;
 import server.universe.Player;
-import util.InputParser;
 import util.PropertyLoader;
 
 /**
@@ -53,22 +51,10 @@ public class ServerThread implements Runnable
 	 */
 	private static final String		WELCOME_STRING	= "welcome to mudtwenty\nuse register or login to join the game";
 
+	private Communicable			connection;
 	private Server					server;
 	private Socket					socket;
 	private State					state;
-
-	// Whether the ServerThread is operating in text mode.
-	private boolean					textMode;
-
-	// MessageProtocol mode
-	private ObjectInputStream		objectIn;
-	private ObjectOutputStream		objectOut;
-
-	// Text mode
-	private BufferedReader			textIn;
-	private PrintWriter				textOut;
-
-	// Player object associated with this thread
 	private Player					player;
 
 	/**
@@ -88,34 +74,36 @@ public class ServerThread implements Runnable
 		this.server = server;
 		this.socket = socket;
 		this.state = State.OK;
-		this.textMode = false;
 		this.player = null;
 
 		try
 		{
-			this.objectIn = new ObjectInputStream(this.socket.getInputStream());
-			this.objectOut = new ObjectOutputStream(this.socket.getOutputStream());
+			// by default, we should run using the gui
+			this.connection = new MessageConnection();
+			this.connection.openConnection(this.socket);
 		}
 		catch (IOException e)
 		{
 			logger.info("error establishing in and out streams on ServerThread: " + this);
 			logger.throwing("ServerThread", "ServerThread", e);
 			logger.info("client is probably not using MessageProtocol, defaulting to basic text streams");
-			this.textMode = true;
 
 			try
 			{
-				this.textIn = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-				this.textOut = new PrintWriter(this.socket.getOutputStream(), true);
+				// and fall back on text mode
+				this.connection = new TextConnection();
+				this.connection.openConnection(this.socket);
 			}
 			catch (IOException ex)
 			{
+				// and complain if that doesn't work, loudly
 				logger.severe("error establishing in and out streams on ServerThread: " + this + " in text mode");
 				logger.throwing("ServerThread", "ServerThread", ex);
 			}
 		}
-		ClientMessage welcomeMessage = new ClientMessage(WELCOME_STRING, Server.SYSTEM_TEXT_COLOR);
-		this.sendMessage(welcomeMessage);
+
+		// send a greeting to our good friend
+		this.connection.sendMessage(new ClientMessage(WELCOME_STRING, Server.SYSTEM_TEXT_COLOR));
 	}
 
 	/**
@@ -132,12 +120,7 @@ public class ServerThread implements Runnable
 		// Enter the main input-getting loop of the server
 		while (this.getState() == State.OK)
 		{
-			ServerMessage toServer;
-
-			if (this.textMode)
-				toServer = getMessageTextMode();
-			else
-				toServer = getMessageProtocolMode();
+			ServerMessage toServer = this.connection.getMessage();
 
 			if (toServer == null)
 			{
@@ -148,60 +131,9 @@ public class ServerThread implements Runnable
 			{
 				ServerResponse response = this.server.getServerResponse(toServer.getCommand());
 				ClientMessage toClient = response.respond(this, toServer.getArguments());
-				this.sendMessage(toClient);
+				this.connection.sendMessage(toClient);
 			}
 		}
-	}
-
-	/**
-	 * Get and return a message to the server in text mode. Return null if
-	 * something went wrong.
-	 */
-	private ServerMessage getMessageTextMode()
-	{
-		ServerMessage message = null;
-
-		try
-		{
-			String input = this.textIn.readLine();
-
-			if (input != null)
-				message = InputParser.parse(input.trim());
-		}
-		catch (IOException e)
-		{
-			logger.throwing("ServerThread", "getMessageTextMode", e);
-		}
-
-		return message;
-	}
-
-	/**
-	 * Get and return a message to the server in MessageProtocol mode. Return
-	 * null if something went wrong.
-	 */
-	private ServerMessage getMessageProtocolMode()
-	{
-		ServerMessage message = null;
-
-		try
-		{
-			message = (ServerMessage) this.objectIn.readObject();
-		}
-		catch (EOFException e)
-		{
-			logger.throwing("ServerThread", "getMessageProtocolMode", e);
-		}
-		catch (IOException e)
-		{
-			logger.throwing("ServerThread", "getMessageProtocolMode", e);
-		}
-		catch (ClassNotFoundException e)
-		{
-			logger.throwing("ServerThread", "getMessageProtocolMode", e);
-		}
-
-		return message;
 	}
 
 	/**
@@ -212,17 +144,7 @@ public class ServerThread implements Runnable
 	{
 		try
 		{
-			if (this.textMode)
-			{
-				this.textIn.close();
-				this.textOut.close();
-			}
-			else
-			{
-				this.objectIn.close();
-				this.objectOut.close();
-			}
-
+			this.connection.terminate();
 			this.socket.close();
 		}
 		catch (IOException e)
@@ -263,56 +185,6 @@ public class ServerThread implements Runnable
 	public void setState(State state)
 	{
 		this.state = state;
-	}
-
-	/**
-	 * Sends a message to the client. This is the default (and only accessible)
-	 * method of communicating with the client. That means that it will
-	 * automatically choose the correct OutputStream for the current mode of
-	 * operation, either via MessageProtocol or text.
-	 * 
-	 * @param message
-	 *            this message will be sent to the client, but when running in
-	 *            text mode, only the ClientMessage's payload will be sent.
-	 */
-	public void sendMessage(ClientMessage message)
-	{
-		if (this.textMode)
-			sendMessageTextMode(message);
-		else
-			sendMessageProtocolMode(message);
-	}
-
-	/**
-	 * Sends a message to the client in text mode.
-	 */
-	private void sendMessageTextMode(ClientMessage message)
-	{
-		try
-		{
-			this.textOut.println(message.getPayload());
-		}
-		catch (NullPointerException e)
-		{
-			// user no longer active, terminate connection
-			this.terminateConnection();
-		}
-	}
-
-	/**
-	 * Sends a message to the client in MessageProtocol mode.
-	 */
-	private void sendMessageProtocolMode(ClientMessage message)
-	{
-		try
-		{
-			this.objectOut.writeObject(message);
-		}
-		catch (IOException e)
-		{
-			// user no longer active, terminate connection
-			this.terminateConnection();
-		}
 	}
 
 	/**
@@ -491,5 +363,16 @@ public class ServerThread implements Runnable
 		}
 
 		return false;
+	}
+
+	/**
+	 * Convenience method for sending messages from outside this class.
+	 * 
+	 * @param message
+	 *            the message to be sent
+	 */
+	public void sendMessage(ClientMessage message)
+	{
+		this.connection.sendMessage(message);
 	}
 }
