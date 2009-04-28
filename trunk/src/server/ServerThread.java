@@ -29,7 +29,7 @@ import util.PropertyLoader;
  * the event that an ObjectStream cannot be established, the system falls back
  * on basic text streams. This makes connecting to and using the server via
  * telnet possible.
- *
+ * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class ServerThread implements Runnable
@@ -76,7 +76,7 @@ public class ServerThread implements Runnable
 	 * connecting client on socket. After the welcome message is sent to the
 	 * user. At this point, the mode of communication is established (either via
 	 * MessageProtocol or text streams) and the thread enters its run loop.
-	 *
+	 * 
 	 * @param server
 	 *            Server parent of this thread, useful for getting a list of
 	 *            other, connected clients
@@ -238,15 +238,15 @@ public class ServerThread implements Runnable
 			if (this.isLoggedIn())
 			{
 				// remove the player from the unvierse
-				this.server.getUniverse().logout(this.getPlayer());
-		}
+				Server.getUniverse().logout(this.getPlayer());
+			}
 		}
 	}
 
 	/**
-	 * Get the state; if a client is still running, then
-	 * <code>State.OK</code>, or if the user has quit, <code>State.DONE</code>
-	 *
+	 * Get the state; if a client is still running, then <code>State.OK</code>,
+	 * or if the user has quit, <code>State.DONE</code>
+	 * 
 	 * @return the State of a client.
 	 */
 	public State getState()
@@ -256,7 +256,7 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Sets the state of the thread.
-	 *
+	 * 
 	 * @param state
 	 *            new state for this thread
 	 */
@@ -270,7 +270,7 @@ public class ServerThread implements Runnable
 	 * method of communicating with the client. That means that it will
 	 * automatically choose the correct OutputStream for the current mode of
 	 * operation, either via MessageProtocol or text.
-	 *
+	 * 
 	 * @param message
 	 *            this message will be sent to the client, but when running in
 	 *            text mode, only the ClientMessage's payload will be sent.
@@ -318,7 +318,7 @@ public class ServerThread implements Runnable
 	/**
 	 * Return the player associated with this thread, if possible. If no player
 	 * has logged in, this returns null.
-	 *
+	 * 
 	 * @return Player associated with this ServerThread
 	 */
 	public Player getPlayer()
@@ -328,7 +328,7 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Test whether the user is logged on.
-	 *
+	 * 
 	 * @return <code>true</code> if the user is logged in, or <code>false</code>
 	 */
 	public boolean isLoggedIn()
@@ -342,10 +342,10 @@ public class ServerThread implements Runnable
 	 * the filesystem, and finally user and password are compared. If all checks
 	 * out, the resultant Player object is associated with this ServerThread,
 	 * and the Player is added to the Universe.
-	 *
+	 * 
 	 * Later, this should be made private and ServerThread should have sole
 	 * responsibility for logging in and registering players.
-	 *
+	 * 
 	 * @param username
 	 *            user input for username
 	 * @param password
@@ -371,7 +371,7 @@ public class ServerThread implements Runnable
 				if (player.getName().equals(name) && player.confirmPasswordHash(password))
 				{
 					// add this player to the universe
-					this.server.getUniverse().login(player);
+					Server.getUniverse().login(player);
 
 					// associate this player with this thread
 					this.player = player;
@@ -386,7 +386,8 @@ public class ServerThread implements Runnable
 			catch (FileNotFoundException e)
 			{
 				// There is no player file?
-				// TODO notify the user and unregister the user name with universe
+				// TODO notify the user and unregister the user name with
+				// universe
 				logger.throwing("ServerThread", "login", e);
 			}
 			catch (IOException e)
@@ -409,13 +410,13 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Registers a new Player in the system. This first checks to see if the
-	 * name is already taken before it does anything. Then, it registers
-	 * the player with the universe, which records the player's location
-	 * as the starting location. This does not log the user in.
-	 *
+	 * name is already taken before it does anything. Then, it registers the
+	 * player with the universe, which records the player's location as the
+	 * starting location. This does not log the user in.
+	 * 
 	 * Later, this should be made private and ServerThread should have sole
 	 * responsibility for logging in and registering players.
-	 *
+	 * 
 	 * @param username
 	 *            user input of the username
 	 * @param password
@@ -435,7 +436,7 @@ public class ServerThread implements Runnable
 			boolean saveSuccess = this.savePlayerToDisk(new Player(name, passwordHash));
 			if (saveSuccess)
 			{
-				this.server.getUniverse().register(name);
+				Server.getUniverse().register(name);
 				return true;
 			}
 		}
@@ -444,10 +445,18 @@ public class ServerThread implements Runnable
 	}
 
 	/**
-	 * Saves a given Player to disk. This is useful during registration, possibly
-	 * when the player is exiting, but also because the server will periodically save
-	 * all players to disk.
-	 *
+	 * @return Server parent of this thread
+	 */
+	public Server getServer()
+	{
+		return this.server;
+	}
+
+	/**
+	 * Saves a given Player to disk. This is useful during registration,
+	 * possibly when the player is exiting, but also because the server will
+	 * periodically save all players to disk.
+	 * 
 	 * @return <code>true</code> if the save were successful or
 	 *         <code>false</code>
 	 */

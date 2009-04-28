@@ -34,7 +34,7 @@ public class OocResponse implements ServerResponse
 			final String textSaid = ArrayUtil.joinArguments(arguments, " ");
 			ClientMessage message = new ClientMessage("Broadcast from " + serverThread.getPlayer().getName() + ": "
 				+ textSaid , Status.CHAT, Server.MESSAGE_TEXT_COLOR);
-			serverThread.getServer().sendMessageToAllClients(message);
+			Server.sendMessageToAllClients(message);
 
 			return new ClientMessage("you said \"" + textSaid + "\" to everyone.");
 		}
