@@ -24,6 +24,10 @@ public abstract class Creature implements Entity, Serializable
 	private int					health;
 	private List<Item>			items;
 	private Map<Skill, Integer>	skills;
+	
+	// equipable items
+	private Weapon				weapon;
+	private Armor				armor;
 
 	/**
 	 * We should change this later.
@@ -47,6 +51,10 @@ public abstract class Creature implements Entity, Serializable
 		this.maxHealth = defaultMaxHealth;
 		this.health = maxHealth;
 		this.items = new ArrayList<Item>();
+		// TODO these items are just added for testing purposes, all creatures shouldn't start with them
+		this.addItem(new Potion());
+		this.addItem(new Armor());
+		this.addItem(new Weapon());
 		// TODO replace type of map with EnumMap because it's a lot more
 		// efficient.
 		this.skills = new HashMap<Skill, Integer>();
@@ -209,5 +217,28 @@ public abstract class Creature implements Entity, Serializable
 				return item;
 
 		return null;
+	}
+	
+	/**
+	 * Equips an item to the creature.
+	 */
+	public void equip(Item item)
+	{
+		if (item instanceof Weapon)
+		{
+			if (weapon != null)
+				addItem(weapon);
+			
+			weapon = (Weapon) item;
+			removeItem(item);
+		}
+		if (item instanceof Armor)
+		{
+			if (armor != null)
+				addItem(armor);
+			
+			armor = (Armor) item;
+			removeItem(item);
+		}
 	}
 }

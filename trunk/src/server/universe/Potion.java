@@ -4,10 +4,6 @@ package server.universe;
  * Potion class outlines everything a potion does.
  */
 public class Potion implements Item {
-	
-	public Potion() {
-		
-	}
 
 	@Override
 	public int getPrice() {

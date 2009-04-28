@@ -33,13 +33,11 @@ public class DefaultUniverse extends Universe
 		Room northRoom = new Room("North Room", "An other boring place.", northRoomExits, northRoomItems);
 		Room southRoom = new Room("South Room", "A boring, empty place.", southRoomExits, southRoomItems);
 
-		Exit toNorth = new Exit("north", "A passageway to the North", Direction.NORTH, northRoom);
+		Exit toNorth = new Exit("north", "A passageway to the North2", Direction.NORTH, northRoom);
 		Exit toSouth = new Exit("south", "A passageway to the South", Direction.SOUTH, southRoom);
 
 		northRoomExits.add(toSouth);
 		southRoomExits.add(toNorth);
-		
-		southRoom.addItem(new Potion());
 
 		return southRoom;
 	}

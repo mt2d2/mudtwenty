@@ -8,9 +8,12 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
+import server.universe.Armor;
 import server.universe.Item;
 import server.universe.Player;
 import server.universe.Potion;
+import server.universe.Weapon;
+import util.ArrayUtil;
 
 /**
  * Responds to the use command as input by the user. Uses a specified item in
@@ -29,21 +32,28 @@ public class UseResponse implements ServerResponse
 	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		if (arguments.size() != 1)
+		if (arguments.size() == 0)
 		{
 			return new ClientMessage("proper syntax of use: use <item name>", Server.ERROR_TEXT_COLOR);
 		}
 		else
 		{
 			Player player = serverThread.getPlayer();
-			Item item = player.getItem(arguments.get(0));
+			String name = ArrayUtil.joinArguments(arguments, " ").trim();
+			Item item = player.getItem(name);
 			
 			if (item instanceof Potion) {
 				player.increaseHealth(((Potion)item).getHealingPower());
+				player.removeItem(item);
 				return new ClientMessage("You use " + item.getName() + " and heal " + ((Potion)item).getHealingPower() + " points");
 			}
 			
-			return new ClientMessage("You do not have that item", Server.ERROR_TEXT_COLOR);
+			if (item instanceof Armor || item instanceof Weapon) {
+				player.equip(item);
+				return new ClientMessage("You equipped " + item.getName());
+			}
+			
+			return new ClientMessage("You do not have " + name, Server.ERROR_TEXT_COLOR);
 		}
 	}
 }

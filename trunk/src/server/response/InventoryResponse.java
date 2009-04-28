@@ -30,7 +30,13 @@ public class InventoryResponse implements ServerResponse
 		StringBuilder items = new StringBuilder();
 		
 		for (Item item : serverThread.getPlayer().getItems())
-			items.append(item.toString() + " ");
+			items.append(item.getName() + ", ");
+		
+		if (items.length() != 0)
+		{
+			items.deleteCharAt(items.length()-1);
+			items.deleteCharAt(items.length()-1);
+		}
 		
 		return new ClientMessage("You have " + (items.length() != 0 ? "the following items: " + items : "no items"));
 		
