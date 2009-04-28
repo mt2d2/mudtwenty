@@ -356,9 +356,14 @@ public class Server
 	{
 		public void run()
 		{
-			logger.fine("the universe is being saved");
+			logger.fine("the universe and players are being saved");
 			Server.this.saveUniverse();
-			// TODO also save players?
+			
+			for (ServerThread st : Server.clients)
+			{
+				st.savePlayerToDisk(st.getPlayer());
+				st.terminateConnection();
+			}
 		}
 	}
 
