@@ -4,6 +4,8 @@
 = Introduction =
 We only have four weeks to plan, design, code, test, and deploy this monstrosity. To help, we need a schedule for major milestones, meetings, and deliverables.
 
+As of now, we have *less than a week to finish the project*.
+
 = Meetings =
   * First checkpoint, *13 April 2009*, Gould Simpson 701
   * Second meeting, *24 pril 2009, Gould Simpson 701, 4:00 - 5:00 PM*
@@ -24,3 +26,12 @@ We only have four weeks to plan, design, code, test, and deploy this monstrosity
   * Simon, *content design, Universe interaction with content*
   * Aaron, *client GUI design, Universe interaction with content*
   * Quinten, *content design, Universe interaction with content*
+    * MOBs and MOB AI
+
+= Major things to do =
+
+We really have to focus on just the most important things for getting a good grade on this assignment, as our time is extremely limited. Some of the major things to do include:
+ * Populating the world with items, monsters, descriptions
+   * I think that we will have to make YAML work before we can do this quickly.
+ * MOBs and MOB AI
+   * I have a few ideas about this that I will try to start in the next day or so.
