@@ -6,6 +6,7 @@ import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
 import server.universe.item.Item;
+import util.ArrayUtil;
 
 /**
  * Responds to the drop command as input by the user. Drops a specified item
@@ -30,12 +31,15 @@ public class DropResponse implements ServerResponse
 		}
 		else
 		{
-			Item item = serverThread.getPlayer().getItem(arguments.get(0));
+			String itemName = ArrayUtil.joinArguments(arguments, " ").trim();
+			Item item = serverThread.getPlayer().getItem(itemName);
 
 			if (item != null)
 			{
+				// remove from user, add to room
 				serverThread.getPlayer().removeItem(item);
-				return new ClientMessage("the item, " + arguments.get(0) + " was removed from your inventory");
+				Server.getUniverse().getRoomOfCreature(serverThread.getPlayer()).addItem(item);
+				return new ClientMessage("the item, " + itemName + " was removed from your inventory");
 			}
 			else
 			{
