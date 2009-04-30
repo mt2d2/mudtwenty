@@ -27,7 +27,7 @@ import util.PropertyLoader;
  * the event that an ObjectStream cannot be established, the system falls back
  * on basic text streams. This makes connecting to and using the server via
  * telnet possible.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class ServerThread implements Runnable
@@ -62,7 +62,7 @@ public class ServerThread implements Runnable
 	 * connecting client on socket. After the welcome message is sent to the
 	 * user. At this point, the mode of communication is established (either via
 	 * MessageProtocol or text streams) and the thread enters its run loop.
-	 * 
+	 *
 	 * @param server
 	 *            Server parent of this thread, useful for getting a list of
 	 *            other, connected clients
@@ -168,7 +168,7 @@ public class ServerThread implements Runnable
 	/**
 	 * Get the state; if a client is still running, then <code>State.OK</code>,
 	 * or if the user has quit, <code>State.DONE</code>
-	 * 
+	 *
 	 * @return the State of a client.
 	 */
 	public State getState()
@@ -178,7 +178,7 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Sets the state of the thread.
-	 * 
+	 *
 	 * @param state
 	 *            new state for this thread
 	 */
@@ -190,7 +190,7 @@ public class ServerThread implements Runnable
 	/**
 	 * Return the player associated with this thread, if possible. If no player
 	 * has logged in, this returns null.
-	 * 
+	 *
 	 * @return Player associated with this ServerThread
 	 */
 	public Player getPlayer()
@@ -200,7 +200,7 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Test whether the user is logged on.
-	 * 
+	 *
 	 * @return <code>true</code> if the user is logged in, or <code>false</code>
 	 */
 	public boolean isLoggedIn()
@@ -214,10 +214,10 @@ public class ServerThread implements Runnable
 	 * the filesystem, and finally user and password are compared. If all checks
 	 * out, the resultant Player object is associated with this ServerThread,
 	 * and the Player is added to the Universe.
-	 * 
+	 *
 	 * Later, this should be made private and ServerThread should have sole
 	 * responsibility for logging in and registering players.
-	 * 
+	 *
 	 * @param username
 	 *            user input for username
 	 * @param password
@@ -229,6 +229,31 @@ public class ServerThread implements Runnable
 	 */
 	public boolean login(String name, String password) throws InvalidLoginException
 	{
+		Player player = loadPlayer(name);
+		if (player == null || !player.getName().equals(name))
+		{
+			throw new InvalidLoginException("Player does not exist.");
+		}
+
+		if (!player.confirmPasswordHash(password))
+		{
+			throw new InvalidLoginException("Incorrect password");
+		}
+		// add this player to the universe
+		Server.getUniverse().login(player);
+
+		// associate this player with this thread
+		this.player = player;
+		return true;
+	}
+
+	/**
+	 * Load a player from their player file if possible. If something goes wrong, return null.
+	 *
+	 * @param name the name of the player
+	 */
+	private Player loadPlayer(String name)
+	{
 		final String dataRoot = conf.getProperty("data.root");
 		final File playerFile = new File(dataRoot + File.separatorChar + "players" + File.separatorChar + name + ".dat");
 
@@ -239,45 +264,27 @@ public class ServerThread implements Runnable
 				ObjectInputStream fileIn = new ObjectInputStream(new FileInputStream(playerFile));
 				Player player = (Player) fileIn.readObject();
 				fileIn.close();
-
-				if (player.getName().equals(name) && player.confirmPasswordHash(password))
-				{
-					// add this player to the universe
-					Server.getUniverse().login(player);
-
-					// associate this player with this thread
-					this.player = player;
-
-					return true;
-				}
-				else
-				{
-					throw new InvalidLoginException("the provided password was invalid");
-				}
+				return player;
 			}
 			catch (FileNotFoundException e)
 			{
 				// There is no player file?
-				// TODO notify the user and unregister the user name with
-				// universe
-				logger.throwing("ServerThread", "login", e);
+				// TODO notify user and unregister the name with universe
+				logger.throwing("ServerThread", "loadPlayer", e);
+				return null;
 			}
 			catch (IOException e)
 			{
-				throw new InvalidLoginException("there was a problem reading the player file");
+				logger.throwing("ServerThread", "loadPlayer", e);
+				return null;
 			}
 			catch (ClassNotFoundException e)
 			{
-				// There is no Player class?
-				logger.throwing("ServerThread", "login", e);
+				logger.throwing("ServerThread", "loadPlayer", e);
+				return null;
 			}
 		}
-		else
-		{
-			throw new InvalidLoginException("invalid user, " + name + ", please use the register command instead");
-		}
-
-		return false;
+		return null;
 	}
 
 	/**
@@ -285,10 +292,10 @@ public class ServerThread implements Runnable
 	 * name is already taken before it does anything. Then, it registers the
 	 * player with the universe, which records the player's location as the
 	 * starting location. This does not log the user in.
-	 * 
+	 *
 	 * Later, this should be made private and ServerThread should have sole
 	 * responsibility for logging in and registering players.
-	 * 
+	 *
 	 * @param username
 	 *            user input of the username
 	 * @param password
@@ -328,7 +335,7 @@ public class ServerThread implements Runnable
 	 * Saves a given Player to disk. This is useful during registration,
 	 * possibly when the player is exiting, but also because the server will
 	 * periodically save all players to disk.
-	 * 
+	 *
 	 * @return <code>true</code> if the save were successful or
 	 *         <code>false</code>
 	 */
@@ -367,7 +374,7 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Convenience method for sending messages from outside this class.
-	 * 
+	 *
 	 * @param message
 	 *            the message to be sent
 	 */

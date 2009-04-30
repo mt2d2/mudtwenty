@@ -52,7 +52,7 @@ import util.PropertyLoader;
  * PORT and delegates each client to a separate thread. Server maintains a list
  * of associated clients (which it periodically prunes) to allow messages to be
  * send to each connected client.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class Server
@@ -104,9 +104,9 @@ public class Server
 	 * and will throw an IOException in the case that this is impossible. It
 	 * also makes sure the universe is up and loaded and starts anything else
 	 * that the server needs to have started (e.g., ReaperTask)
-	 * 
+	 *
 	 * After that, it enters a blocking loop waiting for connections.
-	 * 
+	 *
 	 * @throws IOException
 	 *             indicates problem starting server, most likely a different
 	 *             service running on the same port
@@ -235,7 +235,7 @@ public class Server
 	/**
 	 * Returns a ServerResponse appropriate to a given Command. This is useful
 	 * for quickly parsing incoming ClientMessages for its appropriate action.
-	 * 
+	 *
 	 * @param input
 	 *            selected command
 	 * @return input's associated ServerResponse
@@ -247,7 +247,7 @@ public class Server
 
 	/**
 	 * Sends a message to all clients in a given color.
-	 * 
+	 *
 	 * @param message
 	 *            message to be sent to clients
 	 */
@@ -259,9 +259,9 @@ public class Server
 
 	/**
 	 * Sends a message to all players in a room.
-	 * 
+	 *
 	 * This should also send to MOBs -- and it should be renamed.
-	 * 
+	 *
 	 * @param room
 	 *            room to target
 	 * @param message
@@ -279,7 +279,7 @@ public class Server
 	/**
 	 * Sends a message to a specific player. This player is identified by his
 	 * username only, which might be kind of brittle.
-	 * 
+	 *
 	 * @param username
 	 *            Player that this message will be sent is represented by this
 	 *            String, his username
@@ -323,7 +323,7 @@ public class Server
 
 	/**
 	 * Get the Universe object that the server has loaded.
-	 * 
+	 *
 	 * @return universe associated with this server
 	 */
 	public static Universe getUniverse()
@@ -335,7 +335,7 @@ public class Server
 	 * An extension of TimerTask that periodically prunes finished clients. That
 	 * is, this removes clients whose State is DONE from the list of active
 	 * clients.
-	 * 
+	 *
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
 	private class ReaperTask extends TimerTask
@@ -399,7 +399,7 @@ public class Server
 	/**
 	 * Main entrance to the Server. This creates a new Server object (which
 	 * starts running the server). This also catches severe exceptions.
-	 * 
+	 *
 	 * @param args
 	 *            there are no arguments for Server (this parameter is ignored)
 	 */

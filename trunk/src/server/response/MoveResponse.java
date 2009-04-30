@@ -8,6 +8,7 @@ import server.ServerThread;
 import server.universe.Exit;
 import server.universe.Player;
 import server.universe.Room;
+import server.universe.Direction;
 
 /**
  * Responds to the move command as input by the user. Specifically, this will
@@ -30,33 +31,55 @@ public class MoveResponse implements ServerResponse
 		}
 		else
 		{
+			String where = arguments.get(0);
 			Player player = serverThread.getPlayer();
 			Room oldRoom = Server.getUniverse().getRoomOfCreature(player);
-			List<Exit> exits = oldRoom.getExits();
 
-			// attempt to find a room based on the exit the user specifies
-			Room newRoom = null;
-			for (Exit exit : exits)
-				if (exit.getName().equals(arguments.get(0)))
-					newRoom = exit.getRoom();
+			// get the direction from the first argument
+			Direction direction = stringToDirection(where);
+			if (direction == null)
+				return new ClientMessage("that direction was not recognized", Server.ERROR_TEXT_COLOR);
 
-			// make sure that room exists
-			if (newRoom == null)
-				return new ClientMessage("that room name was not recognized", Server.ERROR_TEXT_COLOR);
-
-			// make the swap
-			Server.getUniverse().changeRoomOfCreature(serverThread.getPlayer(), newRoom);
-
-			// notify all users that the king has left the building
-			ClientMessage leavingMessage = new ClientMessage(player.getName() + " has left the room");
-			Server.sendMessageToAllClientsInRoom(oldRoom, leavingMessage);
-
-			// and that he has entered
-			ClientMessage comingMessage = new ClientMessage(player.getName() + " has entered the room");
-			Server.sendMessageToAllClientsInRoom(newRoom, comingMessage);
-
-			// invoke the look response to show the user the new room
-			return new LookResponse().respond(serverThread, null);
+			return this.respond(serverThread, direction);
 		}
 	}
+
+	public ClientMessage respond(ServerThread serverThread, Direction direction)
+	{
+		Player player = serverThread.getPlayer();
+		Room oldRoom = Server.getUniverse().getRoomOfCreature(player);
+
+		// make sure that the exit exists
+		if (!oldRoom.hasExit(direction))
+			return new ClientMessage("there is no exit in that direction", Server.ERROR_TEXT_COLOR);
+
+		// get the new room
+		Room newRoom = oldRoom.getExit(direction).getRoom();
+
+		// make the swap
+		Server.getUniverse().changeRoomOfCreature(player, newRoom);
+
+		// notify all users that the king has left the building
+		ClientMessage leavingMessage = new ClientMessage(player.getName() + " has left the room");
+		Server.sendMessageToAllClientsInRoom(oldRoom, leavingMessage);
+
+		// and that he has entered
+		ClientMessage comingMessage = new ClientMessage(player.getName() + " has entered the room");
+		Server.sendMessageToAllClientsInRoom(newRoom, comingMessage);
+
+		// invoke the look response to show the user the new room
+		return new LookResponse().respond(serverThread, null);
+	}
+
+	/**
+	 * @return the direction, or null
+	 */
+	private Direction stringToDirection(String s)
+	{
+		for (Direction direction : Direction.values())
+			if (direction.toString().equals(s.toUpperCase()))
+				return direction;
+		return null;
+	}
+
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import server.universe.item.Item;
 import server.universe.item.Potion;
+import server.universe.Direction;
 
 /**
  * A simple default universe that can be loaded for a demo, or when the universe file isn't there.
@@ -27,21 +28,10 @@ public class DefaultUniverse extends Universe
 	 * Assembles a simple Universe, returning a reference to the start room.
 	 */
 	private static Room assemble() {
-		List<Exit> northRoomExits = new ArrayList<Exit>();
-		List<Exit> southRoomExits = new ArrayList<Exit>();
+		Room northRoom = new Room("North Room", "An other boring place.");
+		Room southRoom = new Room("South Room", "A boring, empty place.");
+		southRoom.addRoom(Direction.NORTH, northRoom);
 
-		List<Item> northRoomItems = new ArrayList<Item>();
-		List<Item> southRoomItems = new ArrayList<Item>();
-
-		Room northRoom = new Room("North Room", "An other boring place.", northRoomExits, northRoomItems);
-		Room southRoom = new Room("South Room", "A boring, empty place.", southRoomExits, southRoomItems);
-
-		Exit toNorth = new Exit("north", "A passageway to the North2", Direction.NORTH, northRoom);
-		Exit toSouth = new Exit("south", "A passageway to the South", Direction.SOUTH, southRoom);
-
-		northRoomExits.add(toSouth);
-		southRoomExits.add(toNorth);
-		
 		// add some items
 		northRoom.addItem(new Potion());
 		northRoom.addItem(new Potion());
