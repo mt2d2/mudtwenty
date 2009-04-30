@@ -3,6 +3,8 @@ package server.universe;
 import java.io.Serializable;
 import java.util.List;
 
+import server.universe.item.Item;
+
 /**
  * A Room represents a location in the universe.
  * 
@@ -93,7 +95,7 @@ public class Room implements Entity, Serializable
 
 		toReturn.append("\tItems:\n");
 		for (Item i : this.items)
-			toReturn.append("\t\t" + i.getDescription());
+			toReturn.append("\t\t" + i.getName() + ": " + i.getDescription() + "\n");
 
 		return toReturn.toString();
 	}

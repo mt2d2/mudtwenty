@@ -7,7 +7,7 @@ import java.util.List;
 
 import message.ClientMessage;
 import server.ServerThread;
-import server.universe.Item;
+import server.universe.item.Item;
 
 /**
  * Responds to the inventory command issued by a player. This lists all the

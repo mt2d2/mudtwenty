@@ -127,8 +127,8 @@ public class Server
 		this.installServerResponses();
 
 		// Set up the universe
-		loadUniverse();
 		logger.info("loading universe");
+		this.loadUniverse();
 
 		// Schedule background maintenance tasks
 		timer.schedule(new ReaperTask(), 0, 1000);
@@ -159,6 +159,7 @@ public class Server
 		catch (FileNotFoundException e)
 		{
 			// This is expected on first ever startup
+			logger.info("generating new universe");
 			Server.universe = new DefaultUniverse();
 		}
 		catch (IOException e)

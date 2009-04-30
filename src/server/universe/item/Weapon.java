@@ -1,4 +1,8 @@
-package server.universe;
+package server.universe.item;
+
+import message.ClientMessage;
+import server.universe.Player;
+
 
 /**
  * Outline of item weapon that can be equipped to creatures.
@@ -26,5 +30,12 @@ public class Weapon implements Item
 	public String getName()
 	{
 		return "dagger";
+	}
+	
+	@Override
+	public ClientMessage use(Player player)
+	{
+		player.equip(this);
+		return new ClientMessage("You equipped " + this.getName());
 	}
 }

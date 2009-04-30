@@ -24,7 +24,7 @@ public class LookResponse implements ServerResponse
 	{
 		StringBuilder message = new StringBuilder();
 		final Room roomOfPlayer = Server.getUniverse().getRoomOfCreature(serverThread.getPlayer());
-
+		
 		// Append room info.
 		message.append(roomOfPlayer.getDescription());
 
@@ -35,10 +35,10 @@ public class LookResponse implements ServerResponse
 			message.append(player.getName() + ", ");
 
 		// remove trailing comma or report that there are no players
-		if (playersInRoom.size() > 1)
+		if (playersInRoom.size() >= 1)
 			message.replace(message.length() - 2, message.length(), " ");
 		else
-			message.append("no users online");
+			message.append("no users in the room");
 
 		return new ClientMessage(message.toString());
 	}

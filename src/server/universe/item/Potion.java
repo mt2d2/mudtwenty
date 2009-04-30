@@ -1,4 +1,8 @@
-package server.universe;
+package server.universe.item;
+
+import message.ClientMessage;
+import server.universe.Player;
+
 
 /**
  * Potion class outlines everything a potion does.
@@ -28,5 +32,13 @@ public class Potion implements Item
 	public int getHealingPower()
 	{
 		return 10;
+	}
+
+	@Override
+	public ClientMessage use(Player player)
+	{
+		player.increaseHealth(this.getHealingPower());
+		player.removeItem(this);
+		return new ClientMessage("You use " + this.getName() + " and heal " + ((Potion)this).getHealingPower() + " points");
 	}
 }

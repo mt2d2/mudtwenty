@@ -1,4 +1,7 @@
-package server.universe;
+package server.universe.item;
+
+import message.ClientMessage;
+import server.universe.Player;
 
 /**
  * Armor can be equipped to creatures.
@@ -26,5 +29,12 @@ public class Armor implements Item
 	public String getName()
 	{
 		return "leather";
+	}
+
+	@Override
+	public ClientMessage use(Player player)
+	{
+		player.equip(this);
+		return new ClientMessage("You equipped " + this.getName());
 	}
 }
