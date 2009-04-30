@@ -31,7 +31,10 @@ public enum Command
 	SHUTDOWN((byte) 15, "saves the universe and player state, alerts all participants, and shuts down the server; you must be granted access to this function"),
 	GIVE((byte) 16, "gives an item to a user, e.g., give <player name> <item name>"),
 	GET((byte) 17, "gets an item that exists in the room, e.g., get <name of item in room>"),
-	UNKNOWN((byte) 18, "all unrecognized commands are unknown, and you'll be told so");
+	UNKNOWN((byte) 18, "all unrecognized commands are unknown, and you'll be told so"),
+
+	// aliases
+	CD((byte) 19, "alias for move");
 
 	private byte	code;
 	private String	description;

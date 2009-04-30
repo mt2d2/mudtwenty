@@ -227,6 +227,9 @@ public class Server
 		this.actions.put(Command.SHUTDOWN, new ShutdownResponse());
 		this.actions.put(Command.GIVE, new GiveResponse());
 		this.actions.put(Command.GET, new GetResponse());
+		
+		// aliases
+		this.actions.put(Command.CD, new MoveResponse());
 	}
 
 	/**
