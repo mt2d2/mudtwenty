@@ -2,14 +2,18 @@ package server.universe;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
+import server.universe.Direction;
 import server.universe.item.Item;
 
 /**
  * A Room represents a location in the universe.
- * 
+ *
  * Thus quoteth The Spec:
- * 
+ *
  * "Rooms in a MUD should be thought of as locations rather than an indoor area
  * with walls and a ceiling (A "room" could be a clearing in the woods with a
  * path leading to the north and another to the west, or the middle of a field
@@ -20,47 +24,66 @@ public class Room implements Entity, Serializable
 {
 	private static final long	serialVersionUID	= 1L;
 
-	private List<Exit>	exits;
+	private Map<Direction, Exit> exitMap;
 	private List<Item>	items;
 	private String		name;
 	private String		blurb;
 
 	/**
 	 * Create a new room with the given attributes.
-	 * 
+	 *
 	 * @param name
 	 *            name of the room users will see and reference to
 	 * @param blurb
 	 *            small blurb of what the room looks like, i.e., decoration,
 	 *            weather, etc.
-	 * @param exits
-	 *            list of exists the room has
-	 * @param items
-	 *            list of items the room has
 	 */
-	public Room(String name, String blurb, List<Exit> exits, List<Item> items)
+	public Room(String name, String blurb)
 	{
 		this.name = name;
 		this.blurb = blurb;
-
-		this.exits = exits;
-		this.items = items;
+		this.exitMap = new HashMap<Direction, Exit>();
+		this.items = new ArrayList<Item>();
 	}
 
 	/**
-	 * @return A list of all of the exits from the room.
+	 * Get a particular exit.
+	 *
+	 * @return The exit in the given direction, or <code>null</code> if there is none.
 	 */
-	public List<Exit> getExits()
+	public Exit getExit(Direction direction)
 	{
-		return exits;
+		if (hasExit(direction))
+			return this.exitMap.get(direction);
+		return null;
 	}
 
 	/**
+	 * Test whether there is an exit in the given direction.
+	 *
+	 * @return <code>true</code> if there is an exit in the given direction, <code>false</code> for otherwise.
+	 */
+	public boolean hasExit(Direction direction)
+	{
+		return this.exitMap.containsKey(direction);
+	}
+
+	/**
+	 * Add an exit to the room. Clobber any exit that was there previously.
+	 */
+	public void addExit(Direction direction, Exit exit)
+	{
+		this.exitMap.put(direction, exit);
+	}
+
+	/**
+	 * List the items in the room.
+	 *
 	 * @return A list of all of the items in the room.
 	 */
 	public List<Item> getItems()
 	{
-		return items;
+		return this.items;
 	}
 
 	/**
@@ -80,19 +103,12 @@ public class Room implements Entity, Serializable
 		this.items.remove(item);
 	}
 
-	@Override
 	public String getDescription()
 	{
 		StringBuilder toReturn = new StringBuilder();
-
 		toReturn.append("Room: " + this.name + "\n");
-
 		toReturn.append("\tDescription: " + this.blurb + "\n");
-
-		toReturn.append("\tExits:\n");
-		for (Exit e : this.exits)
-			toReturn.append("\t\t" + e.getDescription() + "\n");
-
+		// TODO add descriptions for exits.
 		toReturn.append("\tItems:\n");
 		for (Item i : this.items)
 			toReturn.append("\t\t" + i.getName() + ": " + i.getDescription() + "\n");
@@ -100,9 +116,30 @@ public class Room implements Entity, Serializable
 		return toReturn.toString();
 	}
 
-	@Override
+	/**
+	 * Get the name of the room. This will be part of the string returned when the room is looked at.
+	 */
 	public String getName()
 	{
 		return this.name;
 	}
+
+	/**
+	 * Set the blurb about the room. This will be some text describing how the room looks,
+	 * regardless of items or creatures herein.
+	 */
+	public void setBlurb(String s)
+	{
+		this.blurb = s;
+	}
+
+	/**
+	 * Add a room to this one in the given direction. Clobber any room that was there previously.
+	 */
+	public void addRoom(Direction direction, Room room)
+	{
+		this.addExit(direction, new Exit(room));
+		room.addExit(direction.opposite(), new Exit(this));
+	}
+
 }

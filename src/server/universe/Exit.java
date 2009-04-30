@@ -5,50 +5,56 @@ import java.io.Serializable;
 /**
  * An Exit is a way to get from one Room to another.
  */
-public class Exit implements Entity, Serializable
+public class Exit implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
-	
+
 	private String		name;
-	private String		description;
-	private Direction	direction;
+	private String		blurb;
 	private Room		room;
 
 	/**
 	 * Create a new Exit with the given attributes.
-	 * 
-	 * @param name
-	 *            user-selectable name of the exit
-	 * @param description
-	 *            description of the exit, i.e., where it goes
-	 * @param direction
-	 *            the direction the exit is situated in the room
+	 *
+	 * @param room
+	 *            the room that this exit leads to
+	 * @param blurb
+	 *            description of the exit; where it goes or what it looks like
 	 */
-	public Exit(String name, String description, Direction direction, Room room)
+	public Exit(Room room, String blurb)
 	{
-		this.name = name;
-		this.description = description;
-		this.direction = direction;
+		this.blurb = blurb;
 		this.room = room;
 	}
 
 	/**
-	 * The description of the exit.
+	 * Create a new Exit with a default blurb.
+	 */
+	public Exit(Room room)
+	{
+		this.blurb = "a nondescript passageway to another place";
+		this.room = room;
+	}
+
+	/**
+	 * Get description of the exit. This will include everything that is returned when the exit is looked at.
 	 */
 	public String getDescription()
 	{
-		return this.name + ": " + this.description;
+		return this.blurb;
 	}
 
 	/**
-	 * The description of the exit.
+	 * Set the blurb of the exit. This will be the appearance of the exit.
 	 */
-	public Direction getDirection()
+	public void setBlurb(String s)
 	{
-		return direction;
+		this.blurb = s;
 	}
 
 	/**
+	 * Get the room that this exit leads to.
+	 *
 	 * @return Room this exit connects to
 	 */
 	public Room getRoom()
@@ -56,9 +62,4 @@ public class Exit implements Entity, Serializable
 		return this.room;
 	}
 
-	@Override
-	public String getName()
-	{
-		return this.name;
-	}
 }
