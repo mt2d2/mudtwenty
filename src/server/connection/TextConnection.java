@@ -1,5 +1,6 @@
 package server.connection;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,10 +8,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Logger;
 
-import util.InputParser;
-
 import message.ClientMessage;
 import message.ServerMessage;
+import server.Server;
+import util.InputParser;
 
 /**
  * Implements the Communicable interface for a connection to telnet, which
@@ -76,7 +77,9 @@ public class TextConnection implements Communicable
 	{
 		try
 		{
-			this.textOut.println(message.getPayload());
+			final String textColor = this.translateColor(message.getColor());
+			// add black to the end
+			this.textOut.println(textColor + message.getPayload() + "\u001B[30m");
 		}
 		catch (NullPointerException e)
 		{
@@ -103,5 +106,33 @@ public class TextConnection implements Communicable
 		}
 
 		this.textOut.close();
+	}
+
+	/**
+	 * Translates a java Color object to the proper ANSI escape code for color.
+	 * Defaults to black.
+	 * 
+	 * @param color
+	 *            Color to mimic
+	 * @return String escape code representing that color
+	 */
+	private String translateColor(Color color)
+	{
+		if (color == Server.ERROR_TEXT_COLOR)
+		{
+			return "\u001B[31m";
+		}
+		else if (color == Server.SYSTEM_TEXT_COLOR)
+		{
+			return "\u001B[32m";
+		}
+		else if (color == Server.MESSAGE_TEXT_COLOR)
+		{
+			return "\u001B[34m";
+		}
+		else
+		{
+			return "\u001B[30m";
+		}
 	}
 }
