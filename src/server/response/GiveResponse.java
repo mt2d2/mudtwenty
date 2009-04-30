@@ -37,6 +37,21 @@ public class GiveResponse implements ServerResponse
 			if (recipient == null)
 				return new ClientMessage("that player, " + arguments.get(0) + ", was not found on the system");
 			
+			// check to see if user is in the same room
+			List<Player> players = Server.getUniverse().getPlayersInRoom(Server.getUniverse().getRoomOfCreature(serverThread.getPlayer()));
+			boolean playerFound = false;
+			for (Player p : players)
+			{ 
+				if (p.getName().equalsIgnoreCase(recipient.getName()))
+				{
+					playerFound = true;
+					break;
+				}	
+			}
+			
+			if (! playerFound)
+				return new ClientMessage(recipient.getName() + " is not in the same room as you");
+			
 			// identify the item
 			arguments.remove(0);
 			Item itemToGive = serverThread.getPlayer().getItem(ArrayUtil.joinArguments(arguments, " ").trim());

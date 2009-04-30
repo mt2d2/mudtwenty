@@ -25,7 +25,7 @@ public class DropResponse implements ServerResponse
 	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		if (arguments.size() != 1)
+		if (arguments.size() < 1)
 		{
 			return new ClientMessage("the proper syntax for drop is drop <item name>", Server.ERROR_TEXT_COLOR);
 		}
@@ -39,7 +39,7 @@ public class DropResponse implements ServerResponse
 				// remove from user, add to room
 				serverThread.getPlayer().removeItem(item);
 				Server.getUniverse().getRoomOfCreature(serverThread.getPlayer()).addItem(item);
-				return new ClientMessage("the item, " + itemName + " was removed from your inventory");
+				return new ClientMessage("the item, " + itemName + ", was removed from your inventory");
 			}
 			else
 			{
