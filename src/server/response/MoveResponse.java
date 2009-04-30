@@ -5,7 +5,6 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
-import server.universe.Exit;
 import server.universe.Player;
 import server.universe.Room;
 import server.universe.Direction;
@@ -31,12 +30,8 @@ public class MoveResponse implements ServerResponse
 		}
 		else
 		{
-			String where = arguments.get(0);
-			Player player = serverThread.getPlayer();
-			Room oldRoom = Server.getUniverse().getRoomOfCreature(player);
-
 			// get the direction from the first argument
-			Direction direction = stringToDirection(where);
+			Direction direction = stringToDirection(arguments.get(0));
 			if (direction == null)
 				return new ClientMessage("that direction was not recognized", Server.ERROR_TEXT_COLOR);
 
@@ -44,6 +39,10 @@ public class MoveResponse implements ServerResponse
 		}
 	}
 
+	/**
+	 * An alternative respond method that takes a direction instead of a list of arguments.
+	 * This may be used directly by other responses such as NorthResponse, EastResponse etc.
+	 */
 	public ClientMessage respond(ServerThread serverThread, Direction direction)
 	{
 		Player player = serverThread.getPlayer();

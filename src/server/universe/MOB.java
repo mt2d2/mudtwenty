@@ -13,14 +13,17 @@ import java.io.Serializable;
  * players."
  * 
  */
-public class MOB extends Creature implements Runnable, Serializable
+public abstract class MOB extends Creature implements Runnable, Serializable
 {
 	private static final long	serialVersionUID	= 1L;
 
+	//private BehaviorStrategy strategy;
+	private boolean alive;
+	
 	public MOB(String name)
 	{
 		super(name);
-		// TODO Auto-generated constructor stub
+		this.alive = true;
 	}
 
 	/**
@@ -30,6 +33,11 @@ public class MOB extends Creature implements Runnable, Serializable
 	 */
 	public void run()
 	{
+		while (!this.alive)
+		{
+			//strategy.doAction();
+		}
+	
 	}
 
 }

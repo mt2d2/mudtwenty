@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class Universe implements Serializable
 {
-	private static final long			serialVersionUID	= 1L;
+	private static final long			serialVersionUID	= 2L;
 
 	// A map of all playernames to locations, including logged out players.
 	private Map<String, Room>			nameToRoom;
@@ -181,6 +181,23 @@ public class Universe implements Serializable
 		this.playerToRoom.put(player, room);
 	}
 
+	/**
+	 * Adds a player to the list of logged-in players in the Universe. Tell the
+	 * server that a user is now logged in. The Universe can now find a rightful
+	 * place for the user.
+	 *
+	 * If the Player was not previously in the list of players on the server, it
+	 * will now be added and put into the starting room.
+	 *
+	 * @param player
+	 *            to add
+	 */
+	public void spawnMob(MOB mob, Room room)
+	{
+		this.mobToRoom.put(mob, room);
+		new Thread(mob).start();
+	}
+	
 	/**
 	 * Removes a player from the list of currently logged-in players.
 	 *
