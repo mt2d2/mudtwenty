@@ -237,6 +237,7 @@ public class Server
 		this.actions.put(Command.WEST, new MoveResponse(Direction.WEST));
 		this.actions.put(Command.HELP, new CommandsResponse());
 		this.actions.put(Command.L, new LookResponse());
+		this.actions.put(Command.LS, new LookResponse());
 		this.actions.put(Command.EXIT, new QuitResponse());
 
 	}

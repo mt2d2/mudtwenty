@@ -41,7 +41,8 @@ public enum Command
 	WEST((byte) 23, "alias for move west"),
 	HELP((byte) 24, "alias for commands"),
 	L((byte) 25, "alias for look"),
-	EXIT((byte) 26, "alias for quit");
+	EXIT((byte) 26, "alias for quit"),
+	LS((byte) 27, "alias for look, l");
 	
 	private byte	code;
 	private String	description;
