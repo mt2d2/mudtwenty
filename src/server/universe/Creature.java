@@ -220,10 +220,10 @@ public abstract class Creature implements Entity, Serializable
 	 */
 	public Item getItem(String itemName)
 	{
-		for (Item item : this.items)			
+		for (Item item : this.items)
 			if (item.getName().equalsIgnoreCase(itemName))
 				return item;
-				
+
 		return null;
 	}
 
@@ -238,7 +238,7 @@ public abstract class Creature implements Entity, Serializable
 				addItem(weapon);
 
 			weapon = (Weapon) item;
-//			removeItem(item);
+			// removeItem(item);
 		}
 		if (item instanceof Armor)
 		{
@@ -246,7 +246,21 @@ public abstract class Creature implements Entity, Serializable
 				addItem(armor);
 
 			armor = (Armor) item;
-//			removeItem(item);
+			// removeItem(item);
 		}
+	}
+
+	/**
+	 * Gives an item to a different Player.
+	 * 
+	 * @param receipient
+	 *            to Player that will recieve the new item
+	 * @param itemToGive
+	 *            the item to give
+	 */
+	public void giveItem(Player receipient, Item itemToGive)
+	{
+		receipient.addItem(itemToGive);
+		this.removeItem(itemToGive);
 	}
 }
