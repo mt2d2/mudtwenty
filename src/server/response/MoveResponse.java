@@ -19,23 +19,44 @@ import server.universe.Direction;
 public class MoveResponse implements ServerResponse
 {
 
+	private Direction direction; 
+	
+	/**
+	 * Alternative constructor for MoveResponse that takes a direction.
+	 */
+	public MoveResponse(Direction direction)
+	{
+		this.direction = direction;
+	}
+	
+	/**
+	 * Default constructor.
+	 */
+	public MoveResponse()
+	{
+	}
+
 	/**
 	 * Move the player (and notify users in both the old and new room) if possible.
 	 */
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		if (arguments.size() != 1)
+		if (this.direction != null)
+		{
+			return this.respond(serverThread, this.direction);
+		}
+		else if (arguments.size() != 1)
 		{
 			return new ClientMessage("proper syntax of move: move <exit name>", Server.ERROR_TEXT_COLOR);
 		}
 		else
 		{
 			// get the direction from the first argument
-			Direction direction = stringToDirection(arguments.get(0));
-			if (direction == null)
+			this.direction = stringToDirection(arguments.get(0));
+			if (this.direction == null)
 				return new ClientMessage("that direction was not recognized", Server.ERROR_TEXT_COLOR);
 
-			return this.respond(serverThread, direction);
+			return this.respond(serverThread, this.direction);
 		}
 	}
 
