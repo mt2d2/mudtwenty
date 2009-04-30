@@ -5,7 +5,7 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
-import server.universe.Item;
+import server.universe.item.Item;
 
 /**
  * Responds to the drop command as input by the user. Drops a specified item

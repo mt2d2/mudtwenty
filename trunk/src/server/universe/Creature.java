@@ -7,10 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import server.universe.item.Armor;
+import server.universe.item.Item;
+import server.universe.item.Potion;
+import server.universe.item.Weapon;
+
 /**
  * The Creature interface represents any living or life-like agent in the
  * universe. Creatures can move between rooms, get hurt, and have items.
- *
+ * 
  * This abstract class deals with all of this simple behavior that is common to
  * both MOBs and Players.
  */
@@ -24,7 +29,7 @@ public abstract class Creature implements Entity, Serializable
 	private int					health;
 	private List<Item>			items;
 	private Map<Skill, Integer>	skills;
-	
+
 	// equipable items
 	private Weapon				weapon;
 	private Armor				armor;
@@ -37,6 +42,7 @@ public abstract class Creature implements Entity, Serializable
 	public Creature()
 	{
 		// required for serializable to work
+		// is it really?
 	}
 
 	/**
@@ -51,7 +57,8 @@ public abstract class Creature implements Entity, Serializable
 		this.maxHealth = defaultMaxHealth;
 		this.health = maxHealth;
 		this.items = new ArrayList<Item>();
-		// TODO these items are just added for testing purposes, all creatures shouldn't start with them
+		// TODO these items are just added for testing purposes, all creatures
+		// shouldn't start with them
 		this.addItem(new Potion());
 		this.addItem(new Armor());
 		this.addItem(new Weapon());
@@ -74,19 +81,21 @@ public abstract class Creature implements Entity, Serializable
 	public String getDescription()
 	{
 		StringBuilder toReturn = new StringBuilder();
-		
+
 		toReturn.append("Name: " + this.name + "\n");
 		toReturn.append("Description: " + this.description + "\n");
 		toReturn.append("Health: " + this.health + "/" + this.maxHealth + "\n");
-	
+		toReturn.append("Wearing: " + ((this.armor == null) ? "no armour" : this.armor.getName()) + "\n");
+		toReturn.append("Wielding: " + ((this.weapon == null) ? "no weapon" : this.weapon.getName()) + "\n");
+
 		toReturn.append("Items:\n");
 		for (Item i : this.items)
-			toReturn.append("\t" + i.getDescription() + "\n");
-		
+			toReturn.append("\t" + i.getName() + ": " + i.getDescription() + "\n");
+
 		toReturn.append("Skills: ");
 		for (Entry<Skill, Integer> es : this.skills.entrySet())
-			toReturn.append(((Skill)es.getKey()).name() + ": " + es.getValue());
-		
+			toReturn.append(((Skill) es.getKey()).name() + ": " + es.getValue());
+
 		return toReturn.toString();
 	}
 
@@ -150,7 +159,7 @@ public abstract class Creature implements Entity, Serializable
 	/**
 	 * Check the value of a skill. If the skill is not in the map of skills, it
 	 * is zero.
-	 *
+	 * 
 	 * @return The value of the given skill.
 	 */
 	public int getSkillValue(Skill skill)
@@ -162,7 +171,7 @@ public abstract class Creature implements Entity, Serializable
 	 * Practice the skill. This has a chance of increasing the value of the
 	 * skill. The result of practicing a skill should depend on the current
 	 * skill level and it should have a chance of increasing the skill.
-	 *
+	 * 
 	 * If the skill is not in the map, it is zero. If it becomes nonzero through
 	 * practice, put it into the map with the new value.
 	 */
@@ -204,21 +213,20 @@ public abstract class Creature implements Entity, Serializable
 
 	/**
 	 * Get an item with the specified name from the Creature's inventory.
-	 *
-	 * @param itemName the name of an item
+	 * 
+	 * @param itemName
+	 *            the name of an item
 	 * @return Item represented by its name (or null if nonexistent).
 	 */
 	public Item getItem(String itemName)
 	{
-		// TODO This only returns the first item with this name.
-		// Is this what we want?
-		for (Item item : this.items)
-			if (item.getName().equals(itemName))
+		for (Item item : this.items)			
+			if (item.getName().equalsIgnoreCase(itemName))
 				return item;
-
+				
 		return null;
 	}
-	
+
 	/**
 	 * Equips an item to the creature.
 	 */
@@ -228,17 +236,17 @@ public abstract class Creature implements Entity, Serializable
 		{
 			if (weapon != null)
 				addItem(weapon);
-			
+
 			weapon = (Weapon) item;
-			removeItem(item);
+//			removeItem(item);
 		}
 		if (item instanceof Armor)
 		{
 			if (armor != null)
 				addItem(armor);
-			
+
 			armor = (Armor) item;
-			removeItem(item);
+//			removeItem(item);
 		}
 	}
 }

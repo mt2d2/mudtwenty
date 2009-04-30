@@ -1,6 +1,3 @@
-/**
- * 
- */
 package server.response;
 
 import java.util.List;
@@ -8,11 +5,8 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
-import server.universe.Armor;
-import server.universe.Item;
 import server.universe.Player;
-import server.universe.Potion;
-import server.universe.Weapon;
+import server.universe.item.Item;
 import util.ArrayUtil;
 
 /**
@@ -42,16 +36,8 @@ public class UseResponse implements ServerResponse
 			String name = ArrayUtil.joinArguments(arguments, " ").trim();
 			Item item = player.getItem(name);
 			
-			if (item instanceof Potion) {
-				player.increaseHealth(((Potion)item).getHealingPower());
-				player.removeItem(item);
-				return new ClientMessage("You use " + item.getName() + " and heal " + ((Potion)item).getHealingPower() + " points");
-			}
-			
-			if (item instanceof Armor || item instanceof Weapon) {
-				player.equip(item);
-				return new ClientMessage("You equipped " + item.getName());
-			}
+			if (item != null)
+				return item.use(player);
 			
 			return new ClientMessage("You do not have " + name, Server.ERROR_TEXT_COLOR);
 		}
