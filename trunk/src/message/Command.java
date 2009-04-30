@@ -34,8 +34,15 @@ public enum Command
 	UNKNOWN((byte) 18, "all unrecognized commands are unknown, and you'll be told so"),
 
 	// aliases
-	CD((byte) 19, "alias for move");
-
+	CD((byte) 19, "alias for move"),
+	NORTH((byte) 20, "alias for move north"),
+	SOUTH((byte) 21, "alias for move south"),
+	EAST((byte) 22, "alias for move east"),
+	WEST((byte) 23, "alias for move west"),
+	HELP((byte) 24, "alias for commands"),
+	L((byte) 25, "alias for look"),
+	EXIT((byte) 26, "alias for quit");
+	
 	private byte	code;
 	private String	description;
 

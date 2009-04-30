@@ -42,6 +42,7 @@ import server.response.UnknownResponse;
 import server.response.UseResponse;
 import server.response.WhoResponse;
 import server.universe.DefaultUniverse;
+import server.universe.Direction;
 import server.universe.Player;
 import server.universe.Room;
 import server.universe.Universe;
@@ -123,7 +124,7 @@ public class Server
 		this.timer = new Timer();
 
 		// Prefer latency over bandwith, over connection time
-		this.serverSocket.setPerformancePreferences(0, 2, 1);
+		//this.serverSocket.setPerformancePreferences(0, 2, 1);
 
 		// Install responses
 		this.installServerResponses();
@@ -230,6 +231,14 @@ public class Server
 		
 		// aliases
 		this.actions.put(Command.CD, new MoveResponse());
+		this.actions.put(Command.NORTH, new MoveResponse(Direction.NORTH));
+		this.actions.put(Command.SOUTH, new MoveResponse(Direction.SOUTH));
+		this.actions.put(Command.EAST, new MoveResponse(Direction.EAST));
+		this.actions.put(Command.WEST, new MoveResponse(Direction.WEST));
+		this.actions.put(Command.HELP, new CommandsResponse());
+		this.actions.put(Command.L, new LookResponse());
+		this.actions.put(Command.EXIT, new QuitResponse());
+
 	}
 
 	/**
