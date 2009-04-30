@@ -34,23 +34,29 @@ public class MoveResponse implements ServerResponse
 			Room oldRoom = Server.getUniverse().getRoomOfCreature(player);
 			List<Exit> exits = oldRoom.getExits();
 
+			// attempt to find a room based on the exit the user specifies
 			Room newRoom = null;
 			for (Exit exit : exits)
 				if (exit.getName().equals(arguments.get(0)))
 					newRoom = exit.getRoom();
 
+			// make sure that room exists
 			if (newRoom == null)
 				return new ClientMessage("that room name was not recognized", Server.ERROR_TEXT_COLOR);
 
+			// make the swap
 			Server.getUniverse().changeRoomOfCreature(serverThread.getPlayer(), newRoom);
 
+			// notify all users that the king has left the building
 			ClientMessage leavingMessage = new ClientMessage(player.getName() + " has left the room");
 			Server.sendMessageToAllClientsInRoom(oldRoom, leavingMessage);
 
+			// and that he has entered
 			ClientMessage comingMessage = new ClientMessage(player.getName() + " has entered the room");
 			Server.sendMessageToAllClientsInRoom(newRoom, comingMessage);
 
-			return new ClientMessage("you have been moved to " + arguments.get(0));
+			// invoke the look response to show the user the new room
+			return new LookResponse().respond(serverThread, null);
 		}
 	}
 }
