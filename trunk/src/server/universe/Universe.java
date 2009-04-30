@@ -41,6 +41,15 @@ public class Universe implements Serializable
 		this.mobToRoom = new HashMap<MOB, Room>();
 		this.startRoom = startRoom;
 	}
+	
+	public Player getPlayer(String playerName)
+	{
+		for (Player player : this.playerToRoom.keySet())
+			if (player.getName().equalsIgnoreCase(playerName))
+				return player;
+		
+		return null;
+	}
 
 	/**
 	 * Return a list of all <b>currently logged in</b> players in a room.

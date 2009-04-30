@@ -39,5 +39,5 @@ public class Player extends Creature implements Serializable
 	public boolean confirmPasswordHash(String hash)
 	{
 		return this.passwordHash.equals(hash);
-	}	
+	}
 }

@@ -29,7 +29,8 @@ public enum Command
 	USE((byte) 13, "use a specified item from your inventory, e.g., use <item name>"),
 	MOVE((byte) 14, "moves you to through your specified exit, e.g., move <exit name>"),
 	SHUTDOWN((byte) 15, "saves the universe and player state, alerts all participants, and shuts down the server; you must be granted access to this function"),
-	UNKNOWN((byte) 16, "all unrecognized commands are unknown, and you'll be told so");
+	GIVE((byte) 15, "gives an item to a user, e.g., give <player name> <item name>"),
+	UNKNOWN((byte) 17, "all unrecognized commands are unknown, and you'll be told so");
 
 	private byte	code;
 	private String	description;

@@ -24,6 +24,7 @@ import message.Command;
 import server.response.CommandsResponse;
 import server.response.DropResponse;
 import server.response.EchoResponse;
+import server.response.GiveResponse;
 import server.response.InventoryResponse;
 import server.response.LoginResponse;
 import server.response.LookResponse;
@@ -223,6 +224,7 @@ public class Server
 		this.actions.put(Command.SCORE, new ScoreResponse());
 		this.actions.put(Command.MOVE, new MoveResponse());
 		this.actions.put(Command.SHUTDOWN, new ShutdownResponse());
+		this.actions.put(Command.GIVE, new GiveResponse());
 	}
 
 	/**
