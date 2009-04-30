@@ -1,9 +1,5 @@
 package server.universe;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import server.universe.item.Item;
 import server.universe.item.Potion;
 import server.universe.Direction;
 
