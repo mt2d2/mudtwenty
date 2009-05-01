@@ -293,7 +293,7 @@ public class Client extends JFrame
 
 		JMenu gameMenu = new JMenu("Game");
 		JMenuItem disconnect = new JMenuItem("Disconnect");
-		exit.addActionListener(new ActionListener() {
+		disconnect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
 				Client.this.renewInterface();
