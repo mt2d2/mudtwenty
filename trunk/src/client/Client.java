@@ -3,16 +3,20 @@ package client;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -22,11 +26,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
+import javax.swing.LayoutStyle;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -42,10 +49,10 @@ import util.InputParser;
  * GUI client that can connect to the MUD Server. Allows the user to configure
  * the host and port of the server, and, if the connection were successful,
  * communicates with the server through a basic terminal emulator.
- *
+ * 
  * This is a huge work in progress. Currently, the user has no option when
  * connecting to a server. It currently only connects to localhost on port 8080.
- *
+ * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class Client extends JFrame
@@ -59,9 +66,9 @@ public class Client extends JFrame
 
 	private static final long			serialVersionUID		= 1L;
 
+	public final static String			GAME_CARD				= "GAME_CARD";
+	public final static String			CONNECTOR_CARD			= "CONNECTOR_CARD";
 	private static final Color			DEFAULT_TEXT_COLOR		= Color.BLACK;
-	private static final String			GAME_CARD				= "GAME_CARD";
-	private static final String			CONNECTOR_CARD			= "CONNECTOR_CARD";
 	private static final Dimension		FRAME_SIZE				= new Dimension(640, 480);
 	private static final List<Command>	ALLOWED_CHAT_COMMANDS	= Arrays.asList(new Command[] { Command.OOC, Command.SAY, Command.TELL, Command.WHO });
 
@@ -89,19 +96,11 @@ public class Client extends JFrame
 		this.setPreferredSize(FRAME_SIZE);
 		this.cards = new JPanel(new CardLayout());
 
+		this.cards.add(this.layoutConnectorInterface(), CONNECTOR_CARD);
 		this.cards.add(this.layoutSplitInterace(), GAME_CARD);
 
-		this.cards.add(this.layoutConnectorInterface(), CONNECTOR_CARD);
 		this.getContentPane().add(this.cards);
 		this.pack();
-
-		// spawn the ClientThread to communicate with the server
-		// TODO move to ActionListener on Button from connector screen
-		this.clientThread = new ClientThread(this, "localhost", 4000);
-		new Thread(this.clientThread).start();
-
-		// request focus on the input as default
-		this.gameField.requestFocusInWindow();
 
 		// add a window close listener
 		this.addWindowListener(new WindowAdapter() {
@@ -116,7 +115,7 @@ public class Client extends JFrame
 	/**
 	 * Adds text to the server display window with a null color. The system will
 	 * resort to its default color.
-	 *
+	 * 
 	 * @param text
 	 *            the text to append
 	 */
@@ -127,7 +126,7 @@ public class Client extends JFrame
 
 	/**
 	 * Adds text to the server display window with a given color.
-	 *
+	 * 
 	 * @param input
 	 *            the text to append
 	 * @param color
@@ -140,7 +139,7 @@ public class Client extends JFrame
 
 	/**
 	 * Adds text to the chat display window with a given color.
-	 *
+	 * 
 	 * @param text
 	 *            the text to append
 	 * @param color
@@ -153,7 +152,7 @@ public class Client extends JFrame
 
 	/**
 	 * Append a string of text to the chat area.
-	 *
+	 * 
 	 * @param area
 	 * @param input
 	 * @param color
@@ -288,10 +287,109 @@ public class Client extends JFrame
 	{
 		JPanel panel = new JPanel();
 
-		panel.add(new JLabel("Connect?"));
-		panel.add(new JButton("Connect"));
+		JLabel host = new JLabel("Hostname:");
+		final JTextField hostField = new JTextField("localhost");
+		JLabel port = new JLabel("Port:");
+		final JTextField portField = new JTextField("4000");
+		final JButton connectButton = new JButton("Connect");
+		final JProgressBar spinner = new JProgressBar();
+		spinner.setIndeterminate(true);
+		spinner.setVisible(false);
+
+		hostField.setToolTipText("Enter the server running the game.");
+		portField.setToolTipText("Enter the port the game is running on");
+		spinner.setStringPainted(true);
+		spinner.setToolTipText("Attempting to connect to the specified server.");
+
+		connectButton.addActionListener(new ActionListener() {
+			private boolean connect = false;
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				spinner.setVisible(true);
+				connectButton.setEnabled(false);
+
+				new Thread(new Runnable() {
+					@Override
+					public void run()
+					{
+						try
+						{
+							Client.this.clientThread = new ClientThread(Client.this, hostField.getText(), Integer.parseInt(portField.getText()));
+							connect = true;
+						}
+						catch (NumberFormatException ex)
+						{
+							JOptionPane.showMessageDialog(Client.this, "You entered an invalid port.");
+							return;
+						}
+						catch (UnknownHostException ex)
+						{
+							JOptionPane.showMessageDialog(Client.this, "The specified server was unreachable.");
+							return;
+						}
+						catch (ConnectException ex)
+						{
+							JOptionPane.showMessageDialog(Client.this, "A problem connecting to the specified server was encountered.");
+							return;
+						}
+						finally
+						{
+							spinner.setVisible(false);
+							connectButton.setEnabled(true);
+						}
+					}
+				}).start();
+
+				if (!connect)
+					return;
+
+				// spawn the ClientThread to communicate with the server
+				new Thread(Client.this.clientThread).start();
+
+				// switch the forward facing card
+				Client.this.switchCard(Client.GAME_CARD);
+
+				// request focus on the input as default
+				Client.this.gameField.requestFocusInWindow();
+			}
+		});
+
+		GroupLayout layout = new GroupLayout(panel);
+		panel.setLayout(layout);
+		layout.setHorizontalGroup(layout.createParallelGroup().addGroup(
+				layout.createSequentialGroup().addContainerGap().addGroup(
+						layout.createParallelGroup().addGroup(
+								layout.createSequentialGroup().addComponent(host).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(
+										hostField, GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)).addGroup(
+								GroupLayout.Alignment.TRAILING,
+								layout.createSequentialGroup().addComponent(port).addGap(45, 45, 45).addComponent(portField, GroupLayout.DEFAULT_SIZE, 314,
+										Short.MAX_VALUE)).addGroup(
+								GroupLayout.Alignment.TRAILING,
+								layout.createSequentialGroup().addComponent(spinner, GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE).addPreferredGap(
+										LayoutStyle.ComponentPlacement.RELATED).addComponent(connectButton))).addContainerGap()));
+		layout.setVerticalGroup(layout.createParallelGroup().addGroup(
+				layout.createSequentialGroup().addContainerGap().addGroup(
+						layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(host).addComponent(hostField, GroupLayout.PREFERRED_SIZE,
+								GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(
+						layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(portField, GroupLayout.PREFERRED_SIZE,
+								GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(port)).addPreferredGap(
+						LayoutStyle.ComponentPlacement.RELATED).addGroup(
+						layout.createParallelGroup().addComponent(connectButton).addComponent(spinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+								GroupLayout.PREFERRED_SIZE)).addContainerGap(197, Short.MAX_VALUE)));
+		layout.linkSize(SwingConstants.VERTICAL, new Component[] { hostField, portField });
+		layout.linkSize(SwingConstants.VERTICAL, new Component[] { connectButton, spinner });
 
 		return panel;
+	}
+
+	/**
+	 * @param card
+	 */
+	public void switchCard(String card)
+	{
+		((CardLayout) (this.cards.getLayout())).show(cards, card);
 	}
 
 	/**
@@ -368,7 +466,7 @@ public class Client extends JFrame
 
 	/**
 	 * Invokes handleSendEvent() when an action is fired.
-	 *
+	 * 
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
 	private class SendEventListener implements ActionListener
@@ -392,7 +490,7 @@ public class Client extends JFrame
 	/**
 	 * Main entrance to the client. Attempts to set a matching plaf for the
 	 * jvm's host and makes a new Client visible.
-	 *
+	 * 
 	 * @param args
 	 *            there are no arguments to Client
 	 */
