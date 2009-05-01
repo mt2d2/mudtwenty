@@ -17,14 +17,14 @@ public abstract class MOB extends Creature implements Runnable, Serializable
 {
 	private static final long	serialVersionUID	= 1L;
 
-// 	private BehaviorStrategy strategy;
-// 	private DialogStrategy dialog;
-// 	private boolean alive;
+ 	private BehaviorStrategy behavior;
+ 	private DialogStrategy dialog;
+ 	private boolean alive;
 
 	public MOB(String name)
 	{
 		super(name);
-// 		this.alive = true;
+ 		this.alive = true;
 	}
 
 	/**
@@ -34,11 +34,45 @@ public abstract class MOB extends Creature implements Runnable, Serializable
 	 */
 	public void run()
 	{
-// 		while (!this.alive)
-// 		{
-// 			strategy.doAction();
-// 		}
-
+ 		while (this.alive)
+ 		{
+ 			behavior.doAction(this);
+ 			
+ 			// Check whether the MOB's dead yet.
+ 			if (this.getHealth() <= 0)
+ 				this.alive = false;
+ 		}
+	}
+	
+	/**
+	 * Receive a message (from either a player or another MOB).
+	 * This will be called when a user says something in the room of a MOB
+	 * or tells something to a mob.
+	 * 
+	 * Depending on the current DialogStrategy of the MOB, the MOB may ignore
+	 * the message or respond in some way.
+	 * 
+	 * @param message the text of what is said.
+	 */
+	public void tell(Creature sender, String message)
+	{
+		dialog.tell(sender, message);
+	}
+	
+	/**
+	 * Set the current behavior strategy.
+	 */
+	public void setBehavior(BehaviorStrategy behavior)
+	{
+		this.behavior = behavior;
+	}
+	
+	/**
+	 * Set the current dialog strategy.
+	 */
+	public void setDialog(DialogStrategy dialog)
+	{
+		this.dialog = dialog;
 	}
 
 }

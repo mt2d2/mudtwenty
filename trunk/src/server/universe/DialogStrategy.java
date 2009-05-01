@@ -15,6 +15,6 @@ public interface DialogStrategy extends Serializable
 	 * It will then probably 'say' or 'tell' something in response to this
 	 * message.
 	 */
-	public void reply(Creature sender, String message);
+	public void tell(Creature sender, String message);
 
 }

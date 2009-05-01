@@ -32,6 +32,18 @@ public class Universe implements Serializable
 	private Room						startRoom;
 
 	/**
+	 * 0-arg constructor. Be careful when using this as it sets startRoom to null.
+	 * setStartRoom must be used if this is used.
+	 */
+	public Universe()
+	{
+		this.nameToRoom = new HashMap<String, Room>();
+		this.playerToRoom = new HashMap<Player, Room>();
+		this.mobToRoom = new HashMap<MOB, Room>();
+		this.startRoom = null;
+	}
+	
+	/**
 	 * In this constructor, a simple default universe might be made.
 	 */
 	public Universe(Room startRoom)
@@ -42,6 +54,9 @@ public class Universe implements Serializable
 		this.startRoom = startRoom;
 	}
 
+	/**
+	 * Get the player with the given name.
+	 */
 	public Player getPlayer(String playerName)
 	{
 		for (Player player : this.playerToRoom.keySet())
@@ -51,6 +66,11 @@ public class Universe implements Serializable
 		return null;
 	}
 
+	public void setStartRoom(Room room)
+	{
+		this.startRoom = room;
+	}
+	
 	/**
 	 * Return a list of all <b>currently logged in</b> players in a room.
 	 */
@@ -130,6 +150,17 @@ public class Universe implements Serializable
 		List<Player> list = new ArrayList<Player>();
 		list.addAll(this.playerToRoom.keySet());
 		return list;
+	}
+	
+	/**
+	 * Test whether a player is logged in.
+	 */
+	public boolean isLoggedIn(String name)
+	{
+		for (Player p : playerToRoom.keySet())
+			if (p.getName().equals(name))
+				return true;
+		return false;
 	}
 
 	/**
