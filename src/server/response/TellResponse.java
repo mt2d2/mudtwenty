@@ -6,6 +6,8 @@ import message.ClientMessage;
 import message.Status;
 import server.Server;
 import server.ServerThread;
+import server.universe.MOB;
+import server.universe.Room;
 import util.ArrayUtil;
 
 /**
@@ -29,15 +31,29 @@ public class TellResponse implements ServerResponse
 		else
 		{
 			// Get and remove the receiver from the argument list.
-			final String reciever = arguments.get(0);
+			final String receiver = arguments.get(0);
 			arguments.remove(0);
-
+			
 			final String textSaid = ArrayUtil.joinArguments(arguments, " ");
-			ClientMessage message = new ClientMessage(serverThread.getPlayer().getName()
-				+ " says: " + textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR);
-			Server.sendMessageToPlayer(reciever, message);
+			if (Server.getUniverse().isLoggedIn(receiver))
+			{
+				ClientMessage message = new ClientMessage(serverThread.getPlayer().getName()
+						+ " says: " + textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR);
+				Server.sendMessageToPlayer(receiver, message);
+			}
+			else
+			{
+				Room room = Server.getUniverse().getRoomOfCreature(serverThread.getPlayer());
+				for (MOB mob : Server.getUniverse().getMOBsInRoom(room))
+				{
+					if (mob.getName().equals(receiver))
+					{
+						mob.tell(serverThread.getPlayer(), textSaid);
+					}
+				}
+			}
 
-			return new ClientMessage("you said \"" + textSaid + "\" to " + reciever);
+			return new ClientMessage("you said \"" + textSaid + "\" to " + receiver);
 		}
 	}
 }

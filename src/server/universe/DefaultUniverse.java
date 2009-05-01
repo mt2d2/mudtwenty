@@ -17,13 +17,7 @@ public class DefaultUniverse extends Universe
 	 */
 	public DefaultUniverse()
 	{
-		super(DefaultUniverse.assemble());
-	}
-
-	/**
-	 * Assembles a simple Universe, returning a reference to the start room.
-	 */
-	private static Room assemble() {
+		super();
 		Room northRoom = new Room("North Room", "An other boring place.");
 		Room southRoom = new Room("South Room", "A boring, empty place.");
 		southRoom.addRoom(Direction.NORTH, northRoom);
@@ -31,8 +25,10 @@ public class DefaultUniverse extends Universe
 		// add some items
 		northRoom.addItem(new Potion());
 		northRoom.addItem(new Potion());
+		
+		this.spawnMob(new Kitten("fluffy"), southRoom);
 
-		return southRoom;
+		this.setStartRoom(southRoom);
 	}
 
 }
