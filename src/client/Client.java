@@ -179,7 +179,15 @@ public class Client extends JFrame
 	 */
 	private void handleExitEvent()
 	{
-		this.clientThread.closeConnection();
+		try 
+		{
+			this.clientThread.closeConnection();
+		}
+		catch (NullPointerException e)
+		{
+			// pass
+		}
+		
 		System.exit(0);
 	}
 
@@ -298,6 +306,7 @@ public class Client extends JFrame
 
 		hostField.setToolTipText("Enter the server running the game.");
 		portField.setToolTipText("Enter the port the game is running on");
+		spinner.setString("Connecting...");
 		spinner.setStringPainted(true);
 		spinner.setToolTipText("Attempting to connect to the specified server.");
 
@@ -364,7 +373,7 @@ public class Client extends JFrame
 								layout.createSequentialGroup().addComponent(host).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(
 										hostField, GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)).addGroup(
 								GroupLayout.Alignment.TRAILING,
-								layout.createSequentialGroup().addComponent(port).addGap(45, 45, 45).addComponent(portField, GroupLayout.DEFAULT_SIZE, 314,
+								layout.createSequentialGroup().addComponent(port).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(portField, GroupLayout.DEFAULT_SIZE, 314,
 										Short.MAX_VALUE)).addGroup(
 								GroupLayout.Alignment.TRAILING,
 								layout.createSequentialGroup().addComponent(spinner, GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE).addPreferredGap(
