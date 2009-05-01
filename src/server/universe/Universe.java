@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import server.Server;
+
+import message.ClientMessage;
+
 /**
  * A Universe represents the entire state of the virtual world. A universe
  * contains Rooms and Entities. Universe is a singleton class -- there is no
@@ -162,7 +166,7 @@ public class Universe implements Serializable
 				return true;
 		return false;
 	}
-
+	
 	/**
 	 * Check whether a player name is registered.
 	 */
@@ -243,7 +247,39 @@ public class Universe implements Serializable
 	{
 		this.playerToRoom.remove(player);
 	}
-
+	
+	public void sendMessageToCreature(Creature sender, Creature receiver, String textSaid)
+	{
+		if (receiver instanceof Player)
+		{
+			ClientMessage message = new ClientMessage(sender.getName() + " tells you: \"" + textSaid + "\"",
+					Server.MESSAGE_TEXT_COLOR);
+			Server.sendMessageToPlayer(receiver.getName(), message);
+		}
+		else
+		{
+			MOB mob = (MOB) receiver;
+			mob.tell(sender, textSaid);
+		}
+	}
+	
+	public void sendMessageToCreaturesInRoom(Creature sender, Room room, String textSaid)
+	{
+		for (MOB mob : this.getMOBsInRoom(room))
+		{
+			if (!mob.equals(sender))
+				sendMessageToCreature(sender, mob, textSaid);
+		}
+		for (Player player : this.getPlayersInRoom(room))
+		{
+			ClientMessage message = new ClientMessage(sender.getName() + " says: \"" + textSaid + "\"",
+					Server.MESSAGE_TEXT_COLOR);
+			
+			if (!player.equals(sender))
+				Server.sendMessageToPlayer(player.getName(), message);
+		}
+	}
+	
 	/**
 	 * Called by Java during deserialization. This helps in restoring transient
 	 * fields.
