@@ -127,8 +127,8 @@ public class ClientThread implements Runnable
 
 			if (message == null)
 			{
-				this.displayServerMessage("Server connection has been terminated.", Color.RED, Status.OK);
-
+				this.client.renewInterface();
+				
 				if (JOptionPane.showConfirmDialog(this.client, "The server connection has been terminated. Would you like to reconnect?") == JOptionPane.YES_OPTION)
 					this.client.switchCard(Client.CONNECTOR_CARD);
 
