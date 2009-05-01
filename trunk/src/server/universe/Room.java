@@ -1,12 +1,12 @@
 package server.universe;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import server.universe.Direction;
 import server.universe.item.Item;
 
 /**
@@ -75,6 +75,18 @@ public class Room implements Entity, Serializable
 	{
 		this.exitMap.put(direction, exit);
 	}
+	
+	/**
+	 * @return the Direction an exit is facing
+	 */
+	public Direction getDirection(Exit exit)
+	{
+		for (Entry<Direction, Exit> entry : this.exitMap.entrySet())
+			if (entry.getValue().equals(exit))
+				return entry.getKey();
+
+		return null;
+	}
 
 	/**
 	 * List the items in the room.
@@ -108,7 +120,11 @@ public class Room implements Entity, Serializable
 		StringBuilder toReturn = new StringBuilder();
 		toReturn.append("Room: " + this.name + "\n");
 		toReturn.append("\tDescription: " + this.blurb + "\n");
-		// TODO add descriptions for exits.
+		
+		toReturn.append("\tExits:\n");
+		for (Exit e : this.exitMap.values())
+			toReturn.append("\t\t" + this.getDirection(e) + ": " + e.getDescription() + "\n");
+		
 		toReturn.append("\tItems:\n");
 		for (Item i : this.items)
 			toReturn.append("\t\t" + i.getName() + ": " + i.getDescription() + "\n");
