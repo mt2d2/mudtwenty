@@ -5,37 +5,11 @@ There's more than one thing that needs to be discussed. List any questions that 
 It might be convenient to discuss major issues on a newsgroup, like the one at <http://groups.google.com/group/mudtwenty>.
 
  * Which network port can we use?
-   * I suggest something besides 8080 -- that port is sometimes used for webservers. --Quinten.
  * Is there a test server we deploy on for home use?
-   * We can use my computer later. No problem --Quinten.
  * Data storage? vs Everything in memory? 
-   * What is meant by this? --Quinten.
 
 ----
 
- * What methods should be in creature? Should attributes of creature be non-private so that subclasses (MOB and Player) can access them?
- * String or enum for direction?
- * For sending colored messages to clients: should we use the current method (`Color` class) or send ANSI colored text?
-   * The spec suggests ANSI, this is how other MUDs do it, and it would work if we sent it to a client connected through another MUD cient.
-   * See [http://www.topmudsites.com/forums/mud-coding/413-java-ansi.html this discussion].
+TODO:
 
-----
-
- * ServerThread.savePlayerToDisk is no longer necessary when Universe keeps track of
-all players including logged-out players.
-
-----
-
-Where should the universe be loaded from a file?
-
-It seems like it should be loaded by the Server once it starts,
-but it might also make sense for it to be loaded in new Universe()
-because Universe is singleton and new Universe() is called when
-no universe is currently loaded.
-
-----
-
-Items and creatures both implement Entity, and this makes sense, because all entities have certain things in common:
-A name, a description, and a location. For certain things, such as "look", all we need is a name and description so "look" should be able to be used on any Entity.
-
-However, Rooms and the Universe should not necessarily contain lists of entities; it might be more convenient for them to contain lists of items, lists of MOBs, and lists of players, because we might want these lists to be handled differently. For example, when a user looks around a room, each type of entity will be listed separately and maybe in a different format.
+Provide a common interface for sending messages (tell, say) to all types of Creatures.
