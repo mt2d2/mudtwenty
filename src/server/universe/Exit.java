@@ -5,22 +5,25 @@ import java.io.Serializable;
 /**
  * An Exit is a way to get from one Room to another.
  */
-public class Exit implements Serializable
+public class Exit implements Entity, Serializable
 {
 	private static final long	serialVersionUID	= 1L;
 
-	private String		blurb;
-	private Room		room;
+	private String				name;
+	private String				blurb;
+	private Room				room;
 
 	/**
 	 * Create a new Exit with the given attributes.
-	 *
+	 * 
 	 * @param room
 	 *            the room that this exit leads to
+	 * @param name
+	 *            name of the exit
 	 * @param blurb
 	 *            description of the exit; where it goes or what it looks like
 	 */
-	public Exit(Room room, String blurb)
+	public Exit(Room room, String name, String blurb)
 	{
 		this.blurb = blurb;
 		this.room = room;
@@ -36,7 +39,8 @@ public class Exit implements Serializable
 	}
 
 	/**
-	 * Get description of the exit. This will include everything that is returned when the exit is looked at.
+	 * Get description of the exit. This will include everything that is
+	 * returned when the exit is looked at.
 	 */
 	public String getDescription()
 	{
@@ -53,12 +57,18 @@ public class Exit implements Serializable
 
 	/**
 	 * Get the room that this exit leads to.
-	 *
+	 * 
 	 * @return Room this exit connects to
 	 */
 	public Room getRoom()
 	{
 		return this.room;
+	}
+
+	@Override
+	public String getName()
+	{
+		return this.name;
 	}
 
 }
