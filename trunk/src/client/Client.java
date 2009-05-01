@@ -95,10 +95,8 @@ public class Client extends JFrame
 		this.setJMenuBar(this.layoutMenuBar());
 		this.setPreferredSize(FRAME_SIZE);
 		this.cards = new JPanel(new CardLayout());
-
 		this.cards.add(this.layoutConnectorInterface(), CONNECTOR_CARD);
 		this.cards.add(this.layoutSplitInterace(), GAME_CARD);
-
 		this.getContentPane().add(this.cards);
 		this.pack();
 
@@ -179,7 +177,19 @@ public class Client extends JFrame
 	 */
 	private void handleExitEvent()
 	{
-		try 
+		this.renewInterface();
+		System.exit(0);
+	}
+
+	/**
+	 * Closes the ClientThread connection and clears the game.
+	 */
+	void renewInterface()
+	{
+		this.gameArea.setText("");
+		this.chatArea.setText("");
+		
+		try
 		{
 			this.clientThread.closeConnection();
 		}
@@ -187,10 +197,8 @@ public class Client extends JFrame
 		{
 			// pass
 		}
-		
-		System.exit(0);
 	}
-
+	
 	/**
 	 * Simple about screen. Nothing fancy here.
 	 */
@@ -283,7 +291,18 @@ public class Client extends JFrame
 		});
 		fileMenu.add(exit);
 
+		JMenu gameMenu = new JMenu("Game");
+		JMenuItem disconnect = new JMenuItem("Disconnect");
+		exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				Client.this.renewInterface();
+			}
+		});
+		gameMenu.add(disconnect);
+
 		menu.add(fileMenu);
+		menu.add(gameMenu);
 
 		return menu;
 	}
@@ -311,52 +330,39 @@ public class Client extends JFrame
 		spinner.setToolTipText("Attempting to connect to the specified server.");
 
 		connectButton.addActionListener(new ActionListener() {
-			private boolean connect = false;
-			
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				spinner.setVisible(true);
 				connectButton.setEnabled(false);
 
-				new Thread(new Runnable() {
-					@Override
-					public void run()
-					{
-						try
-						{
-							Client.this.clientThread = new ClientThread(Client.this, hostField.getText(), Integer.parseInt(portField.getText()));
-							connect = true;
-						}
-						catch (NumberFormatException ex)
-						{
-							JOptionPane.showMessageDialog(Client.this, "You entered an invalid port.");
-							return;
-						}
-						catch (UnknownHostException ex)
-						{
-							JOptionPane.showMessageDialog(Client.this, "The specified server was unreachable.");
-							return;
-						}
-						catch (ConnectException ex)
-						{
-							JOptionPane.showMessageDialog(Client.this, "A problem connecting to the specified server was encountered.");
-							return;
-						}
-						finally
-						{
-							spinner.setVisible(false);
-							connectButton.setEnabled(true);
-						}
-					}
-				}).start();
-
-				if (!connect)
+				try
+				{
+					Client.this.clientThread = new ClientThread(Client.this, hostField.getText(), Integer.parseInt(portField.getText()));
+				}
+				catch (NumberFormatException ex)
+				{
+					JOptionPane.showMessageDialog(Client.this, "You entered an invalid port.");
 					return;
-
-				// spawn the ClientThread to communicate with the server
+				}
+				catch (UnknownHostException ex)
+				{
+					JOptionPane.showMessageDialog(Client.this, "The specified server was unreachable.");
+					return;
+				}
+				catch (ConnectException ex)
+				{
+					JOptionPane.showMessageDialog(Client.this, "A problem connecting to the specified server was encountered.");
+					return;
+				}
+				finally
+				{
+					spinner.setVisible(false);
+					connectButton.setEnabled(true);
+				}
+				
 				new Thread(Client.this.clientThread).start();
-
+				
 				// switch the forward facing card
 				Client.this.switchCard(Client.GAME_CARD);
 
@@ -373,8 +379,8 @@ public class Client extends JFrame
 								layout.createSequentialGroup().addComponent(host).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(
 										hostField, GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)).addGroup(
 								GroupLayout.Alignment.TRAILING,
-								layout.createSequentialGroup().addComponent(port).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(portField, GroupLayout.DEFAULT_SIZE, 314,
-										Short.MAX_VALUE)).addGroup(
+								layout.createSequentialGroup().addComponent(port).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(
+										portField, GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)).addGroup(
 								GroupLayout.Alignment.TRAILING,
 								layout.createSequentialGroup().addComponent(spinner, GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE).addPreferredGap(
 										LayoutStyle.ComponentPlacement.RELATED).addComponent(connectButton))).addContainerGap()));
