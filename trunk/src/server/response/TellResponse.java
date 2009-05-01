@@ -3,10 +3,11 @@ package server.response;
 import java.util.List;
 
 import message.ClientMessage;
-import message.Status;
 import server.Server;
 import server.ServerThread;
+import server.universe.Creature;
 import server.universe.MOB;
+import server.universe.Player;
 import server.universe.Room;
 import util.ArrayUtil;
 
@@ -30,30 +31,32 @@ public class TellResponse implements ServerResponse
 		}
 		else
 		{
-			// Get and remove the receiver from the argument list.
-			final String receiver = arguments.get(0);
-			arguments.remove(0);
-			
-			final String textSaid = ArrayUtil.joinArguments(arguments, " ");
-			if (Server.getUniverse().isLoggedIn(receiver))
+			final Player sender = serverThread.getPlayer();
+			final String receiverName = arguments.get(0);
+			final String textSaid = ArrayUtil.joinArguments(arguments.subList(1, arguments.size() - 1), " ").trim();
+			Creature receiver = null;
+			if (Server.getUniverse().isLoggedIn(receiverName))
 			{
-				ClientMessage message = new ClientMessage(serverThread.getPlayer().getName()
-						+ " says: " + textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR);
-				Server.sendMessageToPlayer(receiver, message);
+				receiver = Server.getUniverse().getPlayer(receiverName);
 			}
 			else
 			{
-				Room room = Server.getUniverse().getRoomOfCreature(serverThread.getPlayer());
+				Room room = Server.getUniverse().getRoomOfCreature(sender);
 				for (MOB mob : Server.getUniverse().getMOBsInRoom(room))
-				{
-					if (mob.getName().equals(receiver))
-					{
-						mob.tell(serverThread.getPlayer(), textSaid);
-					}
-				}
+					if (mob.getName().equals(receiverName))
+						receiver = mob;
 			}
 
-			return new ClientMessage("you said \"" + textSaid + "\" to " + receiver);
+			if (receiver != null)
+			{
+				Server.getUniverse().sendMessageToCreature(sender, receiver, textSaid);
+				return new ClientMessage("You said \"" + textSaid + "\" to " + receiverName + ".");
+			}
+			else
+			{
+				return new ClientMessage("No such player or MOB.", Server.ERROR_TEXT_COLOR);
+			}
+			
 		}
 	}
 }

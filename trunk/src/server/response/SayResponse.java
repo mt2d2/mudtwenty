@@ -3,10 +3,9 @@ package server.response;
 import java.util.List;
 
 import message.ClientMessage;
-import message.Status;
 import server.Server;
 import server.ServerThread;
-import server.universe.MOB;
+import server.universe.Player;
 import server.universe.Room;
 import util.ArrayUtil;
 
@@ -30,21 +29,13 @@ public class SayResponse implements ServerResponse
 		}
 		else
 		{
-			final Room roomOfPlayer = Server.getUniverse().getRoomOfCreature(serverThread.getPlayer());
-			final String textSaid = ArrayUtil.joinArguments(arguments, " ");
+			final Player sender = serverThread.getPlayer();
+			final Room room = Server.getUniverse().getRoomOfCreature(sender);
+			final String textSaid = ArrayUtil.joinArguments(arguments, " ").trim();
 			
-			// Send message to players.
-			ClientMessage message = new ClientMessage(serverThread.getPlayer().getName()
-				+ " says to the room: " + textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR);
-			Server.sendMessageToAllClientsInRoom(roomOfPlayer, message);
+			Server.getUniverse().sendMessageToCreaturesInRoom(sender, room, textSaid);
 			
-			// Send message to MOBs.
-			for (MOB mob : Server.getUniverse().getMOBsInRoom(roomOfPlayer))
-			{
-				mob.tell(serverThread.getPlayer(), textSaid);
-			}
-
-			return new ClientMessage("you said \"" + textSaid + "\" to everyone in the room");
+			return new ClientMessage("You said \"" + textSaid + "\" to everyone in the room.");
 		}
 	}
 }
