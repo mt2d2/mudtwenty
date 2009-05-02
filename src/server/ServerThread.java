@@ -1,5 +1,6 @@
 package server;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,8 +27,6 @@ import util.PropertyLoader;
  * the event that an ObjectStream cannot be established, the system falls back
  * on basic text streams. This makes connecting to and using the server via
  * telnet possible.
- *
- * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class ServerThread implements Runnable
 {
@@ -48,7 +47,7 @@ public class ServerThread implements Runnable
 	 * This is the default login message users see upon connecting to the
 	 * server.
 	 */
-	private static final String		WELCOME_STRING	= "welcome to mudtwenty\nuse register or login to join the game";
+	private static final String		WELCOME_STRING	= "Welcome to mudtwenty.";
 
 	private Communicable			connection;
 	private Server					server;
@@ -112,11 +111,7 @@ public class ServerThread implements Runnable
 	 */
 	public void run()
 	{
-		// Get the user's name.
-		// TODO
-		// Log in or register the player.
-		// TODO
-		// Enter the main input-getting loop of the server
+		this.processLogin();
 		while (this.getState() == State.OK)
 		{
 			ServerMessage toServer = this.connection.getMessage();
@@ -134,6 +129,62 @@ public class ServerThread implements Runnable
 		}
 	}
 
+	/**
+	 * Get the user's name and password. If they're new, register and create a new player.
+	 * Otherwise log them in. If something goes wrong during this process, start again.
+	 */
+	private void processLogin()
+	{
+		this.connection.sendMessage(new ClientMessage("What is your name?"));
+		String name = this.connection.getMessage().getPayload();
+		
+		if (Server.getUniverse().isRegistered(name))
+		{
+			this.connection.sendMessage(new ClientMessage("Welcome back. Please enter your password."));
+			String password = this.connection.getMessage().getPayload();
+			try
+			{
+				if (this.login(name, password))
+				{
+					this.connection.sendMessage(new ClientMessage("Login was successful", Server.SYSTEM_TEXT_COLOR));
+					this.connection.sendMessage(ResponseFactory.getClientMessage(this, "look")); // temp kludge
+				}
+				else
+				{
+					this.connection.sendMessage(new ClientMessage("Login was unsuccessful.", Color.RED));
+					this.processLogin();
+				}
+			}
+			catch (InvalidLoginException e)
+			{
+				this.connection.sendMessage(new ClientMessage(e.getMessage(), Color.RED));
+			}
+		}
+		else
+		{
+			this.connection.sendMessage(new ClientMessage("Welcome, new player. Please enter a password."));
+			String password = this.connection.getMessage().getPayload();
+			if (this.register(name, password))
+			{
+				try {
+					this.login(name, password);
+				} catch (InvalidLoginException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				this.connection.sendMessage(new ClientMessage("Registration and login complete.", Server.SYSTEM_TEXT_COLOR));
+				this.connection.sendMessage(ResponseFactory.getClientMessage(this, "look")); // temp kludge
+			}
+			else
+			{
+				this.connection.sendMessage(new ClientMessage("Registration unsuccessful.", Color.RED));
+				this.processLogin();
+			}
+				
+			
+		}
+	}
+	
 	/**
 	 * Terminates the connection. This terminates the appropriate Input- and
 	 * OutputStreams and the Socket itself.
@@ -157,7 +208,7 @@ public class ServerThread implements Runnable
 
 			if (this.isLoggedIn())
 			{
-				// remove the player from the unvierse
+				// remove the player from the universe
 				Server.getUniverse().logout(this.getPlayer());
 			}
 		}
@@ -208,16 +259,13 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Logs a user into the system. This entails a lengthy process: first, the
-	 * session data is checked to see if such a suer exists, it is loaded from
+	 * session data is checked to see if such a user exists, it is loaded from
 	 * the filesystem, and finally user and password are compared. If all checks
 	 * out, the resultant Player object is associated with this ServerThread,
 	 * and the Player is added to the Universe.
 	 *
-	 * Later, this should be made private and ServerThread should have sole
-	 * responsibility for logging in and registering players.
-	 *
-	 * @param username
-	 *            user input for username
+	 * @param name
+	 *            user input for name
 	 * @param password
 	 *            user input for password
 	 * @return <code>true</code> if login were successful or <code>false</code>
@@ -225,7 +273,7 @@ public class ServerThread implements Runnable
 	 *             thrown to provide helpful error messages to the user, i.e.,
 	 *             user doesn't exist or invalid password
 	 */
-	public boolean login(String name, String password) throws InvalidLoginException
+	private boolean login(String name, String password) throws InvalidLoginException
 	{
 		Player player = loadPlayer(name);
 		if (player == null || !player.getName().equals(name))
@@ -247,8 +295,6 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Load a player from their player file if possible. If something goes wrong, return null.
-	 *
-	 * @param name the name of the player
 	 */
 	private Player loadPlayer(String name)
 	{
@@ -291,9 +337,6 @@ public class ServerThread implements Runnable
 	 * player with the universe, which records the player's location as the
 	 * starting location. This does not log the user in.
 	 *
-	 * Later, this should be made private and ServerThread should have sole
-	 * responsibility for logging in and registering players.
-	 *
 	 * @param username
 	 *            user input of the username
 	 * @param password
@@ -301,7 +344,7 @@ public class ServerThread implements Runnable
 	 * @return <code>true</code> if the registration were successful or
 	 *         <code>false</code>, i.e., the username is already in use.
 	 */
-	public boolean register(String name, String passwordHash)
+	private boolean register(String name, String passwordHash)
 	{
 		final String dataRoot = conf.getProperty("data.root");
 		final File playerFile = new File(dataRoot + File.separatorChar + "players" + File.separatorChar + name + ".dat");
