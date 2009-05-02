@@ -33,7 +33,7 @@ public class TellResponse implements ServerResponse
 		{
 			final Player sender = serverThread.getPlayer();
 			final String receiverName = arguments.get(0);
-			final String textSaid = ArrayUtil.joinArguments(arguments.subList(1, arguments.size() - 1), " ").trim();
+			final String textSaid = ArrayUtil.joinArguments(arguments.subList(1, arguments.size()), " ").trim();
 			Creature receiver = null;
 			if (Server.getUniverse().isLoggedIn(receiverName))
 			{

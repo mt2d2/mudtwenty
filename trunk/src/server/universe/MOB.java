@@ -16,6 +16,8 @@ import java.io.Serializable;
 public abstract class MOB extends Creature implements Runnable, Serializable
 {
 	private static final long	serialVersionUID	= 1L;
+	
+	private static final long SLEEP_TIME = 1000;
 
  	private BehaviorStrategy behavior;
  	private DialogStrategy dialog;
@@ -41,6 +43,17 @@ public abstract class MOB extends Creature implements Runnable, Serializable
  			// Check whether the MOB's dead yet.
  			if (this.getHealth() <= 0)
  				this.alive = false;
+ 			
+ 			// Sleep until the next found.
+ 			try
+ 			{
+				Thread.sleep(SLEEP_TIME);
+			}
+ 			catch (InterruptedException e)
+ 			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
  		}
 	}
 	
