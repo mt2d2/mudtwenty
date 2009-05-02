@@ -1,20 +1,19 @@
 package server.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
+import server.universe.Direction;
 import server.universe.Player;
 import server.universe.Room;
-import server.universe.Direction;
 
 /**
  * Responds to the move command as input by the user. Specifically, this will
  * move a user from his current room, to the room which is connected by an exit
  * the user selects.
- *
- * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class MoveResponse implements ServerResponse
 {
@@ -88,7 +87,7 @@ public class MoveResponse implements ServerResponse
 		Server.sendMessageToAllClientsInRoom(newRoom, comingMessage);
 
 		// invoke the look response to show the user the new room
-		return new LookResponse().respond(serverThread, null);
+		return new LookResponse().respond(serverThread, new ArrayList<String>());
 	}
 
 	/**

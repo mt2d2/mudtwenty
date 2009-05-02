@@ -42,9 +42,9 @@ public class WhoResponse implements ServerResponse
 	private String listPlayerNames(List<Player> players)
 	{
 		if (players.size() == 1)
-			return players.get(0) + ".";
+			return players.get(0).getName() + ".";
 		else
-			return players.get(0) + ", " + listPlayerNames(players.subList(1, players.size()));
+			return players.get(0).getName() + ", " + listPlayerNames(players.subList(1, players.size()));
 	}
 	
 	

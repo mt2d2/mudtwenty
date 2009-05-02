@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import server.universe.item.Item;
 
@@ -75,18 +74,6 @@ public class Room implements Entity, Serializable
 	{
 		this.exitMap.put(direction, exit);
 	}
-	
-	/**
-	 * @return the Direction an exit is facing
-	 */
-	public Direction getDirection(Exit exit)
-	{
-		for (Entry<Direction, Exit> entry : this.exitMap.entrySet())
-			if (entry.getValue().equals(exit))
-				return entry.getKey();
-
-		return null;
-	}
 
 	/**
 	 * List the items in the room.
@@ -115,23 +102,43 @@ public class Room implements Entity, Serializable
 		this.items.remove(item);
 	}
 
+	/**
+	 * Get a description of everything that is intrinsic to the room.
+	 * Creatures and items inside can be listed separately.
+	 */
 	public String getDescription()
 	{
 		StringBuilder toReturn = new StringBuilder();
+		
+		// Add name and description.
 		toReturn.append("Room: " + this.name + "\n");
-		toReturn.append("\tDescription: " + this.blurb + "\n");
+		toReturn.append(this.blurb + "\n");
 		
-		toReturn.append("\tExits:\n");
-		for (Exit e : this.exitMap.values())
-			toReturn.append("\t\t" + this.getDirection(e) + ": " + e.getDescription() + "\n");
-		
-		toReturn.append("\tItems:\n");
-		for (Item i : this.items)
-			toReturn.append("\t\t" + i.getName() + ": " + i.getDescription() + "\n");
+		// Add exits.
+		List<Direction> directions = new ArrayList<Direction>();
+		directions.addAll(this.exitMap.keySet());
+		toReturn.append("Exits: " + listExits(directions) + "\n");
 
 		return toReturn.toString();
 	}
 
+	/**
+	 * Make a properly formatted string listing exit names.
+	 * 
+	 * Precondition: There is at least
+	 */
+	private String listExits(List<Direction> directions)
+	{
+		if (directions.isEmpty())
+			return "There are no exits.";
+		else if (directions.size() == 1)
+			return directions.get(0).toString().toLowerCase() + ".";
+		else
+			return directions.get(0).toString().toLowerCase()
+				+ listExits(directions.subList(1, directions.size()));
+	}
+		
+	
 	/**
 	 * Get the name of the room. This will be part of the string returned when the room is looked at.
 	 */
