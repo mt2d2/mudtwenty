@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -17,6 +20,8 @@ import message.ServerMessage;
 import server.connection.Communicable;
 import server.connection.MessageConnection;
 import server.connection.TextConnection;
+import server.response.LookResponse;
+import server.response.ServerResponse;
 import server.universe.Player;
 import util.PropertyLoader;
 
@@ -123,12 +128,22 @@ public class ServerThread implements Runnable
 			}
 			else
 			{
-				ClientMessage toClient = ResponseFactory.getClientMessage(this, toServer.getPayload());
+				ServerResponse response = ResponseFactory.getResponse(toServer.getPayload());
+				ClientMessage toClient = response.respond(this, getArguments(toServer.getPayload()));
 				this.connection.sendMessage(toClient);
 			}
 		}
 	}
 
+	/**
+	 * Get the list of arguments.
+	 */
+	private List<String> getArguments(String input)
+	{
+		List<String> words = Arrays.asList(input.split(" "));
+		return words.subList(1, words.size());
+	}
+	
 	/**
 	 * Get the user's name and password. If they're new, register and create a new player.
 	 * Otherwise log them in. If something goes wrong during this process, start again.
@@ -147,7 +162,7 @@ public class ServerThread implements Runnable
 				if (this.login(name, password))
 				{
 					this.connection.sendMessage(new ClientMessage("Login was successful", Server.SYSTEM_TEXT_COLOR));
-					this.connection.sendMessage(ResponseFactory.getClientMessage(this, "look")); // temp kludge
+					this.connection.sendMessage(new LookResponse().respond(this, new ArrayList<String>()));
 				}
 				else
 				{
@@ -173,7 +188,7 @@ public class ServerThread implements Runnable
 					e.printStackTrace();
 				}
 				this.connection.sendMessage(new ClientMessage("Registration and login complete.", Server.SYSTEM_TEXT_COLOR));
-				this.connection.sendMessage(ResponseFactory.getClientMessage(this, "look")); // temp kludge
+				this.connection.sendMessage(new LookResponse().respond(this, new ArrayList<String>()));
 			}
 			else
 			{
