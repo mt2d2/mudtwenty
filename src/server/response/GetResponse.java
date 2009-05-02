@@ -5,51 +5,44 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
+import server.universe.Player;
 import server.universe.Room;
 import server.universe.item.Item;
-import util.ArrayUtil;
 
 /**
  * Responds to the get command as issued by the user. This command gets an item
  * that exists in the same room as the user. The proper syntax is get <name of
  * item in room>.
- * 
- * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class GetResponse implements ServerResponse
 {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
-	 */
-	@Override
+
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		if (arguments.size() < 1)
 		{
-			return new ClientMessage("Improper syntax: the proper syntax is get <name of item in room>");
+			return new ClientMessage("Improper syntax: the proper syntax is get <item>");
 		}
 		else
 		{
-			Room room = Server.getUniverse().getRoomOfCreature(serverThread.getPlayer());
+			Player player = serverThread.getPlayer();
+			Room room = Server.getUniverse().getRoomOfCreature(player);
+
+			// locate the item
 			List<Item> itemsInRoom = room.getItems();
 			Item itemToGet = null;
-			
-			// locate the item
-			String search = ArrayUtil.joinArguments(arguments, " " ).trim();
-			for (Item i : itemsInRoom)
-				if (i.getName().equalsIgnoreCase(search))
-					itemToGet = i;
+			String itemName = arguments.get(0);
+			for (Item item : itemsInRoom)
+				if (item.getName().equalsIgnoreCase(itemName))
+					itemToGet = item;
 		
 			if (itemToGet == null)
-				return new ClientMessage("the item you are trying to get, " + search + ", does not exist in this room");
+				return new ClientMessage("The item you are trying to get, " + itemName + ", does not exist in this room.");
 			
 			// give the item to player, remove from room
 			serverThread.getPlayer().addItem(itemToGet);
 			room.removeItem(itemToGet);
-			return new ClientMessage("you got " + itemToGet.getName() + " from this room");
+			return new ClientMessage("You got " + itemName + " from this room.");
 		}
 	}	
 }

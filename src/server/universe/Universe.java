@@ -59,7 +59,7 @@ public class Universe implements Serializable
 	}
 
 	/**
-	 * Get the player with the given name.
+	 * Get the player with the given name. Return null if player does not exist.
 	 */
 	public Player getPlayer(String playerName)
 	{
@@ -144,27 +144,19 @@ public class Universe implements Serializable
 		}
 	}
 
-	/**
-	 * Return a list of players that are currently logged in.
-	 *
-	 * @return A list of all of the players currently logged in to the universe.
-	 */
 	public List<Player> getLoggedInPlayers()
 	{
 		List<Player> list = new ArrayList<Player>();
-		list.addAll(this.playerToRoom.keySet());
+		list.addAll(playerToRoom.keySet());
 		return list;
 	}
 	
 	/**
 	 * Test whether a player is logged in.
 	 */
-	public boolean isLoggedIn(String name)
+	public boolean isLoggedIn(Player player)
 	{
-		for (Player p : playerToRoom.keySet())
-			if (p.getName().equals(name))
-				return true;
-		return false;
+		return playerToRoom.keySet().contains(player);
 	}
 	
 	/**
@@ -192,7 +184,7 @@ public class Universe implements Serializable
 	 * the given name is in the game right now, boot them.
 	 *
 	 * @param name
-	 *            username of the player
+	 *            name of the player
 	 */
 	public void unregister(String name)
 	{
@@ -252,9 +244,10 @@ public class Universe implements Serializable
 	{
 		if (receiver instanceof Player)
 		{
+			Player player = (Player) receiver;
 			ClientMessage message = new ClientMessage(sender.getName() + " tells you: \"" + textSaid + "\"",
 					Server.MESSAGE_TEXT_COLOR);
-			Server.sendMessageToPlayer(receiver.getName(), message);
+			Server.sendMessageToPlayer(player, message);
 		}
 		else
 		{
@@ -276,7 +269,7 @@ public class Universe implements Serializable
 					Server.MESSAGE_TEXT_COLOR);
 			
 			if (!player.equals(sender))
-				Server.sendMessageToPlayer(player.getName(), message);
+				Server.sendMessageToPlayer(player, message);
 		}
 	}
 	

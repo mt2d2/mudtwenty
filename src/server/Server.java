@@ -208,16 +208,15 @@ public class Server
 	 * Sends a message to a specific player. This player is identified by his
 	 * username only, which might be kind of brittle.
 	 *
-	 * @param username
-	 *            Player that this message will be sent is represented by this
-	 *            String, his username
+	 * @param name
+	 *            Name of the user that will be sent a message
 	 * @param message
-	 *            message that will be sent player ot player
+	 *            message that will be sent player to player
 	 */
-	public static synchronized void sendMessageToPlayer(String username, ClientMessage message)
+	public static synchronized void sendMessageToPlayer(Player player, ClientMessage message)
 	{
 		for (ServerThread st : Server.clients)
-			if (st.isLoggedIn() && st.getPlayer().getName().equals(username))
+			if (player.equals(st.getPlayer()) && getUniverse().isLoggedIn(st.getPlayer()))
 				st.sendMessage(message);
 	}
 
@@ -296,7 +295,7 @@ public class Server
 			Server.this.saveUniverse();
 
 			for (ServerThread st : Server.clients)
-				if (st.isLoggedIn())
+				if (getUniverse().isLoggedIn(st.getPlayer()))
 					st.savePlayerToDisk(st.getPlayer());
 		}
 	}
