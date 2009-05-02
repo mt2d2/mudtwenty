@@ -3,7 +3,6 @@ package server;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -153,50 +152,61 @@ public class ServerThread implements Runnable
 		this.connection.sendMessage(new ClientMessage("What is your name?"));
 		String name = this.connection.getMessage().getPayload();
 		
-		if (Server.getUniverse().isRegistered(name))
+		if (playerExists(name))
+			processOldPlayer(name);
+		else
+			processNewPlayer(name);
+	}
+	
+	/**
+	 * Greet, get the password of, and try to register and log in a new player.
+	 */
+	private void processNewPlayer(String name)
+	{
+		this.connection.sendMessage(new ClientMessage("Welcome, new player. Please enter a password."));
+		String password = this.connection.getMessage().getPayload();
+		if (this.register(name, password))
 		{
-			this.connection.sendMessage(new ClientMessage("Welcome back. Please enter your password."));
-			String password = this.connection.getMessage().getPayload();
-			try
-			{
-				if (this.login(name, password))
-				{
-					this.connection.sendMessage(new ClientMessage("Login was successful", Server.SYSTEM_TEXT_COLOR));
-					this.connection.sendMessage(new LookResponse().respond(this, new ArrayList<String>()));
-				}
-				else
-				{
-					this.connection.sendMessage(new ClientMessage("Login was unsuccessful.", Color.RED));
-					this.processLogin();
-				}
-			}
-			catch (InvalidLoginException e)
-			{
+			try {
+				this.login(name, password);
+			} catch (InvalidLoginException e) {
 				this.connection.sendMessage(new ClientMessage(e.getMessage(), Color.RED));
+				processLogin();
 			}
+			this.connection.sendMessage(new ClientMessage("Registration and login complete.", Server.SYSTEM_TEXT_COLOR));
+			this.connection.sendMessage(new LookResponse().respond(this, new ArrayList<String>()));
 		}
 		else
 		{
-			this.connection.sendMessage(new ClientMessage("Welcome, new player. Please enter a password."));
-			String password = this.connection.getMessage().getPayload();
-			if (this.register(name, password))
+			this.connection.sendMessage(new ClientMessage("Registration unsuccessful.", Color.RED));
+			processLogin();
+		}
+	}
+	
+	/**
+	 * Greet, get the password of, and try to log in an already existing player. 
+	 */
+	private void processOldPlayer(String name)
+	{
+		this.connection.sendMessage(new ClientMessage("Welcome back. Please enter your password."));
+		String password = this.connection.getMessage().getPayload();
+		try
+		{
+			if (this.login(name, password))
 			{
-				try {
-					this.login(name, password);
-				} catch (InvalidLoginException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				this.connection.sendMessage(new ClientMessage("Registration and login complete.", Server.SYSTEM_TEXT_COLOR));
+				this.connection.sendMessage(new ClientMessage("Login was successful.", Server.SYSTEM_TEXT_COLOR));
 				this.connection.sendMessage(new LookResponse().respond(this, new ArrayList<String>()));
 			}
 			else
 			{
-				this.connection.sendMessage(new ClientMessage("Registration unsuccessful.", Color.RED));
-				this.processLogin();
+				this.connection.sendMessage(new ClientMessage("Login was unsuccessful.", Color.RED));
+				processLogin();
 			}
-				
-			
+		}
+		catch (InvalidLoginException e)
+		{
+			this.connection.sendMessage(new ClientMessage(e.getMessage(), Color.RED));
+			processLogin();
 		}
 	}
 	
@@ -221,11 +231,8 @@ public class ServerThread implements Runnable
 
 			this.setState(State.DONE);
 
-			if (this.isLoggedIn())
-			{
-				// remove the player from the universe
-				Server.getUniverse().logout(this.getPlayer());
-			}
+			if (Server.getUniverse().isLoggedIn(this.player))
+				Server.getUniverse().logout(this.player);
 		}
 	}
 
@@ -263,15 +270,28 @@ public class ServerThread implements Runnable
 	}
 
 	/**
-	 * Test whether the user is logged on.
-	 *
-	 * @return <code>true</code> if the user is logged in, or <code>false</code>
+	 * Test whether a player exists and rectify any inconsistency between universe and
+	 * player file.
 	 */
-	public boolean isLoggedIn()
+	private boolean playerExists(String name)
 	{
-		return this.player != null;
+		final String dataRoot = conf.getProperty("data.root");
+		final File playerFile = new File(dataRoot + File.separatorChar + "players" + File.separatorChar + name + ".dat");
+		if (!playerFile.exists())
+		{
+			if (Server.getUniverse().isRegistered(name))
+				Server.getUniverse().unregister(name);
+			return false;
+		}
+		else
+		{
+			if (!Server.getUniverse().isRegistered(name))
+				Server.getUniverse().register(name);
+			return true;
+		}
+		
 	}
-
+	
 	/**
 	 * Logs a user into the system. This entails a lengthy process: first, the
 	 * session data is checked to see if such a user exists, it is loaded from
@@ -325,13 +345,6 @@ public class ServerThread implements Runnable
 				fileIn.close();
 				return player;
 			}
-			catch (FileNotFoundException e)
-			{
-				// There is no player file?
-				// TODO notify user and unregister the name with universe
-				logger.throwing("ServerThread", "loadPlayer", e);
-				return null;
-			}
 			catch (IOException e)
 			{
 				logger.throwing("ServerThread", "loadPlayer", e);
@@ -347,33 +360,22 @@ public class ServerThread implements Runnable
 	}
 
 	/**
-	 * Registers a new Player in the system. This first checks to see if the
-	 * name is already taken before it does anything. Then, it registers the
-	 * player with the universe, which records the player's location as the
-	 * starting location. This does not log the user in.
+	 * This registers the player with the universe.
+	 * It creates a player and registers the player with the universe,
+	 * which records the player's location as the starting location.
+	 * This does not log the user in.
+	 * 
+	 * Precondition: player does not exist yet. 
 	 *
-	 * @param username
-	 *            user input of the username
-	 * @param password
-	 *            password user input of the password
-	 * @return <code>true</code> if the registration were successful or
-	 *         <code>false</code>, i.e., the username is already in use.
+	 * @return <code>true</code> if the registration was successful, false otherwise.
 	 */
-	private boolean register(String name, String passwordHash)
+	private boolean register(String name, String password)
 	{
-		final String dataRoot = conf.getProperty("data.root");
-		final File playerFile = new File(dataRoot + File.separatorChar + "players" + File.separatorChar + name + ".dat");
-
-		// TODO check whether the player is registered with the universe
-
-		if (!playerFile.exists())
+		Player newPlayer = new Player(name, password);
+		if (this.savePlayerToDisk(newPlayer))
 		{
-			boolean saveSuccess = this.savePlayerToDisk(new Player(name, passwordHash));
-			if (saveSuccess)
-			{
-				Server.getUniverse().register(name);
-				return true;
-			}
+			Server.getUniverse().register(name);
+			return true;
 		}
 
 		return false;
@@ -397,8 +399,8 @@ public class ServerThread implements Runnable
 	 */
 	public boolean savePlayerToDisk(Player player)
 	{
-		final File playerFile = new File(conf.getProperty("data.root") + File.separatorChar + "players" + File.separatorChar + player.getName() + ".dat");
-
+		final String dataRoot = conf.getProperty("data.root");
+		final File playerFile = new File(dataRoot + File.separatorChar + "players" + File.separatorChar + player.getName() + ".dat");
 		logger.fine("saving " + player.getName() + " to disk at " + playerFile.getAbsolutePath());
 
 		try
@@ -407,18 +409,7 @@ public class ServerThread implements Runnable
 			ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream(playerFile));
 			fileOut.writeObject(player);
 			fileOut.close();
-
-			// there was success in writing
 			return true;
-		}
-		catch (FileNotFoundException e)
-		{
-			System.out.println("here in filenotfound");
-
-			// The player file didn't previously exist?
-			// This is not a problem, and user file should still be saved.
-			// Wait -- this will not be thrown if the file's not found?
-			// TODO fix this.
 		}
 		catch (IOException e)
 		{

@@ -14,15 +14,10 @@ import util.ArrayUtil;
 /**
  * Responds to the say command as input by the user. This command sends a
  * (private) message to the specified user.
- *
- * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class TellResponse implements ServerResponse
 {
 
-	/**
-	 * Send message to receiver and notify sender.
-	 */
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		if (arguments.size() < 2)
@@ -34,8 +29,12 @@ public class TellResponse implements ServerResponse
 			final Player sender = serverThread.getPlayer();
 			final String receiverName = arguments.get(0);
 			final String textSaid = ArrayUtil.joinArguments(arguments.subList(1, arguments.size()), " ").trim();
+
 			Creature receiver = null;
-			if (Server.getUniverse().isLoggedIn(receiverName))
+			
+			// check whether receiver is a player
+			Player player = Server.getUniverse().getPlayer(receiverName);
+			if (Server.getUniverse().isLoggedIn(player))
 			{
 				receiver = Server.getUniverse().getPlayer(receiverName);
 			}

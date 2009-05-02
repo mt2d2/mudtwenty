@@ -22,24 +22,30 @@ public class WhoResponse implements ServerResponse
 	 */
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		StringBuilder message = new StringBuilder();
-		final List<Player> loggedInPlayers = Server.getUniverse().getLoggedInPlayers();
-
-		// Make a comma-separated list of players.
-		for (Player p : loggedInPlayers)
-			message.append(p.getName() + ", ");
-
-		// Remove trailing comma, or modify message to
-		if (message.length() > 2)
+		final List<Player> players = Server.getUniverse().getLoggedInPlayers();
+		String message;
+		switch (players.size())
 		{
-			message.insert(0, "users online: ");
-			message.replace(message.length() - 2, message.length(), " ");
-		}
-		else
-		{
-			message.append("no users online");
+		case 0: message = "There are no players online.";
+		case 1: message = "There is 1 player online: " + listPlayerNames(players);
+		default: message = "There are " + players.size() + " players online: " + listPlayerNames(players); 
 		}
 
-		return new ClientMessage(message.toString(), Status.CHAT, null);
+		return new ClientMessage(message, Status.CHAT, null);
 	}
+
+	/**
+	 * Make a properly formatted list of player names.
+	 * 
+	 * Precondition: List is not empty.
+	 */
+	private String listPlayerNames(List<Player> players)
+	{
+		if (players.size() == 1)
+			return players.get(0) + ".";
+		else
+			return players.get(0) + ", " + listPlayerNames(players.subList(1, players.size()));
+	}
+	
+	
 }

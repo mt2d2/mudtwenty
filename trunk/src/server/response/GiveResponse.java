@@ -6,8 +6,8 @@ import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
 import server.universe.Player;
+import server.universe.Room;
 import server.universe.item.Item;
-import util.ArrayUtil;
 
 /**
  * Invokes give at requested by the user. This command allows a user to give an
@@ -17,13 +17,7 @@ import util.ArrayUtil;
  */
 public class GiveResponse implements ServerResponse
 {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
-	 */
-	@Override
+
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		if (arguments.size() < 2)
@@ -32,36 +26,30 @@ public class GiveResponse implements ServerResponse
 		}
 		else
 		{
+			Player giver = serverThread.getPlayer();
+			
 			// identify the recipient
 			Player recipient = Server.getUniverse().getPlayer(arguments.get(0));
 			if (recipient == null)
-				return new ClientMessage("that player, " + arguments.get(0) + ", was not found on the system");
+				return new ClientMessage("That player, " + arguments.get(0) + ", was not found on the system.");
 			
 			// check to see if user is in the same room
-			List<Player> players = Server.getUniverse().getPlayersInRoom(Server.getUniverse().getRoomOfCreature(serverThread.getPlayer()));
-			boolean playerFound = false;
-			for (Player p : players)
-			{ 
-				if (p.getName().equalsIgnoreCase(recipient.getName()))
-				{
-					playerFound = true;
-					break;
-				}	
-			}
-			
-			if (! playerFound)
-				return new ClientMessage(recipient.getName() + " is not in the same room as you");
+			Room room = Server.getUniverse().getRoomOfCreature(giver);
+			List<Player> players = Server.getUniverse().getPlayersInRoom(room);
+			if (! players.contains(recipient))
+				return new ClientMessage(recipient.getName() + " is not in the same room as you.");
 			
 			// identify the item
-			arguments.remove(0);
-			Item itemToGive = serverThread.getPlayer().getItem(ArrayUtil.joinArguments(arguments, " ").trim());
+			String itemName = arguments.get(1);
+			Item itemToGive = serverThread.getPlayer().getItem(itemName);
 			if (itemToGive == null)
-				return new ClientMessage("that item, " + arguments.get(1) + ", was not found in your inventory");
+				return new ClientMessage("That item, " + itemName + ", was not found in your inventory.");
 		
-			// give and alert
+			// give and notify
 			serverThread.getPlayer().giveItem(recipient, itemToGive);
-			Server.sendMessageToPlayer(recipient.getName(), new ClientMessage("you have recieved " + itemToGive.getName() + " from " + serverThread.getPlayer().getName()));
-			return new ClientMessage("you gave " + recipient.getName() + " " + itemToGive.getName());
+			ClientMessage message = new ClientMessage("You have recieved " + itemName + " from " + giver.getName() + ".");
+			Server.sendMessageToPlayer(recipient, message);
+			return new ClientMessage("You gave " + recipient.getName() + " " + itemToGive.getName());
 		}
 	}
 }
