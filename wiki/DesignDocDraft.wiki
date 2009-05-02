@@ -10,7 +10,7 @@ Outline:
 
 I'm writing this wiki page with some html formatting because I think that it would be convenient if, when this doc is done, we just save it as a html file. This would make it easy to keep the same formatting between this draft and the final copy.
 
-Everything in <code>blockquote</code> is a quote from the spec.
+Everything in `blockquote` is a quote from the spec.
 
 = Draft =
 
