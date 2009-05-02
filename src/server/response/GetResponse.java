@@ -8,6 +8,7 @@ import server.ServerThread;
 import server.universe.Player;
 import server.universe.Room;
 import server.universe.item.Item;
+import util.ArrayUtil;
 
 /**
  * Responds to the get command as issued by the user. This command gets an item
@@ -31,7 +32,7 @@ public class GetResponse implements ServerResponse
 			// locate the item
 			List<Item> itemsInRoom = room.getItems();
 			Item itemToGet = null;
-			String itemName = arguments.get(0);
+			String itemName = ArrayUtil.joinArguments(arguments, " ").trim();
 			for (Item item : itemsInRoom)
 				if (item.getName().equalsIgnoreCase(itemName))
 					itemToGet = item;
