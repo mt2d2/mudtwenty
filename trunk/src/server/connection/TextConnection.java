@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import message.ClientMessage;
 import message.ServerMessage;
 import server.Server;
-import util.InputParser;
 
 /**
  * Implements the Communicable interface for a connection to telnet, which
@@ -30,24 +29,12 @@ public class TextConnection implements Communicable
 	private BufferedReader		textIn;
 	private PrintWriter			textOut;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.Communicable#openConnection(java.net.Socket)
-	 */
-	@Override
 	public void openConnection(Socket socket) throws IOException
 	{
 		this.textIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		this.textOut = new PrintWriter(socket.getOutputStream(), true);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.Communicable#getMessage()
-	 */
-	@Override
 	public ServerMessage getMessage()
 	{
 		ServerMessage message = null;
@@ -57,7 +44,7 @@ public class TextConnection implements Communicable
 			String input = this.textIn.readLine();
 
 			if (input != null)
-				message = InputParser.parse(input.trim());
+				message = new ServerMessage(input.trim());
 		}
 		catch (IOException e)
 		{
@@ -67,12 +54,6 @@ public class TextConnection implements Communicable
 		return message;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.Communicable#sendMessage(message.ClientMessage)
-	 */
-	@Override
 	public void sendMessage(ClientMessage message)
 	{
 		try
@@ -87,12 +68,6 @@ public class TextConnection implements Communicable
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.Communicable#terminate()
-	 */
-	@Override
 	public void terminate()
 	{
 		try

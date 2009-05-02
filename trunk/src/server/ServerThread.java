@@ -16,7 +16,6 @@ import message.ServerMessage;
 import server.connection.Communicable;
 import server.connection.MessageConnection;
 import server.connection.TextConnection;
-import server.response.ServerResponse;
 import server.universe.Player;
 import util.PropertyLoader;
 
@@ -129,8 +128,7 @@ public class ServerThread implements Runnable
 			}
 			else
 			{
-				ServerResponse response = this.server.getServerResponse(toServer.getCommand());
-				ClientMessage toClient = response.respond(this, toServer.getArguments());
+				ClientMessage toClient = ResponseFactory.getClientMessage(this, toServer.getPayload());
 				this.connection.sendMessage(toClient);
 			}
 		}

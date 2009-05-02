@@ -12,8 +12,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.GroupLayout;
@@ -41,9 +39,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyleConstants;
 
-import message.Command;
 import message.ServerMessage;
-import util.InputParser;
 
 /**
  * GUI client that can connect to the MUD Server. Allows the user to configure
@@ -70,7 +66,7 @@ public class Client extends JFrame
 	public final static String			CONNECTOR_CARD			= "CONNECTOR_CARD";
 	private static final Color			DEFAULT_TEXT_COLOR		= Color.BLACK;
 	private static final Dimension		FRAME_SIZE				= new Dimension(640, 480);
-	private static final List<Command>	ALLOWED_CHAT_COMMANDS	= Arrays.asList(new Command[] { Command.OOC, Command.SAY, Command.TELL, Command.WHO });
+	
 
 	private ClientThread				clientThread;
 	private JPanel						cards;
@@ -215,20 +211,18 @@ public class Client extends JFrame
 	private void handleChatSendEvent()
 	{
 		// disable textField and grab input
-		String input = this.chatField.getText();
+		String text = this.chatField.getText().trim();
 
 		// don't do anything if the user didn't type any input.
-		if (input.length() == 0)
+		if (text.isEmpty())
 			return;
 
 		// check to see if its a chat command
-		ServerMessage message = InputParser.parse(input.trim());
-
-		if (ALLOWED_CHAT_COMMANDS.contains(message.getCommand()))
+		if (isChatCommand(text))
 		{
 			// send the message to the server
 			this.chatField.setEnabled(false);
-			this.clientThread.sendMessage(message);
+			this.clientThread.sendMessage(new ServerMessage(text));
 
 			// restore text to blank
 			this.chatField.setText("");
@@ -242,6 +236,19 @@ public class Client extends JFrame
 	}
 
 	/**
+	 * 
+	 */
+	private boolean isChatCommand(String text)
+	{
+		String[] chatCommandWords = { "OOC", "SAY", "TELL", "WHO"};
+		String commandWord = text.split(" ")[0].toUpperCase();
+		for (String word : chatCommandWords)
+			if (commandWord.equals(word))
+				return true;
+		return false;
+	}
+	
+	/**
 	 * Invoked when the user wishes to send a message to the server, either by
 	 * hitting enter when the entry field is in focus or by pressing the send
 	 * button.
@@ -249,15 +256,15 @@ public class Client extends JFrame
 	private void handleGameSendEvent()
 	{
 		// disable textField and grab input
-		String input = this.gameField.getText();
+		String text = this.gameField.getText().trim();
 
 		// don't do anything if the user didn't type any input.
-		if (input.length() == 0)
+		if (text.isEmpty())
 			return;
 
 		// send the message to the server
 		this.gameField.setEnabled(false);
-		this.clientThread.sendMessage(InputParser.parse(input.trim()));
+		this.clientThread.sendMessage(new ServerMessage(text));
 
 		// restore text to blank
 		this.gameField.setText("");

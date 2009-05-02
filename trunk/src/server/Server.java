@@ -11,38 +11,14 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import message.ClientMessage;
-import message.Command;
-import server.response.CommandsResponse;
-import server.response.DropResponse;
-import server.response.EchoResponse;
-import server.response.GetResponse;
-import server.response.GiveResponse;
-import server.response.InventoryResponse;
-import server.response.LoginResponse;
-import server.response.LookResponse;
-import server.response.MoveResponse;
-import server.response.OocResponse;
-import server.response.QuitResponse;
-import server.response.RegisterResponse;
-import server.response.SayResponse;
-import server.response.ScoreResponse;
-import server.response.ServerResponse;
-import server.response.ShutdownResponse;
-import server.response.TellResponse;
-import server.response.UnknownResponse;
-import server.response.UseResponse;
-import server.response.WhoResponse;
 import server.universe.DefaultUniverse;
-import server.universe.Direction;
 import server.universe.Player;
 import server.universe.Room;
 import server.universe.Universe;
@@ -96,7 +72,6 @@ public class Server
 	private static List<ServerThread>		clients;
 	private ServerSocket					serverSocket;
 	private boolean							done;
-	private Map<Command, ServerResponse>	actions;
 	private Timer							timer;
 	private static Universe					universe;
 
@@ -125,9 +100,6 @@ public class Server
 
 		// Prefer latency over bandwith, over connection time
 		//this.serverSocket.setPerformancePreferences(0, 2, 1);
-
-		// Install responses
-		this.installServerResponses();
 
 		// Set up the universe
 		logger.info("loading universe");
@@ -199,60 +171,6 @@ public class Server
 		{
 			logger.throwing("Server", "saveUniverse", e);
 		}
-	}
-
-	/**
-	 * Installs a list of acceptable commands and their associated action for
-	 * each ServerThread to run. This should be edited to register new
-	 * functionality.
-	 */
-	private void installServerResponses()
-	{
-		this.actions = new HashMap<Command, ServerResponse>();
-		this.actions.put(Command.ECHO, new EchoResponse());
-		this.actions.put(Command.UNKNOWN, new UnknownResponse());
-		this.actions.put(Command.QUIT, new QuitResponse());
-		this.actions.put(Command.COMMANDS, new CommandsResponse());
-		this.actions.put(Command.WHO, new WhoResponse());
-		this.actions.put(Command.LOGIN, new LoginResponse());
-		this.actions.put(Command.REGISTER, new RegisterResponse());
-		this.actions.put(Command.TELL, new TellResponse());
-		this.actions.put(Command.OOC, new OocResponse());
-		this.actions.put(Command.SAY, new SayResponse());
-		this.actions.put(Command.DROP, new DropResponse());
-		this.actions.put(Command.USE, new UseResponse());
-		this.actions.put(Command.LOOK, new LookResponse());
-		this.actions.put(Command.INVENTORY, new InventoryResponse());
-		this.actions.put(Command.SCORE, new ScoreResponse());
-		this.actions.put(Command.MOVE, new MoveResponse());
-		this.actions.put(Command.SHUTDOWN, new ShutdownResponse());
-		this.actions.put(Command.GIVE, new GiveResponse());
-		this.actions.put(Command.GET, new GetResponse());
-		
-		// aliases
-		this.actions.put(Command.CD, new MoveResponse());
-		this.actions.put(Command.NORTH, new MoveResponse(Direction.NORTH));
-		this.actions.put(Command.SOUTH, new MoveResponse(Direction.SOUTH));
-		this.actions.put(Command.EAST, new MoveResponse(Direction.EAST));
-		this.actions.put(Command.WEST, new MoveResponse(Direction.WEST));
-		this.actions.put(Command.HELP, new CommandsResponse());
-		this.actions.put(Command.L, new LookResponse());
-		this.actions.put(Command.LS, new LookResponse());
-		this.actions.put(Command.EXIT, new QuitResponse());
-
-	}
-
-	/**
-	 * Returns a ServerResponse appropriate to a given Command. This is useful
-	 * for quickly parsing incoming ClientMessages for its appropriate action.
-	 *
-	 * @param input
-	 *            selected command
-	 * @return input's associated ServerResponse
-	 */
-	public ServerResponse getServerResponse(Command input)
-	{
-		return this.actions.get(input);
 	}
 
 	/**
