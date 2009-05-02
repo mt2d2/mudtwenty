@@ -11,7 +11,7 @@ import server.universe.Player;
 /**
  * Responds to the who command as requested by the user. That is, this returns a
  * list of a users online in the mud, both users and guests.
- *
+ * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class WhoResponse implements ServerResponse
@@ -26,9 +26,15 @@ public class WhoResponse implements ServerResponse
 		String message;
 		switch (players.size())
 		{
-		case 0: message = "There are no players online.";
-		case 1: message = "There is 1 player online: " + listPlayerNames(players);
-		default: message = "There are " + players.size() + " players online: " + listPlayerNames(players); 
+			case 0:
+				message = "There are no players online.";
+				break;
+			case 1:
+				message = "There is 1 player online: " + listPlayerNames(players);
+				break;
+			default:
+				message = "There are " + players.size() + " players online: " + listPlayerNames(players);
+				break;
 		}
 
 		return new ClientMessage(message, Status.CHAT, null);
@@ -46,6 +52,5 @@ public class WhoResponse implements ServerResponse
 		else
 			return players.get(0).getName() + ", " + listPlayerNames(players.subList(1, players.size()));
 	}
-	
-	
+
 }
