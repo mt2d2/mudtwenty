@@ -19,7 +19,7 @@ public class CommandsResponse implements ServerResponse {
 	{
 		String message = "The following commands are available:\n"
 				+ "Chat commands:\n"
-				+ "\twho, w: lists all users online, both users and guests\n"
+				+ "\twho: lists all users online, both users and guests\n"
 				+ "\ttell <name> <message>: send a private message to a player or mob\n"
 				+ "\tsay <message>: send a message to everyone in the same room\n"
 				+ "\tooc <message>: send a message to all users connected to the mud\n"
@@ -36,10 +36,10 @@ public class CommandsResponse implements ServerResponse {
 				+ "\tget <item>: gets an item that exists in the room\n"
 				+ "Movement commands:\n"
 				+ "\tmove <direction>: move you to through your specified exit\n"
-				+ "\tnorth: move north\n"
-				+ "\tsouth: move south\n"
-				+ "\teast: move east\n"
-				+ "\twest: move west\n"
+				+ "\tnorth, n: move north\n"
+				+ "\tsouth, s: move south\n"
+				+ "\teast, e: move east\n"
+				+ "\twest, w: move west\n"
 				+ "Admin commands:\n"
 				+ "\tshutdown: shuts down the server, saving and notifying players\n";
 		
