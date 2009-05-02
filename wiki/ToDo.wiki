@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary A list of things to do very soon!
 
 = Introduction =
 
@@ -13,13 +13,13 @@ A list of things to concentrate on. Delete them from this list when they're done
 
 = Project Spec =
 
- * Expand the universe: "The MUD must have at least 30 rooms."
+ * *Expand the universe*: "The MUD must have at least 30 rooms."
 
- * Expand items, add uses: "The MUD must have at least 10 different types of items. ... All items must have a use in the game. You could have potions to heal damage taken, keys to open doors, special items that affect the player’s stats, equipment the player can wear or items needed to finish a quest."
+ * *Expand items, add uses*: "The MUD must have at least 10 different types of items. ... All items must have a use in the game. You could have potions to heal damage taken, keys to open doors, special items that affect the player’s stats, equipment the player can wear or items needed to finish a quest."
 
- * Expand MOBs, add behavior: "The MUD must have at least 10 different types of MOBs ... Some MOBs may offer quests, services or games to the players ... MOBs must be able to move between rooms ... MOBs must have complex behaviors ... that take into account player statistics or items a player is carrying, or the contents of the room that the MOB is in ... MOBs should have actions that are triggered ... without direct interaction from players."
+ * *Expand MOBs, add behavior*: "The MUD must have at least 10 different types of MOBs ... Some MOBs may offer quests, services or games to the players ... MOBs must be able to move between rooms ... MOBs must have complex behaviors ... that take into account player statistics or items a player is carrying, or the contents of the room that the MOB is in ... MOBs should have actions that are triggered ... without direct interaction from players."
 
- * Add combat system.
+ * *Add combat system*.
 
 = Extra Credit =
 
