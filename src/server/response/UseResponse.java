@@ -17,16 +17,9 @@ import util.ArrayUtil;
  */
 public class UseResponse implements ServerResponse
 {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
-	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		if (arguments.size() == 0)
+		if (arguments.isEmpty())
 		{
 			return new ClientMessage("proper syntax of use: use <item name>", Server.ERROR_TEXT_COLOR);
 		}
@@ -38,8 +31,8 @@ public class UseResponse implements ServerResponse
 			
 			if (item != null)
 				return item.use(player);
-			
-			return new ClientMessage("You do not have " + name, Server.ERROR_TEXT_COLOR);
+			else
+				return new ClientMessage("You do not have " + name, Server.ERROR_TEXT_COLOR);
 		}
 	}
 }

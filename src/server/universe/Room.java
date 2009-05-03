@@ -165,7 +165,17 @@ public class Room implements Entity, Serializable
 			return directions.get(0).toString().toLowerCase()
 				+ ", " + listExits(directions.subList(1, directions.size()));
 	}
-		
+	
+	/**
+	 * Test whether this room is adjacent to another one (i.e. it has an exit leading to the other)
+	 */
+	public boolean isAdjacentTo(Room room)
+	{
+		for (Exit exit : exitMap.values())
+			if (exit.getRoom().equals(room))
+					return true;
+		return false;
+	}
 	
 	/**
 	 * Get the name of the room. This will be part of the string returned when the room is looked at.
@@ -179,9 +189,9 @@ public class Room implements Entity, Serializable
 	 * Set the blurb about the room. This will be some text describing how the room looks,
 	 * regardless of items or creatures herein.
 	 */
-	public void setBlurb(String s)
+	public void setBlurb(String blurb)
 	{
-		this.blurb = s;
+		this.blurb = blurb;
 	}
 
 	/**

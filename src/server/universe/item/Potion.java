@@ -1,44 +1,53 @@
 package server.universe.item;
 
 import message.ClientMessage;
-import server.universe.Player;
-
+import server.universe.Creature;
 
 /**
  * Potion class outlines everything a potion does.
+ * 
+ * All potions are healing potions.
  */
-public class Potion implements Item
+public class Potion extends Item
 {
-	private static final long	serialVersionUID	= 1L;
+	private static final long	serialVersionUID	= 2L;
 
-	@Override
-	public int getPrice()
+	private int healingPower;
+	
+	/**
+	 * Construct a potion with default characteristics.
+	 */
+	public Potion()
 	{
-		return 5;
+		setName("small potion");
+		setDescription("Use potions to recover health points");
+		setPrice(10);
+		this.healingPower = 10;
 	}
-
-	@Override
-	public String getDescription()
-	{
-		return "Use potions to recover health points";
-	}
-
-	@Override
-	public String getName()
-	{
-		return "small potion";
-	}
-
+	
+	/**
+	 * Get the healing power of a potion.
+	 */
 	public int getHealingPower()
 	{
-		return 10;
+		return this.healingPower;
+	}
+	
+	/**
+	 * Set the healing power of a potion.
+	 */
+	public void setHealingPower(int power)
+	{
+		this.healingPower = power;
 	}
 
-	@Override
-	public ClientMessage use(Player player)
+	/**
+	 * Heal player, remove potion from inventory, and possibly notify user.
+	 */
+	public ClientMessage use(Creature creature)
 	{
-		player.increaseHealth(this.getHealingPower());
-		player.removeItem(this);
-		return new ClientMessage("You use " + this.getName() + " and heal " + ((Potion)this).getHealingPower() + " points");
+		creature.increaseHealth(this.healingPower);
+		creature.removeItem(this);
+		return new ClientMessage("You use " + this.getName() + " and heal " + this.healingPower + " points");
 	}
 }
