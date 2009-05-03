@@ -176,6 +176,8 @@ public class Room implements Entity, Serializable
 	 * Make a properly formatted string listing exit names.
 	 * 
 	 * Precondition: There is at least
+	 * 
+	 * @return String description of the exits
 	 */
 	private String listExits(List<Direction> directions)
 	{
