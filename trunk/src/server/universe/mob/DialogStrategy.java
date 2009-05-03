@@ -1,6 +1,8 @@
-package server.universe;
+package server.universe.mob;
 
 import java.io.Serializable;
+
+import server.universe.Creature;
 
 /**
  * A BehaviorStrategy represents a behavior that a MOB can have at any given time.

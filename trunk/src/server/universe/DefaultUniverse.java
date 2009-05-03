@@ -2,6 +2,7 @@ package server.universe;
 
 import server.universe.item.Key;
 import server.universe.item.Potion;
+import server.universe.mob.Kitten;
 import server.universe.Direction;
 
 /**
