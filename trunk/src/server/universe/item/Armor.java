@@ -1,40 +1,33 @@
 package server.universe.item;
 
 import message.ClientMessage;
-import server.universe.Player;
+import server.universe.Creature;
 
 /**
- * Armor can be equipped to creatures.
- * 
- * @author Simon
- * 
+ * This class represents some generic armor.
+ * More specific types of armor can be created by setting
+ * the attributes of this armor and cloning.
  */
-public class Armor implements Item
+public class Armor extends Item
 {
-	private static final long	serialVersionUID	= 1L;
+	private static final long	serialVersionUID	= 2L;
 
-	@Override
-	public int getPrice()
+	/**
+	 * Creates armor with default characteristics.
+	 */
+	public Armor()
 	{
-		return 5;
+		setName("leather armor");
+		setDescription("Protect yourself from attacks.");
+		setPrice(5);
 	}
-
-	@Override
-	public String getDescription()
+	
+	/**
+	 * Equip the armor.
+	 */
+	public ClientMessage use(Creature creature)
 	{
-		return "Protect yourself from enemy attacks";
-	}
-
-	@Override
-	public String getName()
-	{
-		return "leather";
-	}
-
-	@Override
-	public ClientMessage use(Player player)
-	{
-		player.equip(this);
+		creature.equip(this);
 		return new ClientMessage("You equipped " + this.getName());
 	}
 }

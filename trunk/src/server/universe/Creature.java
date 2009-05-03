@@ -21,7 +21,7 @@ import server.universe.item.Weapon;
  */
 public abstract class Creature implements Entity, Serializable
 {
-	private static final long	serialVersionUID	= 1L;
+	private static final long	serialVersionUID	= 2L;
 
 	private String				name;
 	private String				description;
@@ -38,12 +38,6 @@ public abstract class Creature implements Entity, Serializable
 	 * We should change this later.
 	 */
 	private static final int	defaultMaxHealth	= 100;
-
-	public Creature()
-	{
-		// required for serializable to work
-		// is it really?
-	}
 
 	/**
 	 * Construct a creature with the given name. Other attributes of the
