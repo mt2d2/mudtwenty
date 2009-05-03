@@ -4,7 +4,7 @@ public class Sapoman implements Species{
 	
 	private long health = 30;
 	private long mana = 0;
-	private long intel = 15;
+	private long Intel = 15;
 	private long STR = 5;
 	private long DEF = 5;
 	private short HIT = 5;
@@ -77,7 +77,13 @@ public class Sapoman implements Species{
 	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
-		return null;
+		return descript;
+	}
+
+	@Override
+	public long getIntel() {
+		// TODO Auto-generated method stub
+		return Intel;
 	}
 	
 }
