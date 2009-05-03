@@ -1,5 +1,6 @@
 package server.universe;
 
+import server.universe.item.Key;
 import server.universe.item.Potion;
 import server.universe.Direction;
 
@@ -18,13 +19,16 @@ public class DefaultUniverse extends Universe
 	public DefaultUniverse()
 	{
 		super();
-		Room northRoom = new Room("North Room", "An other boring place.");
-		Room southRoom = new Room("South Room", "A boring, empty place.");
+		Room northRoom = new Room("North Room", "An other boring place.", false);
+		Room southRoom = new Room("South Room", "A boring, empty place.", false);
+		Room eastRoom = new Room("East Room", "a lockable room", true);
 		southRoom.addRoom(Direction.NORTH, northRoom);
+		southRoom.addRoom(Direction.EAST, eastRoom);
 
 		// add some items
 		northRoom.addItem(new Potion());
 		northRoom.addItem(new Potion());
+		northRoom.addItem(new Key("silver key", eastRoom));
 		
 		this.spawnMob(new Kitten("fluffy"), southRoom);
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import server.universe.item.Item;
+import server.universe.item.Key;
 
 /**
  * A Room represents a location in the universe.
@@ -24,9 +25,12 @@ public class Room implements Entity, Serializable
 	private static final long	serialVersionUID	= 1L;
 
 	private Map<Direction, Exit> exitMap;
-	private List<Item>	items;
-	private String		name;
-	private String		blurb;
+	private List<Item>			items;
+	private String				name;
+	private String				blurb;
+	
+	private boolean				requiresKey;
+	private long				timeLastUnlockedInMillis;
 
 	/**
 	 * Create a new room with the given attributes.
@@ -37,12 +41,37 @@ public class Room implements Entity, Serializable
 	 *            small blurb of what the room looks like, i.e., decoration,
 	 *            weather, etc.
 	 */
-	public Room(String name, String blurb)
+	public Room(String name, String blurb, boolean requiresKey)
 	{
 		this.name = name;
 		this.blurb = blurb;
 		this.exitMap = new HashMap<Direction, Exit>();
 		this.items = new ArrayList<Item>();
+		
+		this.requiresKey = requiresKey;
+		if (requiresKey)
+			this.timeLastUnlockedInMillis = 0;
+	}
+	
+	/**
+	 * Sets the latest unlock time to the current time.
+	 */
+	public void unlockExit()
+	{
+		this.timeLastUnlockedInMillis = System.currentTimeMillis();
+	}
+	
+	/**
+	 * Tells whether the room is currently locked.
+	 */
+	public boolean isLocked()
+	{
+		return System.currentTimeMillis() - this.timeLastUnlockedInMillis < 60000;
+	}
+	
+	public boolean requiresKey()
+	{
+		return this.requiresKey;
 	}
 
 	/**
@@ -164,5 +193,4 @@ public class Room implements Entity, Serializable
 		this.addExit(direction, new Exit(room));
 		room.addExit(direction.opposite(), new Exit(this));
 	}
-
 }
