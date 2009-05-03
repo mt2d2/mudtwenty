@@ -34,9 +34,7 @@ Creature could be an abstract class that relies on functionality implemented in 
 
 == [http://en.wikipedia.org/wiki/Flyweight_Pattern  Flyweight] ==
 
-*`BehaviorStrategies` will be flyweight*: there will be several types, but they will all be identical, and it would waste memory to instantiate multiple copies of each.
-
-`DialogStrategies` might also, but maybe not: dialogs are often mob-specific and might often be private inner classes that can't be accessed by a separate `FlyweightFactory` style class.
+`BehaviorStrategy`s or `ServerReponse`s could by flyweight? (I tried this with `BehaviorStrategy` and it wasn't pretty. Advise against -- Quinten)
 
 = Behavioral Patterns =
 
@@ -57,3 +55,8 @@ Perhaps the client could be considered the view, something else (parser stuff, p
 == [http://en.wikipedia.org/wiki/Observer_Pattern Observer] ==
 
 Any way that this could be used? How might it be used in the server or client?
+
+= Misc/Uncategorized =
+
+== [http://en.wikipedia.org/wiki/Null_object_pattern Null object] ==
+*`NullDialog` and `NullBehavior` use the null object pattern.*
