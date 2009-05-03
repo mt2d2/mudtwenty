@@ -1,9 +1,7 @@
 package server.universe;
 
-import server.universe.item.Key;
 import server.universe.item.Potion;
 import server.universe.mob.Kitten;
-import server.universe.Direction;
 
 /**
  * A simple default universe that can be loaded for a demo, or when the universe file isn't there.
@@ -29,7 +27,7 @@ public class DefaultUniverse extends Universe
 		// add some items
 		northRoom.addItem(new Potion());
 		northRoom.addItem(new Potion());
-		northRoom.addItem(new Key("silver key", eastRoom));
+	//	northRoom.addItem(new Key("silver key", eastRoom));
 		
 		Kitten fluffy = new Kitten("fluffy");
 		this.spawnMob(fluffy, southRoom);

@@ -1,7 +1,9 @@
 package server.universe;
 
 import java.io.Serializable;
-//I win the game Aaron gets to commit
+
+import server.universe.mob.MOB;
+
 /**
  * A BehaviorStrategy represents a behavior that a MOB can have at any given time.
  * For example, a different behaviors could be the behaviors
@@ -16,5 +18,4 @@ public interface BehaviorStrategy extends Serializable
 	 * the MOB that is performing the action.
 	 */
 	public void doAction(MOB mob);
-
 }
