@@ -15,7 +15,7 @@ import server.universe.Creature;
  * players."
  *
  */
-public abstract class MOB extends Creature implements Runnable, Serializable
+public abstract class MOB extends Creature implements Runnable, Serializable, Cloneable
 {
 	private static final long	serialVersionUID	= 1L;
 	
