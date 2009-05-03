@@ -7,39 +7,53 @@ We have to use 6 patterns, and any more patterns are extra credit. Therefore, we
 = Creational Patterns =
 
 == [http://en.wikipedia.org/wiki/Prototype_Pattern Prototype] ==
-We could use prototypes to make new types of objects. For example, we could have a sword prototype, and create lots of different swords by cloning this prototypical sword and setting its attributes (description, damage, weight, value, etc.)
 
-This would prevent us having to create lots of subclasses for different types of items, and doing things this way allows us to create unique items easily.
+*Items and MOBs use the prototype pattern*: they are cloneable, and in constructing the world, we can use this fact to make a mob, change something about it, and make several clones. This would prevent us having to create many similar groups of MOBs that do not necessarily match any particular hard-coded class.
+
+== [http://en.wikipedia.org/wiki/Factory_Pattern Factory] ==
+
+*`ResponseFactory` uses the factory pattern*: it contains a method which is designed to create different `ServerResponse`s depending on the input given (which is a string).
 
 == [http://en.wikipedia.org/wiki/Singleton_Pattern Singleton] ==
-The Universe could be a singleton -- there is only ever going to be one Universe object existing on the server at any given time, and we don't want any part of our code to make a second Universe.
+
+The Server could be a singleton -- but it might not actually make much sense to do this?
 
 = Structural Patterns = 
 
 == [http://en.wikipedia.org/wiki/Composite_Pattern Composite] ==
-We could use this pattern with items in the world. In order to properly use it, we would have to have an interface (like item) that is extended by leafs (like ordinary items) and composites (like bags, containers, etc.)
+
+*Bags will use the composite pattern*: Bags will be items that can contain items, including bags. 
+
+In order to properly use it, we would have to have an type (like item) that has leaf subtypes (like ordinary items) and composite subtypes (like bags, containers, etc.)
 
 == [http://en.wikipedia.org/wiki/Template_pattern Template] ==
+
+*MOB uses the template pattern*: run() method is an invariant behavior, common to all MOBs, but it depends on variant behavior, takeTurn(), which is specific to particular types of MOBs. run() is not abstract but takeTurn() is.
+
 Creature could be an abstract class that relies on functionality implemented in MOB and Player?
 
 == [http://en.wikipedia.org/wiki/Flyweight_Pattern  Flyweight] ==
-Dialogs and CombatStrategies of MOBs could be flyweight -- there will be a few different types, and many MOBs will share the same strategy in common, but it would take a lot of memory to give them each different objects.
+
+*`BehaviorStrategies` will be flyweight*: there will be several types, but they will all be identical, and it would waste memory to instantiate multiple copies of each.
+
+`DialogStrategies` might also, but maybe not: dialogs are often mob-specific and might often be private inner classes that can't be accessed by a separate `FlyweightFactory` style class.
 
 = Behavioral Patterns =
 
 == [http://en.wikipedia.org/wiki/Command_Pattern Command] ==
-Our Interaction class represents actions/events with objects, so it is using the command pattern.
 
-== [http://en.wikipedia.org/wiki/Interpreter_Pattern Interpreter] ==
-Our command parser could fit this pattern?
+`ServerResponse`s use the command pattern: each `ServerResponse` instance is an object that represents an action -- a response of the server to a client's input.
+
+We might also include a more general Interaction class that represents actions/events that do not necessarily return a message to a player.
 
 == [http://en.wikipedia.org/wiki/Strategy_Pattern Strategy] ==
-Jan hinted in class that it would be obvious what pattern to use for the AI of MOBs ... this is it. There could be, like, a `CombatStrategy` class, a `DialogStrategy` class, etc. and different MOBs could use and change to different strategies at different times.
 
-For example, there might be classes `AggressiveStrategy` and `RetreatStrategy`, and a MOB will switch from one to the other if it gets very hurt.
+*`BehaviorStrategy`s of MOBs use the strategy pattern*: strategies are objects that encapsulate some strategy. The particular `BehaviorStrategy` that MOB is using can be changed dynamically depending on what is happening around the MOB. For example, there might be classes `AggressiveStrategy` and `RetreatStrategy`, and a MOB will switch from one to the other if it gets very hurt.
 
 == [http://en.wikipedia.org/wiki/MVC_Pattern MVC] ==
+
 Perhaps the client could be considered the view, something else (parser stuff, possibly server?) could be considered controller, and universe could be considered model?
 
 == [http://en.wikipedia.org/wiki/Observer_Pattern Observer] ==
+
 Any way that this could be used? How might it be used in the server or client?
