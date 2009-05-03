@@ -1,6 +1,8 @@
-package server.universe;
+package server.universe.mob;
 
 import java.io.Serializable;
+
+import server.universe.Creature;
 
 /**
  * The MOB class represents a mobile non-player character.
@@ -27,6 +29,8 @@ public abstract class MOB extends Creature implements Runnable, Serializable
 	{
 		super(name);
  		this.alive = true;
+ 		this.behavior = new NullBehavior();
+ 		this.dialog = new NullDialog();
 	}
 
 	/**
@@ -86,6 +90,30 @@ public abstract class MOB extends Creature implements Runnable, Serializable
 	public void setDialog(DialogStrategy dialog)
 	{
 		this.dialog = dialog;
+	}
+	
+	private class NullBehavior implements BehaviorStrategy
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Do the action of doing nothing. How zen.
+		 */
+		public void doAction(MOB mob)
+		{
+		}
+	}
+
+	private class NullDialog implements DialogStrategy
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Listen but do not speak. How peaceful.
+		 */
+		public void tell(Creature sender, String message)
+		{
+		}
 	}
 
 }

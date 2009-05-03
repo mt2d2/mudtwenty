@@ -6,9 +6,9 @@ import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
 import server.universe.Creature;
-import server.universe.MOB;
 import server.universe.Player;
 import server.universe.Room;
+import server.universe.mob.MOB;
 import util.ArrayUtil;
 
 /**

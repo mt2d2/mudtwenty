@@ -1,6 +1,7 @@
-package server.universe;
+package server.universe.mob;
 
 import server.Server;
+import server.universe.Creature;
 
 public class Kitten extends MOB {
 
@@ -10,7 +11,6 @@ public class Kitten extends MOB {
 		super(name);
 		this.setMaxHealth(1);
 		this.setDescription("This is a cute, little, white, fluffy kitten. How cute!");
-		this.setBehavior(new StationaryBehavior());
 		this.setDialog(new MeowDialog());
 	}
 	
