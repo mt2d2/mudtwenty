@@ -17,6 +17,8 @@ A list of things to concentrate on. Delete them from this list when they're done
 
  * *Expand items, add uses*: "The MUD must have at least 10 different types of items. ... All items must have a use in the game. You could have potions to heal damage taken, keys to open doors, special items that affect the player’s stats, equipment the player can wear or items needed to finish a quest."
 
+ * *Items so far (4/10)*: Armor, Key, Potion, Weapon
+
  * *Expand MOBs, add behavior*: "The MUD must have at least 10 different types of MOBs ... Some MOBs may offer quests, services or games to the players ... MOBs must be able to move between rooms ... MOBs must have complex behaviors ... that take into account player statistics or items a player is carrying, or the contents of the room that the MOB is in ... MOBs should have actions that are triggered ... without direct interaction from players."
 
  * *Add combat system*.
@@ -25,7 +27,7 @@ A list of things to concentrate on. Delete them from this list when they're done
 
  * Dropped Connections (2 Points) – Announce to all when a player’s connection is dropped and save that player’s state.
 
- * Room Behaviors (4 Points) - Rooms that have behaviors (for instance, weather, or keys that unlock exits).
+ * ~~Some~~ Room Behaviors (4 Points) - Rooms that have behaviors (for instance, weather, or keys that unlock exits).
 
  * Dynamic MUD Editor (4-10 Points) - An in-game menu system for creating new items, mobs and rooms. This could also use a GUI to simplify the process. This option should not be available to all players. 
 
