@@ -25,7 +25,7 @@ A list of things to concentrate on. Delete them from this list when they're done
 
  * *Add combat system*.
 
- * *Make look give a description of an entity for any "look <entity>"*.
+ * *Make look give a description of an entity for any "look ENTITY"*.
 
 = Extra Credit =
 
