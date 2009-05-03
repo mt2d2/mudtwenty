@@ -1,68 +1,34 @@
 package server.universe;
 
-public abstract class Species {
+public interface Species {
 
-	private long health = 30;
-	private long mana = 10;
-	private long STR = 5;
-	private long DEF = 5;
-	private short HIT = 5;
-	private long ATK = 5;
-	private long mres = 5;
-	private double gFactor = 0.01;
-	
-	public Species(){
-		
-		
-	}
-	
-	public long getHealth(){
-		
-		return health;
-		
-	}
-	
-	public long getMana(){
-		
-		return mana;
-	}
 	
 	
-	public long getSTR(){
-		
-		return STR;
-	}
+
 	
-	public long getDEF(){
-		
-		return DEF;
-	}
+	public long getHealth();
 	
-	public short getHIT(){
-		
-		return HIT;
-	}
+	public long getMana();
 	
-	public long getATK(){
-		
-		return ATK;
-	}
+	public long getIntel();
 	
-	public long getMRes(){
-		
-		return mres;
-	}
+	public long getSTR();
 	
-	public double getGFactor(){
-		
-		return gFactor;
-				
-	}
+	public long getDEF();
 	
-	public void set(double chg){
-		
-		gFactor = chg;
-		
-	}
+	public short getHIT();
+	
+	
+	public long getATK();
+	
+	
+	public long getMRes();
+	
+	public double getGFactor();
+	
+	public String getDescription();
+	
+	
+	public void setFactor(double chg);
 	
 }
