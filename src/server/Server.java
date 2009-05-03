@@ -131,20 +131,10 @@ public class Server
 			Server.universe = (Universe) fileIn.readObject();
 			fileIn.close();
 		}
-		catch (FileNotFoundException e)
+		catch (Exception e)
 		{
-			// This is expected on first ever startup
+			logger.throwing("Server", "loadUniverse", e);
 			logger.info("generating new universe");
-			Server.universe = new DefaultUniverse();
-		}
-		catch (IOException e)
-		{
-			logger.throwing("Server", "loadUniverse", e);
-			Server.universe = new DefaultUniverse();
-		}
-		catch (ClassNotFoundException e)
-		{
-			logger.throwing("Server", "loadUniverse", e);
 			Server.universe = new DefaultUniverse();
 		}
 	}

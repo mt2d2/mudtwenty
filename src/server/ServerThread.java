@@ -283,13 +283,13 @@ public class ServerThread implements Runnable
 				Server.getUniverse().unregister(name);
 			return false;
 		}
-		else
+		if (!Server.getUniverse().isRegistered(name))
 		{
-			if (!Server.getUniverse().isRegistered(name))
-				Server.getUniverse().register(name);
-			return true;
+			playerFile.delete();
+			// Notify user?
+			return false;
 		}
-		
+		return true;
 	}
 	
 	/**
