@@ -31,7 +31,8 @@ public class DefaultUniverse extends Universe
 		northRoom.addItem(new Potion());
 		northRoom.addItem(new Key("silver key", eastRoom));
 		
-		this.spawnMob(new Kitten("fluffy"), southRoom);
+		Kitten fluffy = new Kitten("fluffy");
+		this.spawnMob(fluffy, southRoom);
 
 		this.setStartRoom(southRoom);
 	}

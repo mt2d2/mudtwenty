@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import server.Server;
 import server.universe.item.Armor;
 import server.universe.item.Item;
 import server.universe.item.Potion;
@@ -30,7 +31,7 @@ public abstract class Creature implements Entity, Serializable
 	private List<Item>			items;
 	private Map<Skill, Integer>	skills;
 
-	// equipable items
+	// equippable items
 	private Weapon				weapon;
 	private Armor				armor;
 
@@ -244,6 +245,22 @@ public abstract class Creature implements Entity, Serializable
 		}
 	}
 
+	/**
+	 * Get the room of the creature.
+	 */
+	public Room getRoom()
+	{
+		return Server.getUniverse().getRoomOfCreature(this);
+	}
+	
+	/**
+	 * Set the room of the creature.
+	 */
+	public void setRoom(Room room)
+	{
+		Server.getUniverse().changeRoomOfCreature(this, room);
+	}
+	
 	/**
 	 * Gives an item to a different Player.
 	 * 

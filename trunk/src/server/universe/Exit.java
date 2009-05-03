@@ -5,11 +5,10 @@ import java.io.Serializable;
 /**
  * An Exit is a way to get from one Room to another.
  */
-public class Exit implements Entity, Serializable
+public class Exit implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
 
-	private String				name;
 	private String				blurb;
 	private Room				room;
 
@@ -65,9 +64,11 @@ public class Exit implements Entity, Serializable
 		return this.room;
 	}
 
-	@Override
-	public String getName()
+	/**
+	 * See whether the room that this exit leads to is locked.
+	 */
+	public boolean isLocked()
 	{
-		return this.name;
+		return this.room.isLocked();
 	}
 }

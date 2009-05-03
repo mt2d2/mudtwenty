@@ -78,7 +78,7 @@ public class MoveResponse implements ServerResponse
 		// make sure that the exit is unlocked
 		if (newRoom.requiresKey())
 			if (!newRoom.isLocked())
-				return new ClientMessage("the exit leading to " + newRoom.getName() + " is currently locked");
+				return new ClientMessage("the exit leading to " + newRoom.getName() + " is currently locked", Server.ERROR_TEXT_COLOR);
 
 		// make the swap
 		Server.getUniverse().changeRoomOfCreature(player, newRoom);

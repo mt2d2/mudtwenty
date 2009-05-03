@@ -5,7 +5,7 @@ import server.universe.Creature;
 
 public class Kitten extends MOB {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	
 	public Kitten(String name) {
 		super(name);
@@ -22,5 +22,12 @@ public class Kitten extends MOB {
 		{
 			Server.getUniverse().sendMessageToCreature(Kitten.this, sender, "Meow.");
 		}
+	}
+
+	public void takeTurn() {
+		if (Math.random() > 0.75)
+			setBehavior(new MoveBehavior());
+		else
+			setBehavior(new NullBehavior());
 	}
 }

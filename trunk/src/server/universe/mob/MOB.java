@@ -34,14 +34,16 @@ public abstract class MOB extends Creature implements Runnable, Serializable
 	}
 
 	/**
-	 * This is what the MOB does once it is put into the World. It should,
-	 * perhaps, do something about once per second-- look around the room,
-	 * attack players if they're there, etc.
+	 * This is what the MOB does once it is spawned.
+	 * 
+	 * Each turn, it does some mob specific behavior, possibly changing
+	 * to a different behavior, then it 
 	 */
 	public void run()
 	{
  		while (this.alive)
  		{
+ 			takeTurn();
  			behavior.doAction(this);
  			
  			// Check whether the MOB's dead yet.
@@ -60,6 +62,11 @@ public abstract class MOB extends Creature implements Runnable, Serializable
 			}
  		}
 	}
+	
+	/**
+	 * Do some MOB-specific behavior. This might involve changing to a different strategy.
+	 */
+	public abstract void takeTurn();
 	
 	/**
 	 * Receive a message (from either a player or another MOB).
@@ -90,30 +97,6 @@ public abstract class MOB extends Creature implements Runnable, Serializable
 	public void setDialog(DialogStrategy dialog)
 	{
 		this.dialog = dialog;
-	}
-	
-	private class NullBehavior implements BehaviorStrategy
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Do the action of doing nothing. How zen.
-		 */
-		public void doAction(MOB mob)
-		{
-		}
-	}
-
-	private class NullDialog implements DialogStrategy
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Listen but do not speak. How peaceful.
-		 */
-		public void tell(Creature sender, String message)
-		{
-		}
 	}
 
 }

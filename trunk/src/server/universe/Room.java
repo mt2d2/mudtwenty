@@ -61,7 +61,7 @@ public class Room implements Entity, Serializable
 	}
 	
 	/**
-	 * Tells whether the room is currently locked.
+	 * Tells whether this room is currently locked.
 	 */
 	public boolean isLocked()
 	{
@@ -84,7 +84,29 @@ public class Room implements Entity, Serializable
 			return this.exitMap.get(direction);
 		return null;
 	}
-
+	
+	/**
+	 * Return a list of exits from the room.
+	 */
+	public List<Exit> getExits()
+	{
+		List<Exit> exits = new ArrayList<Exit>();
+		exits.addAll(this.exitMap.values());
+		return exits;
+	}
+	
+	/**
+	 * Return a list of exits to rooms that are not locked.
+	 */
+	public List<Exit> getUnlockedExits()
+	{
+		List<Exit> exits = new ArrayList<Exit>();
+		for (Exit exit : this.exitMap.values())
+			if (!exit.isLocked())
+				exits.add(exit);
+		return exits;
+	}
+	
 	/**
 	 * Test whether there is an exit in the given direction.
 	 *
