@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import server.universe.item.Item;
-import server.universe.item.Key;
 
 /**
  * A Room represents a location in the universe.
@@ -164,7 +163,7 @@ public class Room implements Entity, Serializable
 			return directions.get(0).toString().toLowerCase() + ".";
 		else
 			return directions.get(0).toString().toLowerCase()
-				+ listExits(directions.subList(1, directions.size()));
+				+ ", " + listExits(directions.subList(1, directions.size()));
 	}
 		
 	
