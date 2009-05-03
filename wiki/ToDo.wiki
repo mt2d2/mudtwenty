@@ -21,7 +21,11 @@ A list of things to concentrate on. Delete them from this list when they're done
 
  * *Expand MOBs, add behavior*: "The MUD must have at least 10 different types of MOBs ... Some MOBs may offer quests, services or games to the players ... MOBs must be able to move between rooms ... MOBs must have complex behaviors ... that take into account player statistics or items a player is carrying, or the contents of the room that the MOB is in ... MOBs should have actions that are triggered ... without direct interaction from players."
 
+ * *Mobs so far (1/10)*: Kitten
+
  * *Add combat system*.
+
+ * *Make look give a description of an entity for any "look <entity>"*.
 
 = Extra Credit =
 
