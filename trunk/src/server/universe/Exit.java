@@ -70,5 +70,4 @@ public class Exit implements Entity, Serializable
 	{
 		return this.name;
 	}
-
 }
