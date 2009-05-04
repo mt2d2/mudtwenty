@@ -2,6 +2,8 @@ package server.universe;
 
 import server.universe.item.Potion;
 import server.universe.mob.Kitten;
+import server.universe.mob.RoomGiftMob;
+import server.universe.mob.RoomThiefMob;
 
 /**
  * A simple default universe that can be loaded for a demo, or when the universe file isn't there.
@@ -18,21 +20,32 @@ public class DefaultUniverse extends Universe
 	public DefaultUniverse()
 	{
 		super();
-		Room northRoom = new Room("North Room", "An other boring place.", false);
-		Room southRoom = new Room("South Room", "A boring, empty place.", false);
-		Room eastRoom = new Room("East Room", "a lockable room", true);
-		southRoom.addRoom(Direction.NORTH, northRoom);
-		southRoom.addRoom(Direction.EAST, eastRoom);
+		this.setStartRoom(this.spawnRooms());
+	}
+	
+	private Room spawnRooms()
+	{
+		Room rootRoom = new Room("Root room", "A starting place.", false);
+
+		Room northRoom = new Room("North Room", "A boring, empty place in the north.", false);
+		Room eastRoom = new Room("East Room", "a boring room in the east.", false);
+		Room westRoom = new Room("West Room", "a boring, lockable room in the west.", true);
+		Room southRoom = new Room("South Room", "A boring, empty place uin the south.", false);
+		rootRoom.addRoom(Direction.NORTH, northRoom);
+		rootRoom.addRoom(Direction.EAST, eastRoom);
+		rootRoom.addRoom(Direction.WEST, westRoom);
+		rootRoom.addRoom(Direction.SOUTH, southRoom);
 
 		// add some items
-		northRoom.addItem(new Potion());
-		northRoom.addItem(new Potion());
-	//	northRoom.addItem(new Key("silver key", eastRoom));
+		rootRoom.addItem(new Potion());
+		rootRoom.addItem(new Potion());
 		
-		Kitten fluffy = new Kitten("fluffy");
-		this.spawnMob(fluffy, southRoom);
+		// add some mobs
+		this.spawnMob(new Kitten("fluffy"), southRoom);
+		this.spawnMob(new RoomGiftMob("santa"), northRoom);
+		this.spawnMob(new RoomThiefMob("not santa"), southRoom);
 
-		this.setStartRoom(southRoom);
+		return rootRoom;
 	}
 
 }
