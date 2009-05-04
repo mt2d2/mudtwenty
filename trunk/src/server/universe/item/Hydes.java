@@ -2,11 +2,9 @@ package server.universe.item;
 
 import java.util.ArrayList;
 
-import message.ClientMessage;
-import server.universe.Player;
-
-
 public class Hydes extends Armor implements Cloneable{
+	
+	private static final long	serialVersionUID	= 1L;
 
 	private ArrayList<String> arrSpecies;
 	private long DEF = 5;
@@ -35,5 +33,4 @@ public class Hydes extends Armor implements Cloneable{
 		return DEF;
 		
 	}
-	
 }
