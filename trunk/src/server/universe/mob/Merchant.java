@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import message.ClientMessage;
 import server.Server;
 import server.universe.Creature;
 import server.universe.item.Item;
@@ -62,17 +63,17 @@ public class Merchant extends MOB {
 						if (sender.decreaseGold(toExchange.getPrice()))
 						{
 							sender.addItem(toExchange);
-							Server.getUniverse().sendMessageToCreature(Merchant.this, sender, "You successfully bought " + toExchange.getName() + " for " + toExchange.getPrice() + " gold");
+							Server.getUniverse().sendMessageToCreature(Merchant.this, sender, new ClientMessage("You successfully bought " + toExchange.getName() + " for " + toExchange.getPrice() + " gold"));
 							i.remove();
 						} else
 						{
-							Server.getUniverse().sendMessageToCreature(Merchant.this, sender, "I am sorry, but you do not have enough gold for that item");
+							Server.getUniverse().sendMessageToCreature(Merchant.this, sender, new ClientMessage("I am sorry, but you do not have enough gold for that item"));
 						}
 					}
 				}
 			} else
 			{
-				Server.getUniverse().sendMessageToCreature(Merchant.this, sender, "The items I have for sale are as follows:\n" + Merchant.this.itemsForSale());
+				Server.getUniverse().sendMessageToCreature(Merchant.this, sender, new ClientMessage("The items I have for sale are as follows:\n" + Merchant.this.itemsForSale()));
 			}
 		}
 	}

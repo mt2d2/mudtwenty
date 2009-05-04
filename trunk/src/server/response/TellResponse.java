@@ -3,6 +3,7 @@ package server.response;
 import java.util.List;
 
 import message.ClientMessage;
+import message.Status;
 import server.Server;
 import server.ServerThread;
 import server.universe.Creature;
@@ -48,7 +49,7 @@ public class TellResponse implements ServerResponse
 
 			if (receiver != null)
 			{
-				Server.getUniverse().sendMessageToCreature(sender, receiver, textSaid);
+				Server.getUniverse().sendMessageToCreature(sender, receiver, new ClientMessage(textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR));
 				return new ClientMessage("You said \"" + textSaid + "\" to " + receiverName + ".");
 			}
 			else

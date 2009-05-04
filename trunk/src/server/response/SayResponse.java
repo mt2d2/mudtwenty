@@ -3,6 +3,7 @@ package server.response;
 import java.util.List;
 
 import message.ClientMessage;
+import message.Status;
 import server.Server;
 import server.ServerThread;
 import server.universe.Player;
@@ -33,7 +34,7 @@ public class SayResponse implements ServerResponse
 			final Room room = Server.getUniverse().getRoomOfCreature(sender);
 			final String textSaid = ArrayUtil.joinArguments(arguments, " ").trim();
 			
-			Server.getUniverse().sendMessageToCreaturesInRoom(sender, room, textSaid);
+			Server.getUniverse().sendMessageToCreaturesInRoom(sender, room, new ClientMessage(textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR));
 			
 			return new ClientMessage("You said \"" + textSaid + "\" to everyone in the room.");
 		}

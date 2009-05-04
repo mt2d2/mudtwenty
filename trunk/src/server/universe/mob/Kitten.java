@@ -1,5 +1,7 @@
 package server.universe.mob;
 
+import message.ClientMessage;
+import message.Status;
 import server.Server;
 import server.universe.Creature;
 
@@ -20,7 +22,7 @@ public class Kitten extends MOB {
 
 		public void tell(Creature sender, String message)
 		{
-			Server.getUniverse().sendMessageToCreature(Kitten.this, sender, "Meow.");
+			Server.getUniverse().sendMessageToCreature(Kitten.this, sender, new ClientMessage("Fluffy says Meow.", Status.CHAT, Server.MESSAGE_TEXT_COLOR));
 		}
 	}
 
