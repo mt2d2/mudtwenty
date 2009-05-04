@@ -159,6 +159,7 @@ public class Client extends JFrame
 		try
 		{
 			doc.insertString(doc.getLength(), input + "\n", area.getStyle("color"));
+			area.setCaretPosition(area.getDocument().getLength());
 		}
 		catch (BadLocationException e)
 		{
