@@ -5,5 +5,5 @@ package server.universe;
  */
 public enum Skill
 {
-	DEFENCE, ATTACK
+	DEFENCE, ATTACK, READING;
 }

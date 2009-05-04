@@ -159,7 +159,10 @@ public abstract class Creature implements Entity, Serializable
 	 */
 	public int getSkillValue(Skill skill)
 	{
-		return 0;
+		if (this.skills.containsKey(skill))
+			return this.skills.get(skill);
+		else
+			return 0;
 	}
 
 	/**
@@ -172,14 +175,17 @@ public abstract class Creature implements Entity, Serializable
 	 */
 	public void practice(Skill skill)
 	{
+		int currentValue = getSkillValue(skill);
+		this.skills.put(skill, currentValue + 5);
 	}
 
 	/**
 	 * Set the value of a skill. If the skill is not in the map, create it with
 	 * the given value.
 	 */
-	public void setSkill(Skill skill)
+	public void setSkill(Skill skill, int value)
 	{
+		this.skills.put(skill, value);
 	}
 
 	/**
@@ -233,7 +239,6 @@ public abstract class Creature implements Entity, Serializable
 				addItem(weapon);
 
 			weapon = (Weapon) item;
-			// removeItem(item);
 		}
 		if (item instanceof Armor)
 		{
@@ -241,7 +246,6 @@ public abstract class Creature implements Entity, Serializable
 				addItem(armor);
 
 			armor = (Armor) item;
-			// removeItem(item);
 		}
 	}
 
