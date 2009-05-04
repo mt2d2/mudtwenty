@@ -43,12 +43,6 @@ public abstract class MOB extends Creature implements Runnable, Serializable, Cl
 	{
  		while (this.alive)
  		{
- 			takeTurn();
- 			behavior.doAction(this);
- 			
- 			// Check whether the MOB's dead yet.
- 			if (this.getHealth() <= 0)
- 				this.alive = false;
  			
  			// Sleep until the next found.
  			try
@@ -60,6 +54,13 @@ public abstract class MOB extends Creature implements Runnable, Serializable, Cl
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+ 			
+ 			takeTurn();
+ 			behavior.doAction(this);
+ 			
+ 			// Check whether the MOB's dead yet.
+ 			if (this.getHealth() <= 0)
+ 				this.alive = false;
  		}
 	}
 	
@@ -98,5 +99,14 @@ public abstract class MOB extends Creature implements Runnable, Serializable, Cl
 	{
 		this.dialog = dialog;
 	}
+	
+	/**
+	 * Return a copy of this MOB.
+	 */
+	public MOB clone()
+	{
+		return this.clone();
+	}
+	
 
 }
