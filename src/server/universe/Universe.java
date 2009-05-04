@@ -241,23 +241,21 @@ public class Universe implements Serializable
 		this.playerToRoom.remove(player);
 	}
 	
-	public void sendMessageToCreature(Creature sender, Creature receiver, String textSaid)
+	public void sendMessageToCreature(Creature sender, Creature receiver, ClientMessage message)
 	{
 		if (receiver instanceof Player)
 		{
 			Player player = (Player) receiver;
-			ClientMessage message = new ClientMessage(sender.getName() + " tells you: \"" + textSaid + "\"",
-					Server.MESSAGE_TEXT_COLOR);
 			Server.sendMessageToPlayer(player, message);
 		}
 		else
 		{
 			MOB mob = (MOB) receiver;
-			mob.tell(sender, textSaid);
+			mob.tell(sender, message.getPayload());
 		}
 	}
 	
-	public void sendMessageToCreaturesInRoom(Creature sender, Room room, String textSaid)
+	public void sendMessageToCreaturesInRoom(Creature sender, Room room, ClientMessage textSaid)
 	{
 		for (MOB mob : this.getMOBsInRoom(room))
 		{
