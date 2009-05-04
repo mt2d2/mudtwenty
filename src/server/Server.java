@@ -269,7 +269,10 @@ public class Server
 			Server.clients.removeAll(toRemove);
 
 			for (ServerThread st : toRemove)
-				Server.sendMessageToAllClients(new ClientMessage("client terminated connection: " + st, Server.SYSTEM_TEXT_COLOR));
+				if (st.getPlayer() != null)
+					Server.sendMessageToAllClients(new ClientMessage(st.getPlayer().getName() +" has left the game.", Server.SYSTEM_TEXT_COLOR));
+				else
+					Server.sendMessageToAllClients(new ClientMessage("client terminated connection: " + st, Server.SYSTEM_TEXT_COLOR));
 
 			toRemove.clear();
 		}
