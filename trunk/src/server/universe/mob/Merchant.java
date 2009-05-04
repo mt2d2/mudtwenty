@@ -52,7 +52,7 @@ public class Merchant extends MOB {
 				
 				List<Item> itemsForSale = Merchant.this.getItems();
 				
-				Iterator i = itemsForSale.iterator();
+				Iterator<Item> i = itemsForSale.iterator();
 				while (i.hasNext())
 				{
 					Object o = i.next();
