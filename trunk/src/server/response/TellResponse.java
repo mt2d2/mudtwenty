@@ -49,7 +49,7 @@ public class TellResponse implements ServerResponse
 
 			if (receiver != null)
 			{
-				Server.getUniverse().sendMessageToCreature(sender, receiver, new ClientMessage(textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR));
+				Server.getUniverse().sendMessageToCreature(sender, receiver, new ClientMessage(player.getName() + " says " + textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR));
 				return new ClientMessage("You said \"" + textSaid + "\" to " + receiverName + ".");
 			}
 			else
