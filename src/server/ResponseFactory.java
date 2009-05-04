@@ -2,6 +2,7 @@ package server;
 
 import server.response.CommandsResponse;
 import server.response.DropResponse;
+import server.response.EmoteResponse;
 import server.response.GetResponse;
 import server.response.GiveResponse;
 import server.response.InventoryResponse;
@@ -66,6 +67,7 @@ public class ResponseFactory {
 			case SHUTDOWN: return new ShutdownResponse();
 			case GIVE: return new GiveResponse();
 			case GET: return new GetResponse();
+			case EMOTE: return new EmoteResponse();
 			default: return new UnknownResponse();
 		}
 	}
@@ -90,7 +92,7 @@ public class ResponseFactory {
 	{
 		EXIT, QUIT, SC, SCORE, OOC, COMMANDS, WHO, TELL, SAY, L, LS, LOOK,
 		INVENTORY, DROP, USE, MOVE, SHUTDOWN, GIVE, GET, UNKNOWN, CD, N, NORTH, S, SOUTH,
-		E, EAST, W, WEST, HELP, ;
+		E, EAST, W, WEST, HELP, EMOTE;
 	}
 
 }

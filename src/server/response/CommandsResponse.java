@@ -23,6 +23,7 @@ public class CommandsResponse implements ServerResponse {
 				+ "\ttell <name> <message>: send a private message to a player or mob\n"
 				+ "\tsay <message>: send a message to everyone in the same room\n"
 				+ "\tooc <message>: send a message to all users connected to the mud\n"
+				+ "\temote <message>: sends a message to everyone in your room in the third person"
 				+ "General commands:\n"
 				+ "\tcommands, help :lists all available commands and general system help\n"
 				+ "\tquit, exit: saves your state and exits the mud\n"
