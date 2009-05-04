@@ -24,12 +24,18 @@ public abstract class Creature implements Entity, Serializable
 {
 	private static final long	serialVersionUID	= 2L;
 
+	// core info
 	private String				name;
 	private String				description;
+	
+	// stats
 	private int					maxHealth;
 	private int					health;
-	private List<Item>			items;
 	private Map<Skill, Integer>	skills;
+	
+	// possessions
+	private List<Item>			items;
+	private int					gold;
 
 	// equippable items
 	private Weapon				weapon;
@@ -52,6 +58,7 @@ public abstract class Creature implements Entity, Serializable
 		this.maxHealth = defaultMaxHealth;
 		this.health = maxHealth;
 		this.items = new ArrayList<Item>();
+		this.gold = 50;
 		// TODO these items are just added for testing purposes, all creatures
 		// shouldn't start with them
 		this.addItem(new Potion());
@@ -263,6 +270,48 @@ public abstract class Creature implements Entity, Serializable
 	public void setRoom(Room room)
 	{
 		Server.getUniverse().changeRoomOfCreature(this, room);
+	}
+	
+	/**
+	 * Decreases gold a certain amount, returning false
+	 * if not enough gold.
+	 * 
+	 * @param amount
+	 * 			amount of gold to subtract
+	 * @return
+	 * 			whether or not gold was decreased
+	 */
+	public boolean decreaseGold(int amount)
+	{
+		if (amount <= this.gold)
+		{
+			this.gold -= amount;
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Increases the gold a certain amount. Cannot have too
+	 * much gold.
+	 * 
+	 * @param
+	 * 			amount of gold to add to user's repository
+	 */
+	public void increaseGold(int amount)
+	{
+		this.gold += amount;
+	}
+	
+	/**
+	 * Gets gold.
+	 * 
+	 * @return
+	 * 			amount of gold possessed by player
+	 */
+	public int getGold()
+	{
+		return this.gold;
 	}
 	
 	/**
