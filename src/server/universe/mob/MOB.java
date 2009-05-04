@@ -19,7 +19,7 @@ public abstract class MOB extends Creature implements Runnable, Serializable, Cl
 {
 	private static final long	serialVersionUID	= 1L;
 	
-	private static final long SLEEP_TIME = 1000;
+	private static final long SLEEP_TIME = 3000;
 
  	private BehaviorStrategy behavior;
  	private DialogStrategy dialog;
