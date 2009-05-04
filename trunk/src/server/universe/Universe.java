@@ -263,12 +263,9 @@ public class Universe implements Serializable
 				sendMessageToCreature(sender, mob, textSaid);
 		}
 		for (Player player : this.getPlayersInRoom(room))
-		{
-			ClientMessage message = new ClientMessage(sender.getName() + " says: \"" + textSaid + "\"",
-					Server.MESSAGE_TEXT_COLOR);
-			
+		{			
 			if (!player.equals(sender))
-				Server.sendMessageToPlayer(player, message);
+				Server.sendMessageToPlayer(player, textSaid);
 		}
 	}
 	
