@@ -39,6 +39,11 @@ public class RoomGiftMob extends MOB
 			this.setBehavior(new MoveBehavior());
 	}
 
+	/**
+	 * Randomly drops an item into the mobs current room.
+	 * 
+	 * @author Michael Tremel (mtremel@email.arizona.edu)
+	 */
 	private class DropBehavior implements BehaviorStrategy
 	{
 		private static final long	serialVersionUID	= 1L;
@@ -54,14 +59,14 @@ public class RoomGiftMob extends MOB
 		public void doAction(MOB mob)
 		{
 			Item itemToGive = null;
-			
+
 			if (Math.random() < .1)
 				itemToGive = new Armor();
 			else if (Math.random() < .2)
 				itemToGive = new Weapon();
-			else 
+			else
 				itemToGive = new Potion();
-						
+
 			mob.getRoom().addItem(itemToGive);
 		}
 	}
