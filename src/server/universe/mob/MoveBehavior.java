@@ -25,7 +25,7 @@ public class MoveBehavior implements BehaviorStrategy
 		{
 			Room newRoom = exits.get(0).getRoom();
 			mob.setRoom(newRoom);
-			Server.sendMessageToAllClientsInRoom(newRoom, new ClientMessage(mob.getName() + " has left the room."));
+			Server.sendMessageToAllClientsInRoom(oldRoom, new ClientMessage(mob.getName() + " has left the room."));
 			Server.sendMessageToAllClientsInRoom(newRoom, new ClientMessage(mob.getName() + " has entered the room."));
 		}
 	}
