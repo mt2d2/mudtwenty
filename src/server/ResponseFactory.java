@@ -14,6 +14,7 @@ import server.response.SayResponse;
 import server.response.ScoreResponse;
 import server.response.ServerResponse;
 import server.response.ShutdownResponse;
+import server.response.SocialResponse;
 import server.response.TellResponse;
 import server.response.UnknownResponse;
 import server.response.UseResponse;
@@ -68,6 +69,10 @@ public class ResponseFactory {
 			case GIVE: return new GiveResponse();
 			case GET: return new GetResponse();
 			case EMOTE: return new EmoteResponse();
+			case LAUGH: return new SocialResponse("laughs");
+			case GIGGLE: return new SocialResponse("giggles");
+			case SLAP: return new SocialResponse("slaps");
+			case WINK: return new SocialResponse("winks");
 			default: return new UnknownResponse();
 		}
 	}
@@ -92,7 +97,7 @@ public class ResponseFactory {
 	{
 		EXIT, QUIT, SC, SCORE, OOC, COMMANDS, WHO, TELL, SAY, L, LS, LOOK,
 		INVENTORY, DROP, USE, MOVE, SHUTDOWN, GIVE, GET, UNKNOWN, CD, N, NORTH, S, SOUTH,
-		E, EAST, W, WEST, HELP, EMOTE;
+		E, EAST, W, WEST, HELP, EMOTE, LAUGH, GIGGLE, SLAP, WINK;
 	}
 
 }

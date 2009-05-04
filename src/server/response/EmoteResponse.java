@@ -1,6 +1,3 @@
-/**
- * 
- */
 package server.response;
 
 import java.util.List;
