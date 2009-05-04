@@ -29,7 +29,7 @@ A list of things to concentrate on. Delete them from this list when they're done
 
 = Extra Credit =
 
- * Dropped Connections (2 Points) – Announce to all when a player’s connection is dropped and save that player’s state.
+ * ~~Dropped Connections (2 Points)~~ – Announce to all when a player’s connection is dropped and save that player’s state.
 
  * ~~Some~~ Room Behaviors (4 Points) - Rooms that have behaviors (for instance, weather, or keys that unlock exits).
 
