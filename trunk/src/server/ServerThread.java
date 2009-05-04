@@ -399,6 +399,9 @@ public class ServerThread implements Runnable
 	 */
 	public boolean savePlayerToDisk(Player player)
 	{
+		if (player == null)
+			return false;
+		
 		final String dataRoot = conf.getProperty("data.root");
 		final File playerFile = new File(dataRoot + File.separatorChar + "players" + File.separatorChar + player.getName() + ".dat");
 		logger.fine("saving " + player.getName() + " to disk at " + playerFile.getAbsolutePath());
