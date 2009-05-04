@@ -41,6 +41,10 @@ public class CommandsResponse implements ServerResponse {
 				+ "\tsouth, s: move south\n"
 				+ "\teast, e: move east\n"
 				+ "\twest, w: move west\n"
+				+ "\twink <target>: wink at your target"
+				+ "\tlaugh <target>: laugh at your target"
+				+ "\tslap <target>: slap at your target"
+				+ "\tgiggle <target>: giggle at your target"
 				+ "Admin commands:\n"
 				+ "\tshutdown: shuts down the server, saving and notifying players\n";
 		
