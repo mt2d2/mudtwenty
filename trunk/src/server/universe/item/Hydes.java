@@ -1,36 +1,39 @@
 package server.universe.item;
 
+import java.util.ArrayList;
+
 import message.ClientMessage;
 import server.universe.Player;
 
-public abstract class Hydes extends Item
-{
-	private static final long	serialVersionUID	= 1L;
 
-	@Override
-	public int getPrice()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
+public class Hydes extends Armor implements Cloneable{
 
-	public ClientMessage use(Player player)
-	{
-		// TODO Auto-generated method stub
-		return null;
+	private ArrayList<String> arrSpecies;
+	private long DEF = 5;
+	
+	//Humans ans gnorians can wear hydes.
+	public Hydes(){
+		arrSpecies.add("Sapomen");
+		arrSpecies.add("Gnorian");
+		
 	}
-
-	@Override
-	public String getDescription()
-	{
-		// TODO Auto-generated method stub
-		return null;
+	
+	public void setDEF(long bonus){
+		
+		DEF = bonus;
+		
 	}
-
-	@Override
-	public String getName()
-	{
-		// TODO Auto-generated method stub
-		return null;
+	
+	//Determines which species can wear hydes.
+	public ArrayList<String> wearable(){
+		
+		return arrSpecies;
 	}
+	
+	public long getDEF(){
+		
+		return DEF;
+		
+	}
+	
 }
