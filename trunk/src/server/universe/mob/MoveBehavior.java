@@ -4,6 +4,7 @@
 package server.universe.mob;
 
 import java.util.List;
+import java.util.Random;
 
 import message.ClientMessage;
 import server.Server;
@@ -23,7 +24,11 @@ public class MoveBehavior implements BehaviorStrategy
 		List<Exit> exits = oldRoom.getUnlockedExits();
 		if (!exits.isEmpty())
 		{
-			Room newRoom = exits.get(0).getRoom();
+			int exitSize = exits.size();
+			
+			// randomize which exit the mob takes
+			Room newRoom = exits.get(new Random().nextInt(exitSize)).getRoom();
+			
 			mob.setRoom(newRoom);
 			Server.sendMessageToAllClientsInRoom(oldRoom, new ClientMessage(mob.getName() + " has left the room."));
 			Server.sendMessageToAllClientsInRoom(newRoom, new ClientMessage(mob.getName() + " has entered the room."));
