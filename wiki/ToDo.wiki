@@ -43,13 +43,13 @@ A list of things to concentrate on. Delete them from this list when they're done
 
  * Player Grouping (4 Points) - if a player joins a group, he or she follows the movement of the leader, and executes certain commands (for instance, attack) if the leader executes them.
 
- * Emoting/Posing (1 Point) - A command that allows a player to write a sentence from the third person perspective: for instance ‘emote looks around the room curiously.’ 
+ * ~~Emoting/Posing (1 Point)~~ - A command that allows a player to write a sentence from the third person perspective: for instance ‘emote looks around the room curiously.’ 
 
  * Player Preferences (4+ Points depending on complexity) - Player options such as removing oneself from the ooc channel, turning color—if implemented—on and off, etc.
 
  * ~~Room Exit Description~~
 
- * Social Commands - "A set of “social” commands (such as, ‘giggle, laugh, wink, slap,’ etc.)
+ * ~~Social Commands~~ - "A set of “social” commands (such as, ‘giggle, laugh, wink, slap,’ etc.)
 
  * ~~Abbreviated Commands~~
 
