@@ -29,7 +29,7 @@ public class TellResponse implements ServerResponse
 		{
 			final Player sender = serverThread.getPlayer();
 			final String receiverName = arguments.get(0);
-			final String textSaid = ArrayUtil.joinArguments(arguments.subList(1, arguments.size()), " ").trim();
+			String textSaid = ArrayUtil.joinArguments(arguments.subList(1, arguments.size()), " ").trim();
 
 			Creature receiver = null;
 			
@@ -38,6 +38,7 @@ public class TellResponse implements ServerResponse
 			if (Server.getUniverse().isLoggedIn(player))
 			{
 				receiver = Server.getUniverse().getPlayer(receiverName);
+				textSaid = serverThread.getPlayer().getName() + " says " + textSaid;
 			}
 			else
 			{
@@ -49,8 +50,8 @@ public class TellResponse implements ServerResponse
 
 			if (receiver != null)
 			{
-				Server.getUniverse().sendMessageToCreature(sender, receiver, new ClientMessage(player.getName() + " says " + textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR));
-				return new ClientMessage("You said \"" + textSaid + "\" to " + receiverName + ".");
+				Server.getUniverse().sendMessageToCreature(sender, receiver, new ClientMessage(textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR));
+				return new ClientMessage("You said something to " + receiverName + ".");
 			}
 			else
 			{
