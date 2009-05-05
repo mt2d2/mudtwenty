@@ -27,16 +27,16 @@ public class OocResponse implements ServerResponse
 	{
 		if (arguments.size() < 1)
 		{
-			return new ClientMessage("the proper syntax of say is: ooc <message>", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The proper syntax is: ooc <message>", Server.ERROR_TEXT_COLOR);
 		}
 		else
 		{
-			final String textSaid = ArrayUtil.joinArguments(arguments, " ");
+			final String textSaid = ArrayUtil.joinArguments(arguments, " ").trim();
 			ClientMessage message = new ClientMessage("Broadcast from " + serverThread.getPlayer().getName() + ": "
-				+ textSaid , Status.CHAT, Server.MESSAGE_TEXT_COLOR);
+				+ textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR);
 			Server.sendMessageToAllClients(message);
 
-			return new ClientMessage("you said \"" + textSaid + "\" to everyone.");
+			return new ClientMessage("You said \"" + textSaid + "\" to everyone.");
 		}
 	}
 }

@@ -13,11 +13,9 @@ import server.ServerThread;
  */
 public class QuitResponse implements ServerResponse
 {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
+
+	/**
+	 * Terminate!
 	 */
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{

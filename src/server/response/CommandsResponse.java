@@ -6,9 +6,7 @@ import message.ClientMessage;
 import server.ServerThread;
 
 /**
- * Responds to the command-listing command.
- * 
- * @author Michael Tremel (mtremel@email.arizona.edu)
+ * Responds to the "commands" or "help" command.
  */
 public class CommandsResponse implements ServerResponse {
 

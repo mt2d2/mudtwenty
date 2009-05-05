@@ -18,13 +18,9 @@ import server.universe.item.Item;
 public class InventoryResponse implements ServerResponse
 {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
+	/**
+	 * Ignore the arguments. Just list items and their descriptions.
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		StringBuilder items = new StringBuilder();
@@ -39,7 +35,6 @@ public class InventoryResponse implements ServerResponse
 		}
 		
 		return new ClientMessage("You have " + (items.length() != 0 ? "the following items: " + items : "no items"));
-		
 	}
 
 }

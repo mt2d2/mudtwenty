@@ -17,22 +17,26 @@ import util.ArrayUtil;
  */
 public class UseResponse implements ServerResponse
 {
+	
+	/**
+	 * Use an item if possible.
+	 */
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		if (arguments.isEmpty())
 		{
-			return new ClientMessage("proper syntax of use: use <item name>", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The proper syntax is: use <item name>", Server.ERROR_TEXT_COLOR);
 		}
 		else
 		{
-			Player player = serverThread.getPlayer();
-			String name = ArrayUtil.joinArguments(arguments, " ").trim();
-			Item item = player.getItem(name);
+			final Player player = serverThread.getPlayer();
+			String itemName = ArrayUtil.joinArguments(arguments, " ").trim();
+			Item item = player.getItem(itemName);
 			
-			if (item != null)
-				return item.use(player);
-			else
-				return new ClientMessage("You do not have " + name, Server.ERROR_TEXT_COLOR);
+			if (item == null)
+				return new ClientMessage("You do not have " + itemName + ".", Server.ERROR_TEXT_COLOR);
+			
+			return item.use(player);
 		}
 	}
 }

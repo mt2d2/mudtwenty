@@ -2,9 +2,9 @@ package server.response;
 
 import java.util.List;
 
-import server.ServerThread;
-
 import message.ClientMessage;
+import server.Server;
+import server.ServerThread;
 
 /**
  * The default response to any action that the Server does not recognize. Spits
@@ -14,15 +14,13 @@ import message.ClientMessage;
  */
 public class UnknownResponse implements ServerResponse
 {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
+
+	/**
+	 * Send a friendly, helpful, wonderful message to the user.
 	 */
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		return new ClientMessage("The command you entered was not understood. "
-			+ "Type help for a list of available commands.");
+		return new ClientMessage("The command you entered was not found. Type help for a list of commands.",
+				Server.ERROR_TEXT_COLOR);
 	}
 }

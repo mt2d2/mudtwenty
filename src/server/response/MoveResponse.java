@@ -44,18 +44,23 @@ public class MoveResponse implements ServerResponse
 		{
 			return this.respond(serverThread, this.direction);
 		}
-		else if (arguments.size() != 1)
+		else if (arguments.size() < 1)
 		{
-			return new ClientMessage("proper syntax of move: move <exit name>", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The proper syntax is: move <exit name>", Server.ERROR_TEXT_COLOR);
 		}
 		else
 		{
-			// get the direction from the first argument
-			this.direction = stringToDirection(arguments.get(0));
-			if (this.direction == null)
-				return new ClientMessage("that direction was not recognized", Server.ERROR_TEXT_COLOR);
+			try
+			{
+				this.direction = Direction.valueOf(arguments.get(0).toUpperCase());
+				return this.respond(serverThread, this.direction);
 
-			return this.respond(serverThread, this.direction);
+			}
+			catch (IllegalArgumentException e)
+			{
+				return new ClientMessage("That direction was not recognized.", Server.ERROR_TEXT_COLOR);
+			}
+
 		}
 	}
 
@@ -66,11 +71,11 @@ public class MoveResponse implements ServerResponse
 	public ClientMessage respond(ServerThread serverThread, Direction direction)
 	{
 		Player player = serverThread.getPlayer();
-		Room oldRoom = Server.getUniverse().getRoomOfCreature(player);
+		Room oldRoom = player.getRoom();
 
 		// make sure that the exit exists
 		if (!oldRoom.hasExit(direction))
-			return new ClientMessage("there is no exit in that direction", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("There is no exit in that direction.", Server.ERROR_TEXT_COLOR);
 
 		// get the new room
 		Room newRoom = oldRoom.getExit(direction).getRoom();
@@ -78,7 +83,7 @@ public class MoveResponse implements ServerResponse
 		// make sure that the exit is unlocked
 		if (newRoom.requiresKey())
 			if (!newRoom.isLocked())
-				return new ClientMessage("the exit leading to " + newRoom.getName() + " is currently locked", Server.ERROR_TEXT_COLOR);
+				return new ClientMessage("The room " + newRoom.getName() + " is currently locked", Server.ERROR_TEXT_COLOR);
 
 		// make the swap
 		Server.getUniverse().changeRoomOfCreature(player, newRoom);
@@ -93,17 +98,6 @@ public class MoveResponse implements ServerResponse
 
 		// invoke the look response to show the user the new room
 		return new LookResponse().respond(serverThread, new ArrayList<String>());
-	}
-
-	/**
-	 * @return the direction, or null
-	 */
-	private Direction stringToDirection(String s)
-	{
-		for (Direction direction : Direction.values())
-			if (direction.toString().equals(s.toUpperCase()))
-				return direction;
-		return null;
 	}
 
 }

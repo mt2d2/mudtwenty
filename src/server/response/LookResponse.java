@@ -17,10 +17,15 @@ import server.universe.Room;
 public class LookResponse implements ServerResponse
 {
 
+	/**
+	 * If there are no arguments, send a description of the room.
+	 * If there is an argument, send a description of the named entity if it exists;
+	 * otherwise send an error message.
+	 */
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		Player player = serverThread.getPlayer();
-		final Room room = Server.getUniverse().getRoomOfCreature(player);
+		final Player player = serverThread.getPlayer();
+		final Room room = player.getRoom();
 		
 		if (arguments.isEmpty())
 		{
@@ -35,11 +40,14 @@ public class LookResponse implements ServerResponse
 			}
 			catch (IllegalArgumentException e)
 			{
-				return new ClientMessage(arguments.get(0) + " was not found.");
+				return lookAtEntity(room, player);
 			}
 		}
 	}
 	
+	/**
+	 * Return a ClientMessage with a description of the given room.
+	 */
 	private ClientMessage lookAtRoom(Room room, Player player)
 	{
 		String message = room.getDescription()
@@ -79,6 +87,9 @@ public class LookResponse implements ServerResponse
 			return "MOBs in the room: " + listEntityNames(mobs);
 	}
 	
+	/**
+	 * Get a string description of items in the room.
+	 */
 	private String describeItems(Room room)
 	{
 		List<Entity> items = new ArrayList<Entity>();
@@ -93,7 +104,7 @@ public class LookResponse implements ServerResponse
 	/**
 	 * Given a list of entities, return a properly formatted string representation.
 	 * 
-	 * Precondition: list is not empty.
+	 * PRECONDITION: list is not empty.
 	 */
 	private String listEntityNames(List<Entity> entities)
 	{
@@ -104,6 +115,9 @@ public class LookResponse implements ServerResponse
 				+ listEntityNames(entities.subList(1, entities.size()));
 	}
 	
+	/**
+	 * Return a ClientMessage with a description of the exit.
+	 */
 	private ClientMessage lookAtExit(Room room, Direction direction)
 	{
 		if (room.hasExit(direction))
@@ -116,6 +130,14 @@ public class LookResponse implements ServerResponse
 		{
 			return new ClientMessage("There is no exit in that direction.", Server.ERROR_TEXT_COLOR);
 		}
+	}
+	
+	/**
+	 * Return a ClientMessage with a description of the given entity, if possible.
+	 */
+	private ClientMessage lookAtEntity(Room room, Player player)
+	{
+		return new ClientMessage("looking at things besides exits and rooms not quite implemented yet.");
 	}
 	
 }

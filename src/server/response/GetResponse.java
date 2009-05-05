@@ -18,16 +18,19 @@ import util.ArrayUtil;
 public class GetResponse implements ServerResponse
 {
 
+	/**
+	 * If possible, move the item named to the player's inventory. 
+	 */
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		if (arguments.size() < 1)
 		{
-			return new ClientMessage("Improper syntax: the proper syntax is get <item>");
+			return new ClientMessage("The proper syntax is: get <item>", Server.ERROR_TEXT_COLOR);
 		}
 		else
 		{
 			Player player = serverThread.getPlayer();
-			Room room = Server.getUniverse().getRoomOfCreature(player);
+			Room room = player.getRoom();
 
 			// locate the item
 			List<Item> itemsInRoom = room.getItems();

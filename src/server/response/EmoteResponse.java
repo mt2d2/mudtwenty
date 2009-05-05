@@ -5,6 +5,7 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
+import server.universe.Player;
 import server.universe.Room;
 import util.ArrayUtil;
 
@@ -17,25 +18,23 @@ import util.ArrayUtil;
 public class EmoteResponse implements ServerResponse
 {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
+	/**
+	 * Send an emote message to all players in the room.
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		if (arguments.size() < 1)
 		{
-			return new ClientMessage("Improper syntax: the proper syntax is emote <phrase>");
+			return new ClientMessage("The proper syntax is: emote <phrase>", Server.ERROR_TEXT_COLOR);
 		}
 		else
 		{
-			Room roomOfPlayer = Server.getUniverse().getRoomOfCreature(serverThread.getPlayer());
+			Player player = serverThread.getPlayer();
+			Room room = player.getRoom();
+			
 			String phrase = ArrayUtil.joinArguments(arguments, " ").trim();
-
-			Server.sendMessageToAllClientsInRoom(roomOfPlayer, new ClientMessage("*" + serverThread.getPlayer().getName() + " " + phrase + "*"));
+			ClientMessage message = new ClientMessage("*" + player.getName() + " " + phrase + "*");
+			Server.sendMessageToAllClientsInRoom(room, message);
 			return new ClientMessage("You emoted, \"" + phrase + "\"");
 		}
 	}
