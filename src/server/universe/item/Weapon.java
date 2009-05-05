@@ -8,22 +8,12 @@ import server.universe.Creature;
  * This class represents some generic weapon.
  * More specific types of armor could be created by setting attributes.
  */
-public class Weapon extends Item
+public abstract class Weapon extends Item
 {
 	private static final long	serialVersionUID	= 1L;
 
 	private int damage;
-	
-	/**
-	 * Construct a weapon with default characteristics.
-	 */
-	public Weapon()
-	{
-		setName("sword");
-		setDescription("An instrument of death. Not very useful in times of peace.");
-		setPrice(5);
-	}
-	
+
 	/**
 	 * Get the damage of the weapon.
 	 * Later, this could return varying amounts of damage.

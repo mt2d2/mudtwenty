@@ -11,6 +11,7 @@ import server.Server;
 import server.universe.item.Armor;
 import server.universe.item.Item;
 import server.universe.item.Potion;
+import server.universe.item.Spear;
 import server.universe.item.Weapon;
 
 /**
@@ -63,7 +64,7 @@ public abstract class Creature implements Entity, Serializable
 		// shouldn't start with them
 		this.addItem(new Potion());
 		this.addItem(new Armor());
-		this.addItem(new Weapon());
+		this.addItem(new Spear());
 		// TODO replace type of map with EnumMap because it's a lot more
 		// efficient.
 		this.skills = new HashMap<Skill, Integer>();
