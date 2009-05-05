@@ -18,8 +18,7 @@ public class DefaultUniverse extends Universe
 	private static final long	serialVersionUID	= 1L;
 
 	/**
-	 * This constructor assembles a room or two. No need to use any creational
-	 * patterns here... This is only a one-off, simple universe thing.
+	 * Make a default universe with many rooms!
 	 */
 	public DefaultUniverse()
 	{

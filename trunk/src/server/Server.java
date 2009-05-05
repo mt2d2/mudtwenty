@@ -196,13 +196,12 @@ public class Server
 	}
 
 	/**
-	 * Sends a message to a specific player. This player is identified by his
-	 * username only, which might be kind of brittle.
+	 * Sends a message to a specific player.
 	 *
-	 * @param name
-	 *            Name of the user that will be sent a message
+	 * @param player
+	 *            Player that will be sent a message
 	 * @param message
-	 *            message that will be sent player to player
+	 *            message that will be sent
 	 */
 	public static synchronized void sendMessageToPlayer(Player player, ClientMessage message)
 	{
@@ -270,9 +269,11 @@ public class Server
 
 			for (ServerThread st : toRemove)
 				if (st.getPlayer() != null)
-					Server.sendMessageToAllClients(new ClientMessage(st.getPlayer().getName() +" has left the game.", Server.SYSTEM_TEXT_COLOR));
+					Server.sendMessageToAllClients(new ClientMessage(st.getPlayer().getName() +
+							" has left the game.", Server.SYSTEM_TEXT_COLOR));
 				else
-					Server.sendMessageToAllClients(new ClientMessage("client terminated connection: " + st, Server.SYSTEM_TEXT_COLOR));
+					Server.sendMessageToAllClients(new ClientMessage("client terminated connection: " +st,
+							Server.SYSTEM_TEXT_COLOR));
 
 			toRemove.clear();
 		}

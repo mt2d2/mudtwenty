@@ -145,6 +145,9 @@ public class Universe implements Serializable
 		}
 	}
 
+	/**
+	 * Get a list of all players that are currently logged in.
+	 */
 	public List<Player> getLoggedInPlayers()
 	{
 		List<Player> list = new ArrayList<Player>();
@@ -173,7 +176,7 @@ public class Universe implements Serializable
 	 * But, do not log them in yet.
 	 *
 	 * @param name
-	 *            username of the player
+	 *            name of the player
 	 */
 	public void register(String name)
 	{
@@ -210,15 +213,7 @@ public class Universe implements Serializable
 	}
 
 	/**
-	 * Adds a player to the list of logged-in players in the Universe. Tell the
-	 * server that a user is now logged in. The Universe can now find a rightful
-	 * place for the user.
-	 *
-	 * If the Player was not previously in the list of players on the server, it
-	 * will now be added and put into the starting room.
-	 *
-	 * @param player
-	 *            to add
+	 * Spawns a mob in the given room.
 	 */
 	public void spawnMob(MOB mob, Room room)
 	{
@@ -241,6 +236,9 @@ public class Universe implements Serializable
 		this.playerToRoom.remove(player);
 	}
 	
+	/**
+	 * Send a message to one creature. 
+	 */
 	public void sendMessageToCreature(Creature sender, Creature receiver, ClientMessage message)
 	{
 		if (receiver instanceof Player)
@@ -255,6 +253,11 @@ public class Universe implements Serializable
 		}
 	}
 	
+	/**
+	 * Send a message to all creatures in a room. For players, this means sending
+	 * some text to a client. For mobs, these means calling a method to notify the mob that
+	 * it has been sent certain text. 
+	 */
 	public void sendMessageToCreaturesInRoom(Creature sender, Room room, ClientMessage textSaid)
 	{
 		for (MOB mob : this.getMOBsInRoom(room))
@@ -273,7 +276,6 @@ public class Universe implements Serializable
 	 * Called by Java during deserialization. This helps in restoring transient
 	 * fields.
 	 *
-	 * @param stream
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
