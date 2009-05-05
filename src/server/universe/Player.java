@@ -28,6 +28,7 @@ public class Player extends Creature implements Serializable
 	{
 		super(name);
 		this.passwordHash = passwordHash;
+		this.setAttack(10);
 	}
 
 	/**
