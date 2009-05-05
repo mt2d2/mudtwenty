@@ -1,9 +1,14 @@
 package server.universe.mob;
 
-import server.universe.item.Armor;
+import server.universe.item.Cannon;
+import server.universe.item.CheapTreat;
+import server.universe.item.Cloth;
+import server.universe.item.FancyTreat;
 import server.universe.item.Item;
-import server.universe.item.Potion;
+import server.universe.item.LargePotion;
+import server.universe.item.SmallPotion;
 import server.universe.item.Spear;
+import server.universe.item.SteelMesh;
 import server.universe.item.Sword;
 
 /**
@@ -60,17 +65,27 @@ public class RoomGiftMob extends MOB
 		public void doAction(MOB mob)
 		{
 			Item itemToGive = null;
-			
+
 			final double random = Math.random();
 
-			if (random < .05)
+			if (random < .02)
+				itemToGive = new Cannon();
+			else if (random < .05)
 				itemToGive = new Sword();
 			else if (random < .1)
-				itemToGive = new Armor();
+				itemToGive = new SteelMesh();
 			else if (random < .2)
+				itemToGive = new Cloth();
+			else if (random < .3)
 				itemToGive = new Spear();
+			else if (random < .4)
+				itemToGive = new LargePotion();
+			else if (random < .5)
+				itemToGive = new CheapTreat();
+			else if (random < .6)
+				itemToGive = new FancyTreat();
 			else
-				itemToGive = new Potion();
+				itemToGive = new SmallPotion();
 
 			mob.getRoom().addItem(itemToGive);
 		}

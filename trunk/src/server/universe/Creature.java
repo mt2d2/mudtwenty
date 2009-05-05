@@ -10,8 +10,6 @@ import java.util.Map.Entry;
 import server.Server;
 import server.universe.item.Armor;
 import server.universe.item.Item;
-import server.universe.item.Potion;
-import server.universe.item.Spear;
 import server.universe.item.Weapon;
 
 /**
@@ -28,12 +26,12 @@ public abstract class Creature implements Entity, Serializable
 	// core info
 	private String				name;
 	private String				description;
-	
+
 	// stats
 	private int					maxHealth;
 	private int					health;
 	private Map<Skill, Integer>	skills;
-	
+
 	// possessions
 	private List<Item>			items;
 	private int					gold;
@@ -60,11 +58,7 @@ public abstract class Creature implements Entity, Serializable
 		this.health = maxHealth;
 		this.items = new ArrayList<Item>();
 		this.gold = 50;
-		// TODO these items are just added for testing purposes, all creatures
-		// shouldn't start with them
-		this.addItem(new Potion());
-		this.addItem(new Armor());
-		this.addItem(new Spear());
+
 		// TODO replace type of map with EnumMap because it's a lot more
 		// efficient.
 		this.skills = new HashMap<Skill, Integer>();
@@ -264,7 +258,7 @@ public abstract class Creature implements Entity, Serializable
 	{
 		return Server.getUniverse().getRoomOfCreature(this);
 	}
-	
+
 	/**
 	 * Set the room of the creature.
 	 */
@@ -272,15 +266,13 @@ public abstract class Creature implements Entity, Serializable
 	{
 		Server.getUniverse().changeRoomOfCreature(this, room);
 	}
-	
+
 	/**
-	 * Decreases gold a certain amount, returning false
-	 * if not enough gold.
+	 * Decreases gold a certain amount, returning false if not enough gold.
 	 * 
 	 * @param amount
-	 * 			amount of gold to subtract
-	 * @return
-	 * 			whether or not gold was decreased
+	 *            amount of gold to subtract
+	 * @return whether or not gold was decreased
 	 */
 	public boolean decreaseGold(int amount)
 	{
@@ -291,30 +283,28 @@ public abstract class Creature implements Entity, Serializable
 		}
 		return false;
 	}
-	
+
 	/**
-	 * Increases the gold a certain amount. Cannot have too
-	 * much gold.
+	 * Increases the gold a certain amount. Cannot have too much gold.
 	 * 
-	 * @param
-	 * 			amount of gold to add to user's repository
+	 * @param amount
+	 *            of gold to add to user's repository
 	 */
 	public void increaseGold(int amount)
 	{
 		this.gold += amount;
 	}
-	
+
 	/**
 	 * Gets gold.
 	 * 
-	 * @return
-	 * 			amount of gold possessed by player
+	 * @return amount of gold possessed by player
 	 */
 	public int getGold()
 	{
 		return this.gold;
 	}
-	
+
 	/**
 	 * Gives an item to a different Player.
 	 * 
