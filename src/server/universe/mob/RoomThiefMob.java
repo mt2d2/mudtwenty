@@ -5,10 +5,9 @@ import message.Status;
 import server.Server;
 import server.universe.Creature;
 import server.universe.Room;
-//Why not make the mobs different species rather than make a kitten, roomthief mobs and so on.
-//why not just use mob and make their stats vary by giving them different species?
+
 /**
- * This Mob steals from rooms. It has a 10% chance of taking an item from a
+ * This Mob steals from rooms. It has a 20% chance of taking an item from a
  * room, or simply moving on to the next one.
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
@@ -28,7 +27,7 @@ public class RoomThiefMob extends MOB
 	@Override
 	public void takeTurn()
 	{
-		if (Math.random() < .1)
+		if (Math.random() < .2)
 			this.setBehavior(new DropBehavior());
 		else
 			this.setBehavior(new MoveBehavior());

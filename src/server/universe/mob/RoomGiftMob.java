@@ -8,7 +8,7 @@ import server.universe.item.Weapon;
 /**
  * This MOB is a very generous one, in that it drops items throughout rooms. He
  * has a NullDialog strategy, which means he never talks. He drops random items
- * in rooms, making him something like Santa. He has a 10% of dropping an item
+ * in rooms, making him something like Santa. He has a 30% of dropping an item
  * or just moves around.
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
@@ -33,7 +33,7 @@ public class RoomGiftMob extends MOB
 	@Override
 	public void takeTurn()
 	{
-		if (Math.random() < .1)
+		if (Math.random() < .3)
 			this.setBehavior(new DropBehavior());
 		else
 			this.setBehavior(new MoveBehavior());

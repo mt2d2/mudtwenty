@@ -24,10 +24,11 @@ public class MoveBehavior implements BehaviorStrategy
 		List<Exit> exits = oldRoom.getUnlockedExits();
 		if (!exits.isEmpty())
 		{
-			int exitSize = exits.size();
-			
+		
 			// randomize which exit the mob takes
-			Room newRoom = exits.get(new Random().nextInt(exitSize)).getRoom();
+			int exitSize = exits.size();
+			int randomRoomChoice = new Random(System.currentTimeMillis()).nextInt(exitSize);			
+			Room newRoom = exits.get(randomRoomChoice).getRoom();
 			
 			mob.setRoom(newRoom);
 			Server.sendMessageToAllClientsInRoom(oldRoom, new ClientMessage(mob.getName() + " has left the room."));
