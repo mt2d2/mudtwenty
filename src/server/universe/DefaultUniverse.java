@@ -1,5 +1,8 @@
 package server.universe;
 
+import server.universe.item.CheapTreat;
+import server.universe.item.FancyTreat;
+import server.universe.item.LargePotion;
 import server.universe.item.Potion;
 import server.universe.mob.Kitten;
 import server.universe.mob.RoomGiftMob;
@@ -46,7 +49,9 @@ public class DefaultUniverse extends Universe
 
 		// add some items
 		rootRoom.addItem(new Potion());
-		rootRoom.addItem(new Potion());
+		rootRoom.addItem(new LargePotion());
+		northRoom.addItem(new FancyTreat());
+		northRoom.addItem(new CheapTreat());
 
 		// add some mobs
 		this.spawnMob(new Kitten("fluffy"), southRoom);
