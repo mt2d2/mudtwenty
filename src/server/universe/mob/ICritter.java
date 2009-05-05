@@ -4,7 +4,9 @@ import java.util.List;
 
 import server.Server;
 
-
+/**
+ * ICritters, like the ICritters of our previous project, delight in breeding.
+ */
 public abstract class ICritter extends MOB
 {
 
@@ -40,15 +42,21 @@ public abstract class ICritter extends MOB
 
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Breed if another ICritter is found and the room hasn't reached its carrying capacity.
+		 */
 		public void doAction(MOB mob)
 		{
 			List<MOB> mobs = Server.getUniverse().getMOBsInRoom(mob.getRoom());
-			for (MOB otherMob : mobs)
+			if (mobs.size() < 10)
 			{
-				if (otherMob instanceof ICritter)
+				for (MOB otherMob : mobs)
 				{
-					breed(mob, otherMob);
-					break;
+					if (otherMob instanceof ICritter)
+					{
+						breed(mob, otherMob);
+						break;
+					}
 				}
 			}
 		}

@@ -1,10 +1,8 @@
 package server.universe.mob;
 
-import java.util.List;
-
-import server.Server;
-
-
+/**
+ * The familiar ICritterCat, in a new world.
+ */
 public class ICritterDog extends ICritter
 {
 
@@ -16,7 +14,7 @@ public class ICritterDog extends ICritter
 	public ICritterDog(String name)
 	{
 		super(name);
-		this.setDescription("It has sharp claws, and it will mate with any other land animal.");
+		this.setDescription("It has sharp claws, and it will mate with any other land animal!");
 	}
 
 }
