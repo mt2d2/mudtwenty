@@ -22,7 +22,7 @@ public class Potion extends Item
 		setName("small potion");
 		setDescription("Use potions to recover health points");
 		setPrice(10);
-		this.healingPower = 10;
+		setHealingPower(10);
 	}
 	
 	/**
