@@ -3,6 +3,15 @@
 = Introduction =
 
 A list of things to concentrate on. Delete them from this list when they're done, and add one if it's not here and it's important. Should include quotes from spec.
+
+----
+
+*Before we generate the UML, we need to have a few more MOB and item classes: most or all of these can be simple subclasses or variations of the currently existing items/mobs.*
+
+*In order to have a universe consisting of rooms that are slightly interesting, I want to create a class, `RandomRoomFactory` or something like that -- this can incorporate both builder and abstract factory patterns (`patterns += 2`) and return random rooms of slightly different types, depending on a string or enum that is passed to a method called something like `getRandomRoom( RoomType type )`. I will have enough time to do this later tonight, but I have to finish homework for another class and I got sick at a really inconvenient time :-( sorry guys.* --Quinten
+
+----
+
 = Common Spec =
 
  * *UML*: "Complete UML class diagram(s), sequence diagram of inner loop. ...  Matches final submission.  ... The UML class diagrams and sequence diagram should be submitted in paper form. They should clearly show the names of each member of the team, as well as the name of the project being designed."
