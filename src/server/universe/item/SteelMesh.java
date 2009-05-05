@@ -1,8 +1,8 @@
 package server.universe.item;
 
 /**
- * Extends Armor to provide protection to a wearer. SteelMesh is stronger, and
- * has a defense and cost value of 10.
+ * Extends Armor to provide protection to a wearer. SteelMesh is stronger
+ * than cloth.
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
@@ -15,9 +15,9 @@ public class SteelMesh extends Armor
 	 */
 	public SteelMesh()
 	{
-		setName("SteelMesh");
+		setName("steel mesh");
 		setDescription("A tough metal mesh that protects you when worn.");
-		setDefensePoints(10);
-		setPrice(10);
+		setDefensePoints(15);
+		setPrice(15);
 	}
 }

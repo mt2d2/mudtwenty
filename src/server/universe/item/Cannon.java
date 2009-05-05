@@ -1,7 +1,7 @@
 package server.universe.item;
 
 /**
- * This is an extension of Weapon that provides properties that a CAnnon should
+ * This is an extension of Weapon that provides properties that a Cannon should
  * have, i.e., it's the best.
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
