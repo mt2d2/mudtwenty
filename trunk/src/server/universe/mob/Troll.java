@@ -1,13 +1,8 @@
 package server.universe.mob;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
-
 import message.ClientMessage;
 import server.Server;
 import server.universe.Creature;
-import server.universe.item.Item;
 /**
  * The merchant class models a MOB that can sell his items to players.
  * This creature will sell whatever he has in his inventory until runs out.
@@ -25,21 +20,20 @@ public class Troll extends MOB {
 	public Troll(String name) {
 		super(name);
 		this.setMaxHealth(20);
-		this.setDescription("Attack me if you dare!");
-		this.setDialog(new HelloDialog());
+		this.setDescription("Ugly and covered with phlegm. Attack it if you dare!");
+		this.setDialog(new TauntDialog());
 		this.setAttack(5);
 	}
 	
 	/**
-	 * What happens when a player talks to a merchant. Users can
-	 * buy items by typing "tell <merchantName> buy <item>"
+	 * A simple dialog, simply taunting the user if they say anything. 
 	 */
-	private class HelloDialog implements DialogStrategy
+	private class TauntDialog implements DialogStrategy
 	{
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * Either buys an item or displays hello message
+		 * Taunts a player if they say anything.
 		 */
 		public void tell(Creature sender, String message)
 		{
@@ -60,7 +54,7 @@ public class Troll extends MOB {
 	 */
 	public ClientMessage attack(Creature creature)
 	{
-		if (this.getHealth()>0)
+		if (this.getHealth() > 0)
 		{
 			creature.decreaseHealth(this.getAttack());
 			this.decreaseHealth(creature.getAttack());

@@ -16,25 +16,31 @@ public class RoomThiefMob extends MOB
 {
 	private static final long	serialVersionUID	= 1L;
 
+	/**
+	 * Make a thief with the given name. 
+	 */
 	public RoomThiefMob(String name)
 	{
 		super(name);
 		this.setMaxHealth(1);
-		this.setDescription("This is a very mean MOB. He steals the first item he can find a room and moves on. It might be a good idea to kill him.");
+		this.setDescription("This is a very mean MOB. He steals the first item he can find a room and moves on." +
+				"It might be a good idea to kill him.");
 		this.setDialog(new IntimidationDialog());
 	}
 
-	@Override
+	/**
+	 * Steal or move.
+	 */
 	public void takeTurn()
 	{
 		if (Math.random() < .2)
-			this.setBehavior(new DropBehavior());
+			this.setBehavior(new StealBehavior());
 		else
 			this.setBehavior(new MoveBehavior());
 	}
 
 	/**
-	 * Let's all other players in the room know this Mob's true intentions.
+	 * Let all other players in the room know this Mob's true intentions.
 	 * 
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
@@ -42,7 +48,6 @@ public class RoomThiefMob extends MOB
 	{
 		private static final long	serialVersionUID	= 1L;
 
-		@Override
 		public void tell(Creature sender, String message)
 		{
 			Server.getUniverse().sendMessageToCreature(RoomThiefMob.this, sender,
@@ -55,11 +60,10 @@ public class RoomThiefMob extends MOB
 	 * 
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
-	private class DropBehavior implements BehaviorStrategy
+	private class StealBehavior implements BehaviorStrategy
 	{
 		private static final long	serialVersionUID	= 1L;
 
-		@Override
 		public void doAction(MOB mob)
 		{
 			Room room = mob.getRoom();
