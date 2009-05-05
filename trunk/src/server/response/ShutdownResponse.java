@@ -25,20 +25,16 @@ public class ShutdownResponse implements ServerResponse
 	 */
 	private static final Properties	conf	= PropertyLoader.loadProperties("server/configuration.properties");
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
+	/**
+	 * Shutdown the server if the player is an admin.
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		List<String> admins = Arrays.asList(conf.getProperty("admin").split(","));
 
 		if (admins.contains(serverThread.getPlayer().getName()))
 		{
-			Server.sendMessageToAllClients(new ClientMessage("the server is shutting down now", Server.ERROR_TEXT_COLOR));
+			Server.sendMessageToAllClients(new ClientMessage("The server is shutting down now.", Server.ERROR_TEXT_COLOR));
 			serverThread.getServer().shutdown();
 
 			// the server is shutdown, there is no response to send
@@ -47,7 +43,7 @@ public class ShutdownResponse implements ServerResponse
 		else
 		{
 			// user is not allowed to perform shutdown
-			return new ClientMessage("you are not permmitted to execute this command");
+			return new ClientMessage("You are not permmitted to execute this command.", Server.ERROR_TEXT_COLOR);
 		}
 	}
 }

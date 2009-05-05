@@ -26,15 +26,16 @@ public class SayResponse implements ServerResponse
 	{
 		if (arguments.size() < 1)
 		{
-			return new ClientMessage("proper syntax of say is say <message>", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The proper syntax is: say <message>", Server.ERROR_TEXT_COLOR);
 		}
 		else
 		{
 			final Player sender = serverThread.getPlayer();
-			final Room room = Server.getUniverse().getRoomOfCreature(sender);
+			final Room room = sender.getRoom();
 			final String textSaid = ArrayUtil.joinArguments(arguments, " ").trim();
-			
-			Server.getUniverse().sendMessageToCreaturesInRoom(sender, room, new ClientMessage(serverThread.getPlayer().getName() + " says to room: " + textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR));
+			ClientMessage message = new ClientMessage(sender.getName() + " says to room: "
+					+ textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR);
+			Server.getUniverse().sendMessageToCreaturesInRoom(sender, room, message);
 			
 			return new ClientMessage("You said \"" + textSaid + "\" to everyone in the room.");
 		}

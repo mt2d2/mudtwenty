@@ -95,6 +95,9 @@ public class ResponseFactory {
 		return command;
 	}
 
+	/**
+	 * An enumeration of possible commands.
+	 */
 	private enum Command
 	{
 		EXIT, QUIT, SC, SCORE, ATTACK, OOC, COMMANDS, WHO, TELL, SAY, L, LS, LOOK,

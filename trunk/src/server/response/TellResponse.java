@@ -19,11 +19,14 @@ import util.ArrayUtil;
 public class TellResponse implements ServerResponse
 {
 
+	/**
+	 * Send a private message to a player (or MOB if they're in the room) if they exist.
+	 */
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		if (arguments.size() < 2)
 		{
-			return new ClientMessage("the proper syntax of say is: say <user> <message>", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The proper syntax is: say <user> <message>", Server.ERROR_TEXT_COLOR);
 		}
 		else
 		{
@@ -42,7 +45,7 @@ public class TellResponse implements ServerResponse
 			}
 			else
 			{
-				Room room = Server.getUniverse().getRoomOfCreature(sender);
+				Room room = sender.getRoom();
 				for (MOB mob : Server.getUniverse().getMOBsInRoom(room))
 					if (mob.getName().equals(receiverName))
 						receiver = mob;
@@ -50,7 +53,8 @@ public class TellResponse implements ServerResponse
 
 			if (receiver != null)
 			{
-				Server.getUniverse().sendMessageToCreature(sender, receiver, new ClientMessage(textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR));
+				ClientMessage message = new ClientMessage(textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR);
+				Server.getUniverse().sendMessageToCreature(sender, receiver, message);
 				return new ClientMessage("You said something to " + receiverName + ".");
 			}
 			else

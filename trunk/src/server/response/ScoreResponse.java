@@ -13,13 +13,10 @@ import server.ServerThread;
  */
 public class ScoreResponse implements ServerResponse
 {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
+
+	/**
+	 * Send the user a description of their player.
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		return new ClientMessage(serverThread.getPlayer().getDescription());

@@ -23,19 +23,14 @@ public class WhoResponse implements ServerResponse
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		final List<Player> players = Server.getUniverse().getLoggedInPlayers();
+		
 		String message;
-		switch (players.size())
-		{
-			case 0:
-				message = "There are no players online.";
-				break;
-			case 1:
-				message = "There is 1 player online: " + listPlayerNames(players);
-				break;
-			default:
-				message = "There are " + players.size() + " players online: " + listPlayerNames(players);
-				break;
-		}
+		if (players.isEmpty())
+			message = "There are no players online.";
+		else if (players.size() == 1)
+			message = "There is 1 player online: " + listPlayerNames(players);
+		else
+			message = "There are " + players.size() + " players online: " + listPlayerNames(players);
 
 		return new ClientMessage(message, Status.CHAT, null);
 	}
@@ -43,7 +38,7 @@ public class WhoResponse implements ServerResponse
 	/**
 	 * Make a properly formatted list of player names.
 	 * 
-	 * Precondition: List is not empty.
+	 * PRECONDITION: List is not empty.
 	 */
 	private String listPlayerNames(List<Player> players)
 	{

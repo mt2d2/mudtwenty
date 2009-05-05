@@ -19,7 +19,9 @@ public class SocialResponse implements ServerResponse
 	private String	verb;
 
 	/**
-	 * Constructs the social interaction
+	 * Constructs the social interaction with the given verb.
+	 * The verb is assumed to be in 3rd person singular form, ending with an s.
+	 * For example: giggles, not giggle.
 	 * 
 	 * @param verb
 	 *            type of social interaction
@@ -29,32 +31,37 @@ public class SocialResponse implements ServerResponse
 		this.verb = verb;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see server.response.ServerResponse#respond(server.ServerThread,
-	 * java.util.List)
+	/**
+	 * Send a social command to the room using the verb that this SocialResponse was constructed with.
 	 */
-	@Override
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
-		Room roomOfPlayer = Server.getUniverse().getRoomOfCreature(serverThread.getPlayer());
+		final Player player = serverThread.getPlayer();
+		final Room room = player.getRoom();
 		
-		if (arguments.size() < 1)
+		// It is assumed that this SocialResponse object was constructed with 3rd-person singular -s suffix.
+		final String withoutFinalS = this.verb.substring(0, this.verb.length() - 1);
+		
+		if (arguments.isEmpty())
 		{
-			Server.sendMessageToAllClientsInRoom(roomOfPlayer, new ClientMessage(serverThread.getPlayer().getName() + " " + this.verb));
-			return new ClientMessage("You " + this.verb.substring(0, this.verb.length() - 1) + "ed at the room!");
+			ClientMessage message = new ClientMessage(player.getName() + " " + this.verb);
+			Server.sendMessageToAllClientsInRoom(room, message);
+			
+	
+			return new ClientMessage("You " + withoutFinalS + "ed at the room!");
 		}
 		else
 		{
-			Player target = Server.getUniverse().getPlayer(arguments.get(0));
+			// Note that the target player name must be one word.
+			String targetName = arguments.get(0);
+			Player target = Server.getUniverse().getPlayer(targetName);
 			
 			if (target == null)
-				return new ClientMessage("That player, " + arguments.get(0)  + ", could not be found.", Server.ERROR_TEXT_COLOR);
+				return new ClientMessage("That player, " + targetName  + ", could not be found.", Server.ERROR_TEXT_COLOR);
+			ClientMessage message = new ClientMessage(player.getName() + " " + this.verb + " at " + targetName);
+			Server.sendMessageToAllClientsInRoom(room, message);
 			
-			Server.sendMessageToAllClientsInRoom(roomOfPlayer, new ClientMessage(serverThread.getPlayer().getName() + " " + this.verb + " at " + target.getName()));
-			
-			return new ClientMessage("You " + this.verb.substring(0, this.verb.length() - 1) + "ed at " + target.getName() + " to the whole room!");
+			return new ClientMessage("You " + withoutFinalS + "ed at " + targetName + " to the whole room!");
 		}
 	}
 }
