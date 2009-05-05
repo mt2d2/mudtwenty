@@ -26,7 +26,7 @@ A list of things to concentrate on. Delete them from this list when they're done
 
  * *Expand items, add uses*: "The MUD must have at least 10 different types of items. ... All items must have a use in the game. You could have potions to heal damage taken, keys to open doors, special items that affect the player’s stats, equipment the player can wear or items needed to finish a quest."
 
- * *Items so far (9/10)*: Armor, Key, Large Potion, Small Potion, Weapon, FancyTreat, CheapTreat, Sword, Spear
+ * *Items so far (11/10)*: Armor, Key, Large Potion, Small Potion, Weapon, FancyTreat, CheapTreat, Sword, Spear, Cloth, SteelMesh
 
  * *Expand MOBs, add behavior*: "The MUD must have at least 10 different types of MOBs ... Some MOBs may offer quests, services or games to the players ... MOBs must be able to move between rooms ... MOBs must have complex behaviors ... that take into account player statistics or items a player is carrying, or the contents of the room that the MOB is in ... MOBs should have actions that are triggered ... without direct interaction from players."
 
