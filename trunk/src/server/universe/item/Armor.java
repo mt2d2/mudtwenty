@@ -9,25 +9,24 @@ import server.universe.Creature;
  */
 public abstract class Armor extends Item
 {
-	private static final long	serialVersionUID	= 2L;
+	private static final long	serialVersionUID	= 3L;
 
 	private int					defensePoints;
 
+	/**
+	 * Get the defense rating of this armor.
+	 */
 	public int getDefensePoints()
 	{
 		return defensePoints;
 	}
 
+	/**
+	 * Set the defense rating.
+	 */
 	public void setDefensePoints(int defensePoints)
 	{
 		this.defensePoints = defensePoints;
-	}
-
-	/**
-	 * Creates armor with default characteristics.
-	 */
-	public Armor()
-	{
 	}
 
 	/**

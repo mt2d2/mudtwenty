@@ -12,7 +12,7 @@ import server.universe.Skill;
 public class Book extends Item
 {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	
 	/**
 	 * Creates a book with default attributes.
@@ -23,10 +23,9 @@ public class Book extends Item
 		setDescription("It is large and filled with arcane lore.");
 		setPrice(20);
 	}
-	
 
 	/**
-	 * Unlock the room if the room that the key can be used on is adjacent. Otherwise, report that the key doesn't work.
+	 * Read and learn from the book.
 	 */
 	public ClientMessage use(Creature creature)
 	{

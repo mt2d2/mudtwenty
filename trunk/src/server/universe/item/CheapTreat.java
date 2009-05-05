@@ -9,6 +9,9 @@ public class CheapTreat extends FancyTreat
 {
 	private static final long	serialVersionUID	= 1L;
 
+	/**
+	 * Sole constructor for cheap treats
+	 */
 	public CheapTreat()
 	{
 		setName("CheapTreat");
