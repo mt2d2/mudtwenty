@@ -8,7 +8,7 @@ import server.universe.Creature;
  * 
  * All potions are healing potions.
  */
-public class Potion extends Item
+public class SmallPotion extends Item
 {
 	private static final long	serialVersionUID	= 2L;
 
@@ -17,7 +17,7 @@ public class Potion extends Item
 	/**
 	 * Construct a potion with default characteristics.
 	 */
-	public Potion()
+	public SmallPotion()
 	{
 		setName("small potion");
 		setDescription("Use potions to recover health points");

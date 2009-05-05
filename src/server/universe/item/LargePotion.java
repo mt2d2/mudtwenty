@@ -5,7 +5,7 @@ package server.universe.item;
  * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
-public class LargePotion extends Potion
+public class LargePotion extends SmallPotion
 {
 	private static final long	serialVersionUID	= 1L;
 
