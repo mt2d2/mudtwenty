@@ -35,6 +35,7 @@ public class CommandsResponse implements ServerResponse {
 				+ "\tuse <item>: use a specified item from your inventory\n"
 				+ "\tgive <name> <item>: gives an item to a user\n"
 				+ "\tget <item>: gets an item that exists in the room\n"
+				+ "\tattack <mob name>: attacks a mob in the room the player is in"
 				+ "Movement commands:\n"
 				+ "\tmove <direction>: move you to through your specified exit\n"
 				+ "\tnorth, n: move north\n"

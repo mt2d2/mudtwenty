@@ -30,6 +30,7 @@ public abstract class Creature implements Entity, Serializable
 	// stats
 	private int					maxHealth;
 	private int					health;
+	private int					attack;
 	private Map<Skill, Integer>	skills;
 
 	// possessions
@@ -317,5 +318,23 @@ public abstract class Creature implements Entity, Serializable
 	{
 		receipient.addItem(itemToGive);
 		this.removeItem(itemToGive);
+	}
+
+	/**
+	 * @return
+	 * 			attack of creature
+	 */
+	public int getAttack()
+	{
+		return this.attack;
+	}
+	
+	/**
+	 * Sets attack of creature.
+	 * @param attack
+	 */
+	public void setAttack(int attack)
+	{
+		this.attack = attack;
 	}
 }

@@ -1,5 +1,6 @@
 package server;
 
+import server.response.AttackResponse;
 import server.response.CommandsResponse;
 import server.response.DropResponse;
 import server.response.EmoteResponse;
@@ -55,6 +56,7 @@ public class ResponseFactory {
 			case INVENTORY: return new InventoryResponse();
 			case SC:
 			case SCORE: return new ScoreResponse();
+			case ATTACK: return new AttackResponse();
 			case CD:
 			case MOVE: return new MoveResponse();
 			case N:
@@ -95,7 +97,7 @@ public class ResponseFactory {
 
 	private enum Command
 	{
-		EXIT, QUIT, SC, SCORE, OOC, COMMANDS, WHO, TELL, SAY, L, LS, LOOK,
+		EXIT, QUIT, SC, SCORE, ATTACK, OOC, COMMANDS, WHO, TELL, SAY, L, LS, LOOK,
 		INVENTORY, DROP, USE, MOVE, SHUTDOWN, GIVE, GET, UNKNOWN, CD, N, NORTH, S, SOUTH,
 		E, EAST, W, WEST, HELP, EMOTE, LAUGH, GIGGLE, SLAP, WINK;
 	}
