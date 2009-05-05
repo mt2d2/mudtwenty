@@ -3,7 +3,8 @@ package server.universe.mob;
 import server.universe.item.Armor;
 import server.universe.item.Item;
 import server.universe.item.Potion;
-import server.universe.item.Weapon;
+import server.universe.item.Spear;
+import server.universe.item.Sword;
 
 /**
  * This MOB is a very generous one, in that it drops items throughout rooms. He
@@ -59,11 +60,15 @@ public class RoomGiftMob extends MOB
 		public void doAction(MOB mob)
 		{
 			Item itemToGive = null;
+			
+			final double random = Math.random();
 
-			if (Math.random() < .1)
+			if (random < .05)
+				itemToGive = new Sword();
+			else if (random < .1)
 				itemToGive = new Armor();
-			else if (Math.random() < .2)
-				itemToGive = new Weapon();
+			else if (random < .2)
+				itemToGive = new Spear();
 			else
 				itemToGive = new Potion();
 
