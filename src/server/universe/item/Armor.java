@@ -4,24 +4,32 @@ import message.ClientMessage;
 import server.universe.Creature;
 
 /**
- * This class represents some generic armor.
- * More specific types of armor can be created by setting
- * the attributes of this armor and cloning.
+ * This class represents some generic armor. More specific types of armor can be
+ * created by setting the attributes of this armor and cloning.
  */
-public class Armor extends Item
+public abstract class Armor extends Item
 {
 	private static final long	serialVersionUID	= 2L;
+
+	private int					defensePoints;
+
+	public int getDefensePoints()
+	{
+		return defensePoints;
+	}
+
+	public void setDefensePoints(int defensePoints)
+	{
+		this.defensePoints = defensePoints;
+	}
 
 	/**
 	 * Creates armor with default characteristics.
 	 */
 	public Armor()
 	{
-		setName("leather armor");
-		setDescription("Protect yourself from attacks.");
-		setPrice(5);
 	}
-	
+
 	/**
 	 * Equip the armor.
 	 */
