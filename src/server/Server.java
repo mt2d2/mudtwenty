@@ -2,9 +2,11 @@ package server;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -120,24 +122,21 @@ public class Server
 	 */
 	private void loadUniverse()
 	{
-		logger.info("ignoring file, generating new universe (temporary while universe is in development)");
-		Server.universe = new DefaultUniverse();
-		
-//		String dataRoot = conf.getProperty("data.root");
-//		File universeFile = new File(dataRoot + File.separatorChar + "universe.dat");
-//
-//		try
-//		{
-//			ObjectInputStream fileIn = new ObjectInputStream(new FileInputStream(universeFile));
-//			Server.universe = (Universe) fileIn.readObject();
-//			fileIn.close();
-//		}
-//		catch (Exception e)
-//		{
-//			logger.throwing("Server", "loadUniverse", e);
-//			logger.info("generating new universe");
-//			Server.universe = new DefaultUniverse();
-//		}
+		String dataRoot = conf.getProperty("data.root");
+		File universeFile = new File(dataRoot + File.separatorChar + "universe.dat");
+
+		try
+		{
+			ObjectInputStream fileIn = new ObjectInputStream(new FileInputStream(universeFile));
+			Server.universe = (Universe) fileIn.readObject();
+			fileIn.close();
+		}
+		catch (Exception e)
+		{
+			logger.throwing("Server", "loadUniverse", e);
+			logger.info("generating new universe");
+			Server.universe = new DefaultUniverse();
+		}
 	}
 
 	/**
