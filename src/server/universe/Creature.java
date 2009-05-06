@@ -146,12 +146,12 @@ public abstract class Creature implements Entity, Serializable
 	}
 
 	/**
-	 * Decrease the creature's health by some amount. If health goes to zero,
-	 * the Creature should die?
+	 * Decrease the creature's health by some amount.
 	 */
 	public void decreaseHealth(int amount)
 	{
 		health -= amount;
+		health = (health < 0 ? 0 : health);
 	}
 
 	/**

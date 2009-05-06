@@ -13,17 +13,12 @@ import server.universe.mob.Troll;
 import util.ArrayUtil;
 
 /**
- * Responds to the attack command as input by the user.
+ * Responds to the say command as input by the user. This command sends a
+ * (private) message to the specified user.
  */
 public class AttackResponse implements ServerResponse
 {
 
-	/**
-	 * Attack the given MOB, if possible.
-	 * 
-	 * PRECONDITION: currently, the only attackable mob is Troll.
-	 * This is because the only mob with an attack
-	 */
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		if (arguments.size() < 1)
@@ -40,13 +35,33 @@ public class AttackResponse implements ServerResponse
 			for (MOB mob : Server.getUniverse().getMOBsInRoom(room))
 				if (mob.getName().equals(attackeeName) && mob instanceof Troll)
 					attackee = mob;
-
-			// Notify user if there is no such mob.
-			if (attackee == null)
-				return new ClientMessage("No such MOB to attack.", Server.ERROR_TEXT_COLOR);
 			
-			// Attack.
-			return ((Troll) attackee).attack(attacker);
+			for (Player player : Server.getUniverse().getPlayersInRoom(room))
+				if (player.getName().equals(attackeeName))
+					attackee = player;
+	
+			if (attackee == null)
+				return new ClientMessage("No such MOB or player to attack; some MOBS cannot be attacked", Server.ERROR_TEXT_COLOR);
+			
+			if (attackee instanceof Troll)
+			{
+				return ((Troll) attackee).attack(attacker);
+			}
+			else if (attackee instanceof Player)
+			{
+				if (attackee.getHealth() == 0)
+					return new ClientMessage(attackee.getName() + " has no health left! No need to attack.");
+				
+				int attack = attacker.getAttack();
+				attackee.decreaseHealth(attack);
+				Server.getUniverse().sendMessageToCreature(attacker, attackee, new ClientMessage(attacker.getName() + " just hit you for " + attack + " points"));
+				if (attackee.getHealth() == 0)
+					return new ClientMessage("You killed " + attackee.getName());
+				else
+					return new ClientMessage("You attack " + attackee.getName() + " for " + attack + " points");
+			}
+			
+			return null;
 		}
 	}
 }
