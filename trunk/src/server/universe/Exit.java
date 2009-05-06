@@ -14,7 +14,7 @@ public class Exit implements Serializable
 
 	/**
 	 * Create a new Exit with the given attributes.
-	 * 
+	 *
 	 * @param room
 	 *            the room that this exit leads to
 	 * @param name
@@ -33,7 +33,7 @@ public class Exit implements Serializable
 	 */
 	public Exit(Room room)
 	{
-		this.blurb = "a nondescript passageway to another place";
+		this.blurb = "A nondescript passageway to another place.";
 		this.room = room;
 	}
 
@@ -56,7 +56,7 @@ public class Exit implements Serializable
 
 	/**
 	 * Get the room that this exit leads to.
-	 * 
+	 *
 	 * @return Room this exit connects to
 	 */
 	public Room getRoom()

@@ -28,48 +28,70 @@ public class DefaultUniverse extends Universe
 
 	private Room spawnRooms()
 	{
-		Room rootRoom = new Room("Root room", "A starting place.", false);
+// 		// use the node maker to add on to the east
+// 		Room appendRoom = rootRoom;
+// 		for (int i = 0; i < 9; i++)
+// 		{
+// 			Room node = this.makeRoomNode(i);
+// 			appendRoom.addRoom(Direction.EAST, node);
+// 			appendRoom = node;
+// 		}
 
-		Room northRoom = new Room("North Room", "A boring, empty place in the north.", false);
-		Room westRoom = new Room("West Room", "a boring, lockable room in the west.", true);
-		Room southRoom = new Room("South Room", "A boring, empty place in the south.", false);
-		rootRoom.addRoom(Direction.NORTH, northRoom);
-		rootRoom.addRoom(Direction.WEST, westRoom);
-		rootRoom.addRoom(Direction.SOUTH, southRoom);
+		Room rootRoom = new Room("Start room", "You are at the entrance to a grand castlem, to the north.\n"
+			+ "There is a dark forest to the west and a friendly village to the south.", false);
 
-		// use the node maker to add on to the east
-		Room appendRoom = rootRoom;
-		for (int i = 0; i < 9; i++)
-		{
-			Room node = this.makeRoomNode(i);
-			appendRoom.addRoom(Direction.EAST, node);
-			appendRoom = node;
-		}
-
-		// add some items
-		rootRoom.addItem(new SmallPotion());
-		rootRoom.addItem(new LargePotion());
-		northRoom.addItem(new FancyTreat());
-		northRoom.addItem(new CheapTreat());
-
-		// add some mobs
-		this.spawnMob(new Kitten("fluffy"), southRoom);
-		this.spawnMob(new RoomGiftMob("santa"), northRoom);
-		this.spawnMob(new RoomThiefMob("thief"), southRoom);
+		addCastle(rootRoom);
+		addVillage(rootRoom);
+		addForest(rootRoom);
 
 		return rootRoom;
 	}
 
-	private Room makeRoomNode(int num)
+	/**
+	 * Add the castle section of the default universe to the north of the start room.
+	 */
+	private void addCastle(Room startRoom)
 	{
-		Room rootRoom = new Room("Node root room: " + num, "the " + num + " node root", false);
+		Room entrance = new Room("Castle Entrance", "This is the entrance to the castle.", false);
+		startRoom.addExit(Direction.NORTH, new Exit(entrance, null, "A large stairway to a forboding castle."));
+		entrance.addExit(Direction.SOUTH, new Exit(startRoom, null, "A stairway leading out of the forboding castle."));
 
-		// west is already taken
-		Room northRoom = new Room("North Room part of node " + num, "A boring, empty place in the north.", false);
-		Room southRoom = new Room("South Room part of node " + num, "A boring, empty place in the south.", false);
-		rootRoom.addRoom(Direction.NORTH, northRoom);
-		rootRoom.addRoom(Direction.SOUTH, southRoom);
-
-		return rootRoom;
+		// Add a bunch of random rooms
+		Room northNode = entrance;
+		for (int i = 0; i < 10; i++)
+		{
+			northNode.addRoom(Direction.EAST, RandomRoomFactory.getRandomRoom(RoomType.CASTLE));
+			northNode.addRoom(Direction.WEST, RandomRoomFactory.getRandomRoom(RoomType.CASTLE));
+			Room nextNorth = RandomRoomFactory.getRandomRoom(RoomType.CASTLE);
+			northNode.addRoom(Direction.NORTH, nextNorth);
+			northNode = nextNorth;
+		}
 	}
+
+	/**
+	 * Add the village section of the default universe to the west of the start room.
+	 */
+	private void addVillage(Room startRoom)
+	{
+	}
+
+	/**
+	 * Add the forest section of the default universe to the south of the start room.
+	 */
+	private void addForest(Room startRoom)
+	{
+	}
+
+// 	private Room makeRoomNode(int num)
+// 	{
+// 		Room rootRoom = new Room("Node root room: " + num, "the " + num + " node root", false);
+//
+// 		// west is already taken
+// 		Room northRoom = new Room("North Room part of node " + num, "A boring, empty place in the north.", false);
+// 		Room southRoom = new Room("South Room part of node " + num, "A boring, empty place in the south.", false);
+// 		rootRoom.addRoom(Direction.NORTH, northRoom);
+// 		rootRoom.addRoom(Direction.SOUTH, southRoom);
+//
+// 		return rootRoom;
+// 	}
 }
