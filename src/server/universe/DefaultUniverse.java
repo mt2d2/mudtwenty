@@ -28,15 +28,6 @@ public class DefaultUniverse extends Universe
 
 	private Room spawnRooms()
 	{
-// 		// use the node maker to add on to the east
-// 		Room appendRoom = rootRoom;
-// 		for (int i = 0; i < 9; i++)
-// 		{
-// 			Room node = this.makeRoomNode(i);
-// 			appendRoom.addRoom(Direction.EAST, node);
-// 			appendRoom = node;
-// 		}
-
 		Room rootRoom = new Room("Start room", "You are at the entrance to a grand castlem, to the north.\n"
 			+ "There is a dark forest to the west and a friendly village to the south.", false);
 
@@ -58,13 +49,13 @@ public class DefaultUniverse extends Universe
 
 		// Add a bunch of random rooms
 		Room northNode = entrance;
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			northNode.addRoom(Direction.EAST, RandomRoomFactory.getRandomRoom(RoomType.CASTLE));
 			northNode.addRoom(Direction.WEST, RandomRoomFactory.getRandomRoom(RoomType.CASTLE));
-			Room nextNorth = RandomRoomFactory.getRandomRoom(RoomType.CASTLE);
-			northNode.addRoom(Direction.NORTH, nextNorth);
-			northNode = nextNorth;
+			Room nextNorthNode = RandomRoomFactory.getRandomRoom(RoomType.CASTLE);
+			northNode.addRoom(Direction.NORTH, nextNorthNode);
+			northNode = nextNorthNode;
 		}
 	}
 
@@ -73,6 +64,20 @@ public class DefaultUniverse extends Universe
 	 */
 	private void addVillage(Room startRoom)
 	{
+		Room entrance = new Room("Village entrance", "This is the entrance to the village.", false);
+		startRoom.addExit(Direction.WEST, new Exit(entrance, null, "A dirt pathway to a very strange village."));
+		entrance.addExit(Direction.EAST, new Exit(startRoom, null, "The pathway to the castle entrance."));
+
+		// Add a bunch of random rooms
+		Room westNode = entrance;
+		for (int i = 0; i < 4; i++)
+		{
+			westNode.addRoom(Direction.NORTH, RandomRoomFactory.getRandomRoom(RoomType.VILLAGE));
+			westNode.addRoom(Direction.SOUTH, RandomRoomFactory.getRandomRoom(RoomType.VILLAGE));
+			Room nextWestNode = RandomRoomFactory.getRandomRoom(RoomType.VILLAGE);
+			westNode.addRoom(Direction.WEST, nextWestNode);
+			westNode = nextWestNode;
+		}
 	}
 
 	/**
@@ -80,18 +85,20 @@ public class DefaultUniverse extends Universe
 	 */
 	private void addForest(Room startRoom)
 	{
+		Room entrance = new Room("Forest entrance", "This is the entrance into the forest.", false);
+		startRoom.addExit(Direction.SOUTH, new Exit(entrance, null, "A dark and forboding entrance to a dark and forboding forest."));
+		entrance.addExit(Direction.NORTH, new Exit(startRoom, null, "The path out of the forest."));
+
+		// Add a bunch of random rooms
+		Room southNode = entrance;
+		for (int i = 0; i < 4; i++)
+		{
+			southNode.addRoom(Direction.EAST, RandomRoomFactory.getRandomRoom(RoomType.FOREST));
+			southNode.addRoom(Direction.WEST, RandomRoomFactory.getRandomRoom(RoomType.FOREST));
+			Room nextSouthNode = RandomRoomFactory.getRandomRoom(RoomType.FOREST);
+			southNode.addRoom(Direction.SOUTH, nextSouthNode);
+			southNode = nextSouthNode;
+		}
 	}
 
-// 	private Room makeRoomNode(int num)
-// 	{
-// 		Room rootRoom = new Room("Node root room: " + num, "the " + num + " node root", false);
-//
-// 		// west is already taken
-// 		Room northRoom = new Room("North Room part of node " + num, "A boring, empty place in the north.", false);
-// 		Room southRoom = new Room("South Room part of node " + num, "A boring, empty place in the south.", false);
-// 		rootRoom.addRoom(Direction.NORTH, northRoom);
-// 		rootRoom.addRoom(Direction.SOUTH, southRoom);
-//
-// 		return rootRoom;
-// 	}
 }

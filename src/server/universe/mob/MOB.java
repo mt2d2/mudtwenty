@@ -18,7 +18,7 @@ import server.universe.Creature;
 public abstract class MOB extends Creature implements Runnable, Serializable, Cloneable
 {
 	private static final long	serialVersionUID	= 1L;
-	
+
 	private static final long SLEEP_TIME = 3000;
 
  	private BehaviorStrategy behavior;
@@ -35,15 +35,15 @@ public abstract class MOB extends Creature implements Runnable, Serializable, Cl
 
 	/**
 	 * This is what the MOB does once it is spawned.
-	 * 
+	 *
 	 * Each turn, it does some mob specific behavior, possibly changing
-	 * to a different behavior, then it 
+	 * to a different behavior, then it
 	 */
 	public void run()
 	{
  		while (this.alive)
  		{
- 			
+
  			// Sleep until the next found.
  			try
  			{
@@ -54,36 +54,36 @@ public abstract class MOB extends Creature implements Runnable, Serializable, Cl
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
- 			
+
  			takeTurn();
  			behavior.doAction(this);
- 			
+
  			// Check whether the MOB's dead yet.
  			if (this.getHealth() <= 0)
  				this.alive = false;
  		}
 	}
-	
+
 	/**
 	 * Do some MOB-specific behavior. This might involve changing to a different strategy.
 	 */
 	public abstract void takeTurn();
-	
+
 	/**
 	 * Receive a message (from either a player or another MOB).
 	 * This will be called when a user says something in the room of a MOB
 	 * or tells something to a mob.
-	 * 
+	 *
 	 * Depending on the current DialogStrategy of the MOB, the MOB may ignore
 	 * the message or respond in some way.
-	 * 
+	 *
 	 * @param message the text of what is said.
 	 */
 	public void tell(Creature sender, String message)
 	{
 		dialog.tell(sender, message);
 	}
-	
+
 	/**
 	 * Set the current behavior strategy.
 	 */
@@ -91,7 +91,7 @@ public abstract class MOB extends Creature implements Runnable, Serializable, Cl
 	{
 		this.behavior = behavior;
 	}
-	
+
 	/**
 	 * Set the current dialog strategy.
 	 */
@@ -99,14 +99,21 @@ public abstract class MOB extends Creature implements Runnable, Serializable, Cl
 	{
 		this.dialog = dialog;
 	}
-	
+
 	/**
 	 * Return a copy of this MOB.
 	 */
 	public MOB clone()
 	{
-		return this.clone();
+		try
+		{
+		return (MOB) super.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+		return null; // This will never happen, right?
+		}
 	}
-	
+
 
 }
