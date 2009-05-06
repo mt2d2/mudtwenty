@@ -36,29 +36,44 @@ The location of players (and MOBs) is kept track centrally, by the class `Univer
 
 <blockquote>Players must have statistics that are changed via their actions in the MUD.‎ ‏In a traditional RPG,‭ ‬this would be things like hp‭ (‬health point/hit points‭)‬,‭ ‬defense,‭ ‬level,‭ ‬etc.‭ ‬For something less traditional,‭ ‬it could be number of questions answered correctly or amount of money won.</blockquote>
 
+Both players and MOBs have the same sorts of statistics because they are both subtypes of the abstract class Creature, which keeps track of statistics. In our game, there are 
+
 <blockquote>Players must be able to carry items they find/buy/earn with them as they travel.</blockquote>
 
 Players have a list of items inherited from the abstract class `Creature`.
 
 <blockquote>Players must be able to move between rooms through the use of commands‎ (‏See Interaction section‭)‬.</blockquote>
 
+Because the `Universe` class keeps track of the locations of players and MOBs in the game, it includes a method, `changeRoomOfCreature`, which changes the location of a mob or player. This method 
+
 <blockquote>Players must be able to‎ ‏interact with one another,‭ ‬and be able to see the locations and movements of other players in the same room as them.</blockquote>
 
+Players can see the locations of other players in the same room because the players in the room are listed when the look command is used. Players can see the movements of others because when a move command is used, a notification is sent to players in the room they're leaving and the room they're arriving in.
+
+Players can interact with each other through chat commands.
+
 <blockquote>Players must be able to‎ ‏interact with MOBs.</blockquote>
+
+Players can interact with MOBs through chat commands and by attacking. When a player uses a say or tell command, the text that they type is input to a function that is specific to the type of MOB, which determines the MOB's response.
 
 <h3>Rooms:</h3>
 
 <blockquote>The MUD must have at least‎ ‏30‎ ‏rooms.</blockquote>
 
-(list rooms)
+To make the MUD have 30 not-entirely-boring rooms when we were short on time, we used a class called `RandomRoomFactory` to generate rooms of different types. Although the rooms aren't entirely boring, it would probably make more sense to write customized descriptions for each room if we were planning to host a MUD that people actually played on.
 
 <blockquote>A room must have a‎ ‏description and a‭ ‬list of possible exits,‭ ‬as well as a‭ ‬list of contents‭ (‬items,‭ ‬MOBs,‭ ‬and other players in the room‭)‬.‭ ‬This must be‭ ‬viewable by the player via‭ ‘‬look‭’ ‬and should be displayed by default upon their entrance into the room.</blockquote>
+
+
 
 <h3>Items:</h3>
 
 <blockquote>The MUD must have at least‎ ‏10‎ ‏different types of items.</blockquote>
 
-(List mobs)
+Our MUD has the following concrete Item classes:
+Key, SmallPotion, LargePotion, Cannon, Spear
+Sword, Cloth, Hydes, SteelMesh, CheapTreat,
+FancyTreat, Book.
 
 ‎‏<blockquote>All items must have a use in the game.‭ ‬You could have potions to heal damage taken,‭ ‬keys to open doors,‭ ‬special items that affect the player’s stats,‭ ‬equipment the player can wear or items needed to finish a quest.‭</blockquote>
 
@@ -66,7 +81,9 @@ Players have a list of items inherited from the abstract class `Creature`.
 
 <blockquote>The MUD must have at least‎ ‏10‎ ‏different types of MOBs.</blockquote>
 
-(List mobs)
+Our MUD has the following concrete MOB classes:
+Merchant, ICritterCat, ICritterDog, ICritterPenguin, Kitten, 
+Bunny, Deer, RoomGiftMob, RoomThiefMob, Troll.
 
 <blockquote>MOBs must be able to move between rooms.</blockquote>
 
