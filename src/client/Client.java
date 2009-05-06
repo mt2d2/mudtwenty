@@ -58,26 +58,25 @@ public class Client extends JFrame
 	 * This could be augmented by using a global properties file to localize the
 	 * error strings.
 	 */
-	private static Logger				logger					= Logger.getLogger("mudtwenty");
+	private static Logger			logger				= Logger.getLogger("mudtwenty");
 
-	private static final long			serialVersionUID		= 1L;
+	private static final long		serialVersionUID	= 1L;
 
-	public final static String			GAME_CARD				= "GAME_CARD";
-	public final static String			CONNECTOR_CARD			= "CONNECTOR_CARD";
-	private static final Color			DEFAULT_TEXT_COLOR		= Color.BLACK;
-	private static final Dimension		FRAME_SIZE				= new Dimension(640, 480);
-	
+	public final static String		GAME_CARD			= "GAME_CARD";
+	public final static String		CONNECTOR_CARD		= "CONNECTOR_CARD";
+	private static final Color		DEFAULT_TEXT_COLOR	= Color.BLACK;
+	private static final Dimension	FRAME_SIZE			= new Dimension(640, 480);
 
-	private ClientThread				clientThread;
-	private JPanel						cards;
+	private ClientThread			clientThread;
+	private JPanel					cards;
 
 	// game panel
-	private JTextPane					gameArea;
-	private JTextField					gameField;
+	private JTextPane				gameArea;
+	private JTextField				gameField;
 
 	// chat panel
-	private JTextPane					chatArea;
-	private JTextField					chatField;
+	private JTextPane				chatArea;
+	private JTextField				chatField;
 
 	/**
 	 * Sole constructor for client. Sets up the JFrame, adding appropriate
@@ -185,7 +184,7 @@ public class Client extends JFrame
 	{
 		this.gameArea.setText("");
 		this.chatArea.setText("");
-		
+
 		try
 		{
 			this.clientThread.closeConnection();
@@ -195,7 +194,7 @@ public class Client extends JFrame
 			// pass
 		}
 	}
-	
+
 	/**
 	 * Simple about screen. Nothing fancy here.
 	 */
@@ -241,14 +240,14 @@ public class Client extends JFrame
 	 */
 	private boolean isChatCommand(String text)
 	{
-		String[] chatCommandWords = { "OOC", "SAY", "TELL", "WHO"};
+		String[] chatCommandWords = { "OOC", "SAY", "TELL", "WHO" };
 		String commandWord = text.split(" ")[0].toUpperCase();
 		for (String word : chatCommandWords)
 			if (commandWord.equals(word))
 				return true;
 		return false;
 	}
-	
+
 	/**
 	 * Invoked when the user wishes to send a message to the server, either by
 	 * hitting enter when the entry field is in focus or by pressing the send
@@ -368,9 +367,9 @@ public class Client extends JFrame
 					spinner.setVisible(false);
 					connectButton.setEnabled(true);
 				}
-				
+
 				new Thread(Client.this.clientThread).start();
-				
+
 				// switch the forward facing card
 				Client.this.switchCard(Client.GAME_CARD);
 
@@ -496,6 +495,11 @@ public class Client extends JFrame
 	{
 		private boolean	chat;
 
+		/**
+		 * @param isChat
+		 *            <code>true</code> if this event listener listens for chat
+		 *            input, or <code>false</code>
+		 */
 		public SendEventListener(boolean isChat)
 		{
 			this.chat = isChat;
