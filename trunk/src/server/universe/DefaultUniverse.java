@@ -4,9 +4,15 @@ import server.universe.item.CheapTreat;
 import server.universe.item.FancyTreat;
 import server.universe.item.LargePotion;
 import server.universe.item.SmallPotion;
+import server.universe.item.Spear;
+import server.universe.item.SteelMesh;
+import server.universe.item.Book;
+import server.universe.item.Cannon;
 import server.universe.mob.Kitten;
 import server.universe.mob.RoomGiftMob;
 import server.universe.mob.RoomThiefMob;
+import server.universe.mob.Merchant;
+import server.universe.mob.Troll;
 
 /**
  * A simple default universe that can be loaded for a demo, or when the universe
@@ -28,7 +34,7 @@ public class DefaultUniverse extends Universe
 
 	private Room spawnRooms()
 	{
-		Room rootRoom = new Room("Start room", "You are at the entrance to a grand castlem, to the north.\n"
+		Room rootRoom = new Room("Start room", "You are at the entrance to a grand castle, to the north.\n"
 			+ "There is a dark forest to the west and a friendly village to the south.", false);
 
 		addCastle(rootRoom);
@@ -68,6 +74,15 @@ public class DefaultUniverse extends Universe
 		startRoom.addExit(Direction.WEST, new Exit(entrance, null, "A dirt pathway to a very strange village."));
 		entrance.addExit(Direction.EAST, new Exit(startRoom, null, "The pathway to the castle entrance."));
 
+		Merchant merch = new Merchant("Vendor");
+		merch.addItem(new Spear());
+		merch.addItem(new SteelMesh());
+		merch.addItem(new Book());
+		merch.addItem(new Cannon());
+		merch.addItem(new SmallPotion());
+
+		this.spawnMob(merch, entrance);
+
 		// Add a bunch of random rooms
 		Room westNode = entrance;
 		for (int i = 0; i < 4; i++)
@@ -88,6 +103,8 @@ public class DefaultUniverse extends Universe
 		Room entrance = new Room("Forest entrance", "This is the entrance into the forest.", false);
 		startRoom.addExit(Direction.SOUTH, new Exit(entrance, null, "A dark and forboding entrance to a dark and forboding forest."));
 		entrance.addExit(Direction.NORTH, new Exit(startRoom, null, "The path out of the forest."));
+
+		this.spawnMob(new Troll("Gurk"), entrance);
 
 		// Add a bunch of random rooms
 		Room southNode = entrance;
