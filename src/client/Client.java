@@ -78,6 +78,8 @@ public class Client extends JFrame
 	private JTextPane				chatArea;
 	private JTextField				chatField;
 
+	private static final boolean	IS_MAC				= System.getProperty("os.name").toLowerCase().startsWith("mac os x");
+
 	/**
 	 * Sole constructor for client. Sets up the JFrame, adding appropriate
 	 * contents and listeners.
@@ -200,13 +202,10 @@ public class Client extends JFrame
 	 */
 	private void handleAboutEvent()
 	{
-		String about = "This is mudtwenty, a Java MUD Server and Client. For the CS C 335\n" +
-						"at the University of Arizona, graded by Jan Smrcina. Written by:\n" +
-							"    Michael Tremel\n" +
-							"    Quinten Yearsley\n" +
-							"    Simon MacDonald\n" +
-							"    Aaron Morgan";
-		
+		String about = "This is mudtwenty, a Java MUD Server and Client. For the CS C 335\n"
+				+ "at the University of Arizona, graded by Jan Smrcina. Written by:\n" + "    Michael Tremel\n" + "    Quinten Yearsley\n"
+				+ "    Simon MacDonald\n" + "    Aaron Morgan";
+
 		JOptionPane.showMessageDialog(this, about);
 	}
 
@@ -533,7 +532,14 @@ public class Client extends JFrame
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			System.setProperty("apple.laf.useScreenMenuBar", "true");
+
+			if (IS_MAC)
+			{
+				// at some point customize the mac menu bar
+				// a lot more could be done here, but that totally defeats the
+				// purpose of swing
+				System.setProperty("apple.laf.useScreenMenuBar", "true");
+			}
 		}
 		catch (ClassNotFoundException e)
 		{
