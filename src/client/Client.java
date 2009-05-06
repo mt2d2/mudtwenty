@@ -200,7 +200,14 @@ public class Client extends JFrame
 	 */
 	private void handleAboutEvent()
 	{
-		JOptionPane.showMessageDialog(this, "About");
+		String about = "This is mudtwenty, a Java MUD Server and Client. For the CS C 335\n" +
+						"at the University of Arizona, graded by Jan Smrcina. Written by:\n" +
+							"    Michael Tremel\n" +
+							"    Quinten Yearsley\n" +
+							"    Simon MacDonald\n" +
+							"    Aaron Morgan";
+		
+		JOptionPane.showMessageDialog(this, about);
 	}
 
 	/**
