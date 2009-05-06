@@ -1,12 +1,18 @@
 package server.universe;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import server.Server;
+import server.universe.item.Hydes;
 import server.universe.item.Item;
+import server.universe.item.Spear;
+import server.universe.mob.Bunny;
+import server.universe.mob.Deer;
 import server.universe.mob.MOB;
-import server.universe.RoomType;
+import server.universe.mob.RoomThiefMob;
 
 /**
  * This class is a builder that uses an abstract factory. It makes random rooms of the specified type.
@@ -60,9 +66,7 @@ public class RandomRoomFactory {
 	private static class ForestRoomFactory implements RoomFactory
 	{
 		
-		public ForestRoomFactory()
-		{
-		}
+		Random random = new Random();
 		
 		public String makeName() {
 			return "Forest";
@@ -73,12 +77,27 @@ public class RandomRoomFactory {
 		}
 
 		public List<Item> makeItems() {
+			List<Item> possibleItems = Arrays.asList(new Hydes(), new Spear());
 			List<Item> items = new ArrayList<Item>();
+			int numItems = random.nextInt(3);
+			for (int i = 0; i < numItems; i++)
+			{
+				int indexOfChosenItem = random.nextInt(possibleItems.size());
+				items.add(possibleItems.get(indexOfChosenItem).clone());
+			}
 			return items;
 		}
 
 		public List<MOB> makeMOBs() {
+			List<MOB> possibleMobs = Arrays.asList(new Deer("bambi"), new Bunny("flufftail"),
+					new RoomThiefMob("bandit"));
 			List<MOB> mobs = new ArrayList<MOB>();
+			int numMobs = random.nextInt(1);
+			for (int i = 0; i < numMobs; i++)
+			{
+				int indexOfChosenMob = random.nextInt(possibleMobs.size());
+				mobs.add(possibleMobs.get(indexOfChosenMob).clone());
+			}
 			return mobs;
 		}
 

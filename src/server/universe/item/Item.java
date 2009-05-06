@@ -14,7 +14,7 @@ import server.universe.Entity;
  * Item is an abstract class because there exists some methods that
  * are common to all subclasses -- getters and setters.
  */
-public abstract class Item implements Entity, Serializable
+public abstract class Item implements Entity, Serializable, Cloneable
 {
 	private static final long	serialVersionUID	= 1L;
 	
@@ -82,6 +82,11 @@ public abstract class Item implements Entity, Serializable
 	public void setPrice(int price)
 	{
 		this.price = price;
+	}
+	
+	public Item clone()
+	{
+		return this.clone();
 	}
 	
 	/**

@@ -15,7 +15,7 @@ public class Cloth extends Armor
 	 */
 	public Cloth()
 	{
-		setName("Cloth");
+		setName("cloth");
 		setDescription("A light fabric that will protect you in battle.");
 		setDefensePoints(5);
 		setPrice(5);

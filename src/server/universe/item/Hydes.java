@@ -3,7 +3,7 @@ package server.universe.item;
 /**
  * Hydes are a type of armor.
  */
-public class Hydes extends Armor implements Cloneable {
+public class Hydes extends Armor {
 	
 	private static final long	serialVersionUID	= 3L;
 
