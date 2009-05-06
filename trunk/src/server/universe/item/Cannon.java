@@ -12,7 +12,7 @@ public class Cannon extends Weapon
 
 	public Cannon()
 	{
-		setName("Cannon");
+		setName("cannon");
 		setDescription("An instrument of death, which has 50 damage points");
 		setPrice(50);
 		this.setDamage(50);
