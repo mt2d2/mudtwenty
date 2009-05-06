@@ -6,32 +6,24 @@ import java.util.List;
 import java.util.Random;
 
 import server.Server;
-
-import server.universe.item.Item;
-import server.universe.item.Book;
 import server.universe.item.Cannon;
 import server.universe.item.CheapTreat;
 import server.universe.item.Cloth;
 import server.universe.item.FancyTreat;
 import server.universe.item.Hydes;
-import server.universe.item.Key;
-import server.universe.item.LargePotion;
-import server.universe.item.SmallPotion;
+import server.universe.item.Item;
 import server.universe.item.Spear;
 import server.universe.item.SteelMesh;
 import server.universe.item.Sword;
-
-import server.universe.mob.MOB;
-import server.universe.mob.Kitten;
-import server.universe.mob.Merchant;
-import server.universe.mob.Troll;
 import server.universe.mob.Bunny;
 import server.universe.mob.Deer;
-import server.universe.mob.RoomThiefMob;
-import server.universe.mob.RoomGiftMob;
 import server.universe.mob.ICritterCat;
 import server.universe.mob.ICritterDog;
 import server.universe.mob.ICritterPenguin;
+import server.universe.mob.Kitten;
+import server.universe.mob.MOB;
+import server.universe.mob.RoomGiftMob;
+import server.universe.mob.RoomThiefMob;
 
 /**
  * This class is a builder that uses an abstract factory. It makes random rooms of the specified type.

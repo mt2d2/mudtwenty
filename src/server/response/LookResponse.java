@@ -6,7 +6,6 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
-import server.universe.Creature;
 import server.universe.Direction;
 import server.universe.Entity;
 import server.universe.Player;
@@ -15,7 +14,11 @@ import server.universe.item.Item;
 import server.universe.mob.MOB;
 
 /**
- * Responds to the look command as issued by the user.
+ * Responds to the look command as issued by the user. There is a possibility of
+ * looking at things by supplying an argument. Look can view items, players, or
+ * mobs in the player's current room.
+ * 
+ * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class LookResponse implements ServerResponse
 {
@@ -36,32 +39,27 @@ public class LookResponse implements ServerResponse
 		}
 		else
 		{
-			if (roomHasPlayer(Server.getUniverse().getRoomOfCreature(serverThread.getPlayer()), arguments.get(0)))
+			try
 			{
-				String message = Server.getUniverse().getPlayer(arguments.get(0)).getDescription();
-				return new ClientMessage("Info about " + arguments.get(0) + ": " + message);
-			}
-			else if (roomHasMob(Server.getUniverse().getRoomOfCreature(serverThread.getPlayer()), arguments.get(0)))
-			{
-				String message = getMob(Server.getUniverse().getMOBsInRoom(Server.getUniverse().getRoomOfCreature(serverThread.getPlayer())), arguments.get(0)).getDescription();
-				return new ClientMessage("Info about " + arguments.get(0) + ": " + message);
-			}
-			else if (inventoryHasItem(serverThread.getPlayer().getItems(), arguments.get(0)))
-			{
-				String message = Server.getUniverse().getPlayer(arguments.get(0)).getItem(arguments.get(0)).getDescription();
-				return new ClientMessage("Info about " + arguments.get(0) + ": " + message);
-			}
-			else
-			{
-				try
+				Item item = getItem(Server.getUniverse().getRoomOfCreature(serverThread.getPlayer()).getItems(), arguments.get(0));
+				Player person = getPlayer(Server.getUniverse().getRoomOfCreature(serverThread.getPlayer()), arguments.get(0));
+				MOB mob = getMob(Server.getUniverse().getMOBsInRoom(Server.getUniverse().getRoomOfCreature(serverThread.getPlayer())), arguments.get(0));
+
+				if (item != null)
+					return new ClientMessage("Info about " + arguments.get(0) + ": " + item.getDescription());
+				else if (person != null)
+					return new ClientMessage("Info about " + arguments.get(0) + ": " + person.getDescription());
+				else if (mob != null)
+					return new ClientMessage("Info about " + arguments.get(0) + ": " + mob.getDescription());
+				else
 				{
 					Direction direction = Direction.valueOf(arguments.get(0).toUpperCase());
 					return lookAtExit(room, direction);
 				}
-				catch (IllegalArgumentException e)
-				{
-					return lookAtEntity(room, player);
-				}
+			}
+			catch (IllegalArgumentException e)
+			{
+				return new ClientMessage("The thing you are searching for, " + arguments.get(0) + ", could not be found.", Server.ERROR_TEXT_COLOR);
 			}
 		}
 	}
@@ -71,35 +69,26 @@ public class LookResponse implements ServerResponse
 		for (MOB m : list)
 			if (m.getName().equalsIgnoreCase(string))
 				return m;
-		
+
 		return null;
 	}
 
-	private boolean inventoryHasItem(List<Item> list, String string)
+	private Item getItem(List<Item> list, String string)
 	{
 		for (Item i : list)
 			if (i.getName().equalsIgnoreCase(string))
-				return true;
+				return i;
 
-		return false;
+		return null;
 	}
 
-	private boolean roomHasPlayer(Room room, String string)
+	private Player getPlayer(Room room, String string)
 	{
-		for (Creature c : Server.getUniverse().getPlayersInRoom(room))
-			if (c.getName().equalsIgnoreCase(string))
-				return true;
+		for (Player p : Server.getUniverse().getPlayersInRoom(room))
+			if (p.getName().equalsIgnoreCase(string))
+				return p;
 
-		return false;
-	}
-
-	private boolean roomHasMob(Room roomOfCreature, String string)
-	{
-		for (Creature c : Server.getUniverse().getMOBsInRoom(roomOfCreature))
-			if (c.getName().equalsIgnoreCase(string))
-				return true;
-
-		return false;
+		return null;
 	}
 
 	/**
@@ -185,14 +174,4 @@ public class LookResponse implements ServerResponse
 			return new ClientMessage("There is no exit in that direction.", Server.ERROR_TEXT_COLOR);
 		}
 	}
-
-	/**
-	 * Return a ClientMessage with a description of the given entity, if
-	 * possible.
-	 */
-	private ClientMessage lookAtEntity(Room room, Player player)
-	{
-		return new ClientMessage("looking at things besides exits and rooms not quite implemented yet.");
-	}
-
 }
