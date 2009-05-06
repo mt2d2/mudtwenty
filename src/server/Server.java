@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import message.ClientMessage;
@@ -326,6 +327,19 @@ public class Server
 	 */
 	public static void main(String[] args)
 	{
+		try
+		{
+			logger.addHandler(new FileHandler(conf.getProperty("data.log")));
+		}
+		catch (SecurityException e1)
+		{
+			e1.printStackTrace();
+		}
+		catch (IOException e1)
+		{
+			System.out.println("Warning: the server could not write to its log file. Check the server configuration and directory permissions.");
+		}
+		
 		try
 		{
 			new Server();
