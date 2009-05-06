@@ -21,7 +21,12 @@ public class CommandsResponse implements ServerResponse {
 				+ "\ttell <name> <message>: send a private message to a player or mob\n"
 				+ "\tsay <message>: send a message to everyone in the same room\n"
 				+ "\tooc <message>: send a message to all users connected to the mud\n"
-				+ "\temote <message>: sends a message to everyone in your room in the third person"
+				+ "\temote <message>: sends a message to everyone in your room in the third person\n"
+				+ "Social commands:\n"
+				+ "\twink <target>: wink at your target\n"
+				+ "\tlaugh <target>: laugh at your target\n"
+				+ "\tslap <target>: slap at your target\n"
+				+ "\tgiggle <target>: giggle at your target\n"
 				+ "General commands:\n"
 				+ "\tcommands, help :lists all available commands and general system help\n"
 				+ "\tquit, exit: saves your state and exits the mud\n"
@@ -33,20 +38,16 @@ public class CommandsResponse implements ServerResponse {
 				+ "\tuse <item>: use a specified item from your inventory\n"
 				+ "\tgive <name> <item>: gives an item to a user\n"
 				+ "\tget <item>: gets an item that exists in the room\n"
-				+ "\tattack <mob name>: attacks a mob in the room the player is in"
+				+ "\tattack <mob name>: attacks a mob in the room the player is in\n"
 				+ "Movement commands:\n"
 				+ "\tmove <direction>: move you to through your specified exit\n"
 				+ "\tnorth, n: move north\n"
 				+ "\tsouth, s: move south\n"
 				+ "\teast, e: move east\n"
 				+ "\twest, w: move west\n"
-				+ "\twink <target>: wink at your target"
-				+ "\tlaugh <target>: laugh at your target"
-				+ "\tslap <target>: slap at your target"
-				+ "\tgiggle <target>: giggle at your target"
 				+ "Admin commands:\n"
 				+ "\tshutdown: shuts down the server, saving and notifying players\n";
-		
+
 		return new ClientMessage(message);
 	}
 
