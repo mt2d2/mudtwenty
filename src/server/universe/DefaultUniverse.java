@@ -1,16 +1,10 @@
 package server.universe;
 
-import server.universe.item.CheapTreat;
-import server.universe.item.FancyTreat;
-import server.universe.item.LargePotion;
+import server.universe.item.Book;
+import server.universe.item.Cannon;
 import server.universe.item.SmallPotion;
 import server.universe.item.Spear;
 import server.universe.item.SteelMesh;
-import server.universe.item.Book;
-import server.universe.item.Cannon;
-import server.universe.mob.Kitten;
-import server.universe.mob.RoomGiftMob;
-import server.universe.mob.RoomThiefMob;
 import server.universe.mob.Merchant;
 import server.universe.mob.Troll;
 
