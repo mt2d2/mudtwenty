@@ -21,7 +21,7 @@ public class ArrayUtilTest
 	@Test
 	public void joinArguments()
 	{
-		List<String> words = Arrays.asList(new String[] {"hello", "world"});
+		List<String> words = Arrays.asList("hello", "world");
 		assertEquals(2, words.size());
 		
 		assertEquals("hello,world,", ArrayUtil.joinArguments(words, ","));
