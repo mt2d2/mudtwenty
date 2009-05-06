@@ -2,63 +2,67 @@ Introduction
 -----------------------------------------------------------------
 This is mudtwenty, a Java MUD Server and Client. For the CS C 335
 at the University of Arizona, graded by Jan Smrcina. Written by:
-	Michael Tremel
-	Quinten Yearsley 
-	Simon MacDonald 
-	Aaron Morgan
-
+    Michael Tremel
+    Quinten Yearsley 
+    Simon MacDonald 
+    Aaron Morgan
+    
+All documents, source, licenses, and other information can be 
+found on the project's website.
+    http://code.google.com/p/mudtwenty/
+    
 Deployment and Use
 -----------------------------------------------------------------
 mudtwenty has two main components, its Server and Client. This 
 project is implemented as an Eclipse project, and can easily be 
 imported to and built using Eclipse. Alternatively, the project 
 can also be built using Apache Ant, e.g.,, in the root directory:
-	ant
+    ant
 Ant can also be used to clean the project of all compiled files:
-	ant clean
+    ant clean
 There are two main entries into the Program: server.Server.main()
 and client.Client.main(). While Eclipse can be used to start
 both, Ant can also be used to run the program itself, both Server
 and Client. e.g., in the root directory:
-	ant Server
-	ant Client
-	
+    ant Server
+    ant Client
+    
 This project expects and requires Java 6. It has been developed 
 and tested with Sun's Hotspot JDK, but has also been success-
 fully deployed on other JVMs. The Server code is largely back-
 wards compatible with Java 5. Client has more dependencies on
 Java 6, though, which could be easily removed if need be.
-	 
+     
 Server Configuration
 -----------------------------------------------------------------
 There are a few user-selected options for running the Server of
 mudtwenty. The configuration file exists in the server package
 of the deployment, and can be hand-edited with any text editor.
 Available configuration options:
-	server.port: the port the server will run on
-	data.root: the root of all saved server data
-	data.log: the filepath to save logs from the server
-	admin: a list of administrative users, with special per-
-		   missions (i.e., can shutdown the server). Separate 
-		   each user with a comma. 
+    server.port: the port the server will run on
+    data.root: the root of all saved server data
+    data.log: the filepath to save logs from the server
+    admin: a list of administrative users, with special per-
+           missions (i.e., can shutdown the server). Separate 
+           each user with a comma. 
 
 Documentation
 -----------------------------------------------------------------
 Outside this file, there are a few other sources of documentation
 for mudtwenty. All documentation is stored in the $ROOT/doc. For 
 example, Javadoc is stored in 
-	$ROOT/doc/javadoc.
+    $ROOT/doc/javadoc.
 Note that generated javadoc is not stored in SVN.
 
 All UML can be found in 
-	$ROOT/doc/uml
+    $ROOT/doc/uml
 and the final UML that was turned-in in class can be found under
-	$ROOT/doc/uml/turnin
-	
+    $ROOT/doc/uml/turnin
+    
 For further information about special capabilities of the system, 
 the design process, or specifics in the code, see the design doc.
 The design doc is stored in
-	$ROOT/doc/design.pdf
-	
+    $ROOT/doc/design.pdf
+    
 Finally, the development Wiki may provide other, useful answers:
-	http://code.google.com/p/mudtwenty/w/list
+    http://code.google.com/p/mudtwenty/w/list
