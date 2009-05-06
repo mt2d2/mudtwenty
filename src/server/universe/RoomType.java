@@ -5,5 +5,5 @@ package server.universe;
  */
 public enum RoomType
 {
-	FOREST, CASTLE;
+	FOREST, CASTLE, VILLAGE;
 }
