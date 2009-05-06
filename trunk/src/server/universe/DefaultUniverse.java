@@ -2,9 +2,15 @@ package server.universe;
 
 import server.universe.item.Book;
 import server.universe.item.Cannon;
+import server.universe.item.CheapTreat;
+import server.universe.item.Cloth;
+import server.universe.item.FancyTreat;
+import server.universe.item.Key;
+import server.universe.item.LargePotion;
 import server.universe.item.SmallPotion;
 import server.universe.item.Spear;
 import server.universe.item.SteelMesh;
+import server.universe.item.Sword;
 import server.universe.mob.Merchant;
 import server.universe.mob.Troll;
 
@@ -30,7 +36,21 @@ public class DefaultUniverse extends Universe
 	{
 		Room rootRoom = new Room("Start room", "You are at the entrance to a grand castle, to the north.\n"
 			+ "There is a dark forest to the west and a friendly village to the south.", false);
+		rootRoom.addItem(new Cannon());
+		rootRoom.addItem(new CheapTreat());
+		rootRoom.addItem(new Cloth());
+		rootRoom.addItem(new FancyTreat());
+		rootRoom.addItem(new LargePotion());
+		rootRoom.addItem(new SmallPotion());
+		rootRoom.addItem(new Spear());
+		rootRoom.addItem(new SteelMesh());
+		rootRoom.addItem(new Sword());
 
+		// add a locked room
+		Room secretRoom = new Room("Secret Room", "This is a secret room, which was locked from prying eyes.", true);
+		rootRoom.addExit(Direction.EAST, new Exit(secretRoom, null, "A secret passageway..."));
+		rootRoom.addItem(new Key("SecretKey", secretRoom));
+		
 		addCastle(rootRoom);
 		addVillage(rootRoom);
 		addForest(rootRoom);
