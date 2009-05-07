@@ -44,7 +44,7 @@ public class Key extends Item
 		if (roomOfCreature.isAdjacentTo(room))
 		{
 			room.unlockExit();
-			return new ClientMessage("The room, " + room.getName() + ", has been unlocked!");
+			return new ClientMessage("The room, " + room.getName() + ", has been unlocked!", Server.SYSTEM_TEXT_COLOR);
 		}
 		else
 		{
