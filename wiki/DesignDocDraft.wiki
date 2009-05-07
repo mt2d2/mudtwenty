@@ -13,13 +13,13 @@ I'm writing this wiki page with some html formatting because I think that it wou
  * We created a basic MUD server and client.
  * It has potential to be expanded in various ways.
 
-<h2>Spec</h2>
+<h2>Specification</h2>
 
 <h3>Connections:</h3>
 
 <blockquote><i>Multiple players must be able to connect to the MUD at the same time over the Internet.‭ ‬To do so,‭ ‬they will launch a MUD Client program which will allow them to connect to the MUD Server running at a different location.‭ ‬Read the Client/Server section for more details.</i></blockquote>
 
-Connection over the Internet is possible because we are using sockets to communicate between client and server. Simultaneous connections are possible because when a client connects, a separate thread (A `ServerThread`) is spawned to handle the client. A connection to a player can happen in two different apps, the bundled Client or via telnet. The system automatically decides which system to use and calls each subsystem as appropriate.
+Connection over the Internet is possible because we are using sockets to communicate between client and server. Simultaneous connections are possible because when a client connects, a separate thread (a `ServerThread`) is spawned to handle the client. A connection to a player can happen in two different apps, the bundled Client or via telnet. The system automatically decides which system to use and calls each subsystem as appropriate.
 
 In the GUI Client, serialized Java objects are passed over the network to provide some useful metadata. The `Externalizable` interface is implemented for these message objects to circumvent some issues with normal Java Serialization issues. We also considered using different Java serialization routines (e.g. `JBossSerialization`) or Google Protocol Buffers. Ultimately, the default Java method won out, due to the ban on external libraries.
 
@@ -47,13 +47,11 @@ Because the `Universe` class keeps track of the locations of players and MOBs in
 
 <blockquote><i>Players must be able to‎ ‏interact with one another,‭ ‬and be able to see the locations and movements of other players in the same room as them.</i></blockquote>
 
-Players can see the locations of other players in the same room because the players in the room are listed when the look command is used. Players can see the movements of others because when a move command is used, a notification is sent to players in the room they're leaving and the room they're arriving in.
-
-Players can interact with each other through chat commands.
+Players can see the locations of other players in the same room because the players in the room are listed when the look command is used. Players can see the movements of others because when a move command is used, a notification is sent to players both in the room they're leaving and the room they're arriving in. Players can also interact with each other through chat commands.
 
 <blockquote><i>Players must be able to‎ ‏interact with MOBs.</i></blockquote>
 
-Players can interact with MOBs through chat commands and by attacking. When a player uses a say or tell command, the text that they type is input to a function that is specific to the type of MOB, which determines the MOB's response.
+Players can interact with MOBs by talking to them and by attacking them. Players can also, of course, indirectly interact with MOBs by unlocking doors or leaving items in a room.
 
 <h3>Rooms:</h3>
 
@@ -63,7 +61,7 @@ To make the MUD have 30 not-entirely-boring rooms when we were short on time, we
 
 <blockquote><i>A room must have a‎ ‏description and a‭ ‬list of possible exits,‭ ‬as well as a‭ ‬list of contents‭ (‬items,‭ ‬MOBs,‭ ‬and other players in the room‭)‬.‭ ‬This must be‭ ‬viewable by the player via‭ ‘‬look‭’ ‬and should be displayed by default upon their entrance into the room.</i></blockquote>
 
-The `Room` class, which represents rooms in the game, contain a list of items that can be accessed by the `getItems()` and modified with the methods `addItem(Item item)` and `removeItem(Item item)`. `Room` also has a map of `Direction` to `Because `Universe` keeps track of which rooms each player and MOB are in, it also contains a method for getting a list of players or MOBs in any particular room.
+The `Room` class, which represents rooms in the game, contain a list of items that can be accessed by the method `getItems` and modified with the methods `addItem` and `removeItem`. `Room` also keeps track of the exits from the room; this was implemented as a Because `Universe` keeps track of which rooms each player and MOB are in, it also contains a method for getting a list of players or MOBs in any particular room.
 
 All of these things that can be in a room are listed by a `LookResponse`, which is created when a player uses ‘‬look‭’. They are also listed when a player enters a room because this action also creates a `LookResponse`.
 
@@ -71,10 +69,7 @@ All of these things that can be in a room are listed by a `LookResponse`, which 
 
 <blockquote><i>The MUD must have at least‎ ‏10‎ ‏different types of items.</i></blockquote>
 
-Our MUD has the following concrete Item classes:
-Key, SmallPotion, LargePotion, Cannon, Spear
-Sword, Cloth, Hydes, SteelMesh, CheapTreat,
-FancyTreat, Book.
+Our MUD has the following concrete Item classes: Key, SmallPotion, LargePotion, Cannon, Spear Sword, Cloth, Hydes, SteelMesh, CheapTreat, FancyTreat, Book.
 
 ‎‏<blockquote><i>All items must have a use in the game.‭ ‬You could have potions to heal damage taken,‭ ‬keys to open doors,‭ ‬special items that affect the player’s stats,‭ ‬equipment the player can wear or items needed to finish a quest.‭</i></blockquote>
 
@@ -105,9 +100,13 @@ MOBs also have a `DialogStrategy` object, which determines how they respond to s
 ‭
 <blockquote><i>Players must be able to‎ ‏interact with the game with a set of commands that include‭ ‬at least the following: [ooc, who, say, tell, score, give, get, inventory, drop, use, quit, shutdown]</i></blockquote>
 
+When a player types one of the above commands, a `ServerThread` receives it and uses the `ResponseFactory` to create a `ServerResponse` object. Each of the different types of commands is handled by a different `ServerResponse` object.
+
 <h3>System:</h3>
 
 <blockquote><i>MUD must be‭ ‬persistent.‭ ‬Changes made to players and the MUD must remain even after the MUD is shutdown and restarted.</i></blockquote>
+
+Our MUD is persistent because the `Universe` and `Player` objects are periodically serialized and saved to disk by the server. The players are saved and loaded separately from the server in order to avoid loading all logged-out players into memory when the server is started. However, the `Universe`, which is saved periodically, does contain a map of all player names to rooms so that players can be put into the room they were last in when they log back in.
 
 <blockquote><i>MUD must be able to be‭ ‬shutdown from within the game.‭ ‬This function should not be available to all players‭ (‬ie.‭ ‬Password protected,‭ ‬reserved to specific players,‭ ‬etc‭)‬.</i></blockquote>
 
@@ -115,13 +114,15 @@ MOBs also have a `DialogStrategy` object, which determines how they respond to s
 
 <blockquote><i>The MUD should be logically consistent.‭ ‬For example,‭ ‬a player should only be able to give items to another player/MOB if they are in the same room.‭ ‬Also,‭ ‬walking north to the next room and then south should take the player back to the original room they were in‭ (‬Unless the area is designed to randomly connect rooms to create a maze like environment.‭ ‬If so,‭ ‬the area should be clearly marked with a sign before entering it or a warning in the description of the room before entering it‭)‬.</i></blockquote>
 
-Players can only give items to others in the same room because a check is made for this when the player tries to give an item, in the class `GiveResponse`. Similar checks exist for commands such as get.
+Players can only give items to others in the same room because a check is made for this when the player tries to give an item, in the class `GiveResponse`. Similar checks exist for commands such as get. Consistency in the connections between the rooms is ensured by the method `addRoom` of the class `Room`, which creates an exit going back to the first room from the room that is added. The flexibility to create a maze-link environment exists, though.
 
 <h3>Client/Server:</h3>
 
 <blockquote><i>The main portion of the MUD will be written as the MUD Server.‭ ‬All interactions with the client should be sent to the server and should trigger an appropriate response by the server that is sent back to the client.‭ ‬The server should run as a terminal based program on one computer and must accept connections from MUD Client programs that run on other computers over the internet.</i></blockquote>‭
 
-<blockquote><i>The MUD Client will be a simple GUI which will allow the user to connect to the server.‭ ‬The MUD Client will connect to the server using a Socket/ServerSocket relationship.‭ ‬It must provide a GUI which consists of at least two frames‭ (‬or panels‭)‬,‭ ‬one which handles chat‭ (‬referred to as Chat‭) ‬and one which handles the users‭’ ‬interactions with the Server and the Server’s responses‭ (‬referred to as System‭)‬.‭ ‬The specifics of the implementation are up to you.</i></blockquote>‭
+<blockquote><i>The MUD Client will be a simple GUI which will allow the user to connect to the server.‭ ‬The MUD Client will connect to the server using a Socket/ServerSocket relationship.‭ ‬It must provide a GUI which consists of at least two frames‭ (‬or panels‭)‬,‭ ‬one which handles chat‭ (‬referred to as Chat‭) ‬and one which handles the users‭’ ‬interactions with the Server and the Server’s responses‭ (‬referred to as System‭)‬.‭ ‬The specifics of the implementation are up to you.</i></blockquote>
+
+Our server and client fulfills these requirements.‭
 
 <blockquote><i>Note:‭ ‬All commands listed above should work in the System frame‭ (‬or panel‭)‬,‭ ‬even if they are a chat command‭ (‬such as‭ “‬ooc‭”)‬.‭ ‬On the other hand,‭ ‬the Chat frame‭ (‬or panel‭) ‬should only respond to commands that relate to Chat functions,‭ ‬such as‭ ‬ooc,‭ ‬who,‭ ‬say,‭ ‬and tell.</i></blockquote>
 
@@ -135,15 +136,19 @@ Rooms can be lockable, and `Key` objects can be created that correspond to a par
 
 <blockquote><i>ANSI Color Support (4 Points) - ANSI color schemes for output.</i></blockquote>
 
+Color of messages that are sent to clients is kept track of in `ClientMessage`; if the user is using our GUI client, then our client uses the color information inside the message. If the user is not using our GUI client, then the color of the message is se
+
 <blockquote><i>Emoting/Posing (1 Point) - A command that allows a player to write a sentence from the third person perspective: for instance ‘emote looks around the room curiously.’</i></blockquote>
 
 <blockquote><i>Room Exit Description (1 Point) - Room exits that have descriptions viewable with the ‘look’ command.</i></blockquote>
 
+The `Exit` class has a method `getDescription` which is given to the user when they use the look command on an exit (e.g 'look north').
+
 <blockquote><i>Social Commands (1 Point) - A set of “social” commands (such as, ‘giggle, laugh, wink, slap,’ etc, that would display something like, ‘player giggles at target’ or just ‘player; giggles’).</i></blockquote>
 
-The social commands
-
 <blockquote><i>Abbreviated Commands (1 Point) - Players able to type abbreviated versions of command names (for instance, ‘l’ for look, ‘sc’ for score, ‘”’ for say, etc).</i></blockquote>
+
+Abbreviated forms of commands were implemented inside of `ResponseFactory`, which, for example, returns the same `ServerResponse` if the user types 'look', 'l', or 'ls'. Likewise, the same action is performed for each of the commands 'north', 'n', 'move north', and 'cd north'.
 
 <h2>Design Patterns</h2>
 
@@ -153,7 +158,7 @@ Items and MOBs use the prototype pattern. They are cloneable, and in constructin
 
 <h3>Factory</h3>
 
-`ResponseFactory` uses the factory pattern. It contains a method which is designed to create different `ServerResponse` objects depending on the input given (which is a string).
+`ResponseFactory` is a factory; it has a method, `getResponse` which constructs different types of `ServerResponse` depending on the input given. Although `ResponseFactory` is not abstract and does not have any subtypes, it could potentially be extended by a class which parsed input differently but still used the same method name for making `ServerResponse` objects.
 
 <h3>Template</h3>
 
@@ -161,7 +166,7 @@ MOB uses the template pattern. The `run()` method of MOB is an invariant behavio
 
 <h3>Abstract Factory</h3>
 
-`RandomRoomFactory` uses the factory pattern.
+`RoomFactory`, an inner class of `RandomRoomFactory`, is an abstract factory. It is an interface for creating a collection of products, which are parts of rooms. It is implemented by several concrete factories which make differently-themed room parts. This is useful for assembling complete rooms that have a particular theme.
 
 <h3>Command</h3>
 
@@ -173,7 +178,7 @@ MOB uses the template pattern. The `run()` method of MOB is an invariant behavio
 
 <h3>MVC</h3>
 
-Perhaps the client could be considered the view, something else (parser stuff, possibly server?) could be considered controller, and universe could be considered model?
+*Perhaps the client could be considered the view, something else (parser stuff, possibly server?) could be considered controller, and universe could be considered model?*
 
 <h2>Extra features</h2>
 
@@ -181,4 +186,4 @@ Our Server can accept connections from telnet or other MUD clients as well as ou
 
 <h2>Known problems</h2>
 
-There are no known problems. Our universe is not complete enough to use in an actual mud server?
+There are no known problems.
