@@ -1,0 +1,459 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+<title>Design Doc for Mudtwenty</title>
+<style type="text/css">
+body {margin: 1em;}
+blockquote {font-size: 0.75em; color: #005;}
+</style>
+</head>
+<body>
+
+<h1>Design Doc for Mudtwenty</h1>
+
+<ul>
+<li><a href="#Specification">Specification</a></li>
+<ul>
+<li><a href="#Connections:">Connections</a></li>
+<li><a href="#Players:">Players</a></li>
+<li><a href="#Rooms:">Rooms</a></li>
+<li><a href="#Items:">Items</a></li>
+<li><a href="#MOBs:">MOBs</a></li>
+<li><a href="#Interaction:">Interaction</a></li>
+<li><a href="#System:">System</a></li>
+<li><a href="#Consistency:">Consistency</a></li>
+<li><a href="#Client/Server:">Client/Server</a></li>
+<li><a href="#Extra credit:">Extra credit</a></li>
+</ul>
+<li><a href="#Design Patterns">Design Patterns</a></li>
+<ul>
+<li><a href="#Prototype">Prototype</a></li>
+<li><a href="#Factory">Factory</a></li>
+<li><a href="#Template">Template</a></li>
+<li><a href="#Abstract Factory">Abstract Factory</a></li>
+<li><a href="#Command">Command</a></li>
+<li><a href="#Strategy">Strategy</a></li>
+<li><a href="#MVC">MVC</a></li>
+</ul>
+<li><a href="#Extra features">Extra features</a></li>
+<li><a href="#Known problems">Known problems</a></li>
+</ul>
+
+<a name="Specification" /><h2>Specification</h2>
+
+<a name="Connections:" /><h3>Connections:</h3>
+
+<blockquote><i>Multiple players must be able to connect to the MUD
+at the same time over the Internet. To do so, they will launch a
+MUD Client program which will allow them to connect to the MUD
+Server running at a different location. Read the Client/Server
+section for more details.</i></blockquote>
+
+<p>Connection over the Internet is possible because we are using
+sockets to communicate between client and server. Simultaneous
+connections are possible because when a client connects, a separate
+thread (a <tt>ServerThread</tt>) is spawned to handle the client. A
+connection to a player can happen in two different apps, the
+bundled Client or via telnet. The system automatically decides
+which system to use and calls each subsystem as appropriate.</p>
+
+<p>In the GUI Client, serialized Java objects are passed over the
+network to provide some useful metadata. The
+<tt>Externalizable</tt> interface is implemented for these message
+objects to circumvent some issues with normal Java Serialization
+issues. We also considered using different Java serialization
+routines (e.g. <tt>JBossSerialization</tt>) or Google Protocol
+Buffers. Ultimately, the default Java method won out, due to the
+ban on external libraries.</p>
+
+<a name="Players:" /><h3>Players:</h3>
+
+<blockquote><i>Players must have a name.</i></blockquote>
+
+<p>Player names are accessed by a method <tt>getName()</tt> which
+is inherited from the abstract class <tt>Creature</tt>. The method
+is mandated by <tt>Entity</tt>, which is implemented by
+<tt>Creature</tt>.</p>
+
+<blockquote><i>Players must have a location (A room they are
+in).</i></blockquote>
+
+<p>The location of players (and MOBs) is kept track centrally, by
+the class <tt>Universe</tt>, in a <tt>Map</tt> from players to
+rooms. This was done because keeping track of player locations in
+both the <tt>Player</tt> class and the <tt>Room</tt> class could
+have led to inconsistencies. Keeping track of location in a Map
+ensures that Players can only have one location.</p>
+
+<blockquote><i>Players must have statistics that are changed via
+their actions in the MUD. In a traditional RPG, this would be
+things like hp (health point/hit points), defense, level, etc. For
+something less traditional, it could be number of questions
+answered correctly or amount of money won.</i></blockquote>
+
+<p>Both players and MOBs have the same sorts of statistics because
+they are both subtypes of the abstract class <tt>Creature</tt>,
+which keeps track of statistics. In our game, there are several
+statistics that are implemented as fields in the <tt>Creature</tt>
+class, including health, money, strength of attacks</p>
+
+<blockquote><i>Players must be able to carry items they
+find/buy/earn with them as they travel.</i></blockquote>
+
+<p>Players have a list of items inherited from the abstract class
+<tt>Creature</tt>.</p>
+
+<blockquote><i>Players must be able to move between rooms through
+the use of commands (See Interaction section).</i></blockquote>
+
+<p>Because the <tt>Universe</tt> class keeps track of the locations
+of players and MOBs in the game, it includes a method,
+<tt>changeRoomOfCreature</tt>, that changes the location of a mob
+or player. This method is called on a player by a
+<tt>MoveResponse</tt>, which is created when a player uses a move
+command.</p>
+
+<blockquote><i>Players must be able to interact with one another,
+and be able to see the locations and movements of other players in
+the same room as them.</i></blockquote>
+
+<p>Players can see the locations of other players in the same room
+because the players in the room are listed when the look command is
+used. Players can see the movements of others because when a move
+command is used, a notification is sent to players both in the room
+they're leaving and the room they're arriving in. Players can also
+interact with each other through chat commands.</p>
+
+<blockquote><i>Players must be able to interact with
+MOBs.</i></blockquote>
+
+<p>Players can interact with MOBs by talking to them and by
+attacking them. Players can also, of course, indirectly interact
+with MOBs by unlocking doors or leaving items in a room.</p>
+
+<a name="Rooms:" /><h3>Rooms:</h3>
+
+<blockquote><i>The MUD must have at least 30
+rooms.</i></blockquote>
+
+<p>To make the MUD have 30 not-entirely-boring rooms when we were
+short on time, we used a class called <tt>RandomRoomFactory</tt> to
+generate rooms of different types.</p>
+
+<blockquote><i>A room must have a description and a list of
+possible exits, as well as a list of contents (items, MOBs, and
+other players in the room). This must be viewable by the player via
+'look' and should be displayed by default upon their entrance into
+the room.</i></blockquote>
+
+<p>The <tt>Room</tt> class, which represents rooms in the game,
+contain a list of items that can be accessed by the method
+<tt>getItems</tt> and modified with the methods <tt>addItem</tt>
+and <tt>removeItem</tt>. <tt>Room</tt> also keeps track of the
+exits from the room; this was implemented as a Because
+<tt>Universe</tt> keeps track of which rooms each player and MOB
+are in, it also contains a method for getting a list of players or
+MOBs in any particular room.</p>
+
+<p>All of these things that can be in a room are listed by a
+<tt>LookResponse</tt>, which is created when a player uses 'look'.
+They are also listed when a player enters a room because this
+action also creates a <tt>LookResponse</tt>.</p>
+
+<a name="Items:" /><h3>Items:</h3>
+
+<blockquote><i>The MUD must have at least 10 different types of
+items.</i></blockquote>
+
+<p>Our MUD has the following concrete Item classes: <tt>Key</tt>,
+<tt>SmallPotion</tt>, <tt>LargePotion</tt>, <tt>Cannon</tt>, <tt>Spear</tt>, <tt>Sword</tt>, <tt>Cloth</tt>, <tt>Hydes</tt>,
+<tt>SteelMesh</tt>, <tt>CheapTreat</tt>, <tt>FancyTreat</tt>, <tt>Book</tt>.</p>
+
+<blockquote><i>All items must have a use in the game. You could
+have potions to heal damage taken, keys to open doors, special
+items that affect the player's stats, equipment the player can wear
+or items needed to finish a quest.</i></blockquote>
+
+<p><tt>Item</tt>, the supertype of all items in the game, has an
+abstract <tt>use</tt> method which determines what happens when a
+player uses an item.</p>
+
+<a name="MOBs:" /><h3>MOBs:</h3>
+
+<blockquote><i>The MUD must have at least 10 different types of
+MOBs.</i></blockquote>
+
+<p>Our MUD has the following concrete MOB classes:
+<tt>Merchant</tt>, <tt>ICritterCat</tt>, <tt>ICritterDog</tt>,
+<tt>ICritterPenguin</tt>, <tt>Kitten</tt>, <tt>Bunny</tt>,
+<tt>Deer</tt>, <tt>RoomGiftMob</tt>, <tt>RoomThiefMob</tt>,
+<tt>Troll.</tt></p>
+
+<blockquote><i>MOBs must be able to move between
+rooms.</i></blockquote>
+
+<p>The mechanism for moving MOBs between rooms is the same as the
+mechanism for moving Players; the method
+<tt>changeRoomOfCreature</tt> in <tt>Universe</tt> can be used.
+However, this method is called not by a <tt>MoveResponse</tt>,
+which only responds to players' commands, but by a MOB's
+<tt>BehaviorStrategy</tt>.</p>
+
+<blockquote><i>MOBs must have complex behaviors--these can involve
+player interactions that take into account player statistics or
+items a player is carrying, or the contents of the room that the
+MOB is in, and MOBs should have actions that are triggered
+periodically, without direct interaction from players. For
+instance, movement, speech, interacting with other MOBs,
+etc.</i></blockquote>
+
+<p>In our server, there is a thread for each MOB; the class
+<tt>MOB</tt> implements <tt>Runnable</tt>. In the <tt>run()</tt>
+method for <tt>MOB</tt>, there is a loop wherein the MOB performs
+some action and then sleeps for an amount of time. This allows MOBs
+to perform actions that are triggered periodically. To allow MOBs
+to have complex behaviors, MOBs have a <tt>BehaviorStrategy</tt>
+object, which determines how they behave at a particular time, and
+a <tt>takeTurn</tt> method, which determines when a particular MOB
+switches strategy.</p>
+
+<p>MOBs also have a <tt>DialogStrategy</tt> object, which
+determines how they respond to speech from players and other MOBs.
+When some creature says something to a MOB, a method in the MOB's
+<tt>DialogStrategy</tt> is called, which returns the MOB's response
+to the speech. <tt>DialogStrategy</tt> was made a separate
+interface so that complex dialog behavior could be added that could
+be common to several different types of MOBs.</p>
+
+<a name="Interaction:" /><h3>Interaction:</h3>
+
+<blockquote><i>When players are in the system, they should be able
+to send input and receive output without interference from other
+players.</i></blockquote>
+
+<p>Each player independently sends input and receives output from
+the server because each player is handled by a different
+thread.</p>
+
+<blockquote><i>Players must be able to interact with the game with
+a set of commands that include at least the following: [who, say,
+tell, score, give, get, inventory, drop, use, quit,
+shutdown]</i></blockquote>
+
+<p>When a player types one of the above commands, a
+<tt>ServerThread</tt> receives it and uses the
+<tt>ResponseFactory</tt> to create a <tt>ServerResponse</tt>
+object. Each of the different types of commands is handled by a
+different <tt>ServerResponse</tt> object.</p>
+
+<a name="System:" /><h3>System:</h3>
+
+<blockquote><i>MUD must be persistent. Changes made to players and
+the MUD must remain even after the MUD is shutdown and
+restarted.</i></blockquote>
+
+<p>Our MUD is persistent because the <tt>Universe</tt> and
+<tt>Player</tt> objects are periodically serialized and saved to
+disk by the server. The players are saved and loaded separately
+from the server in order to avoid loading all logged-out players
+into memory when the server is started. However, the
+<tt>Universe</tt>, which is saved periodically, does contain a map
+of all player names to rooms so that players can be put into the
+room they were last in when they log back in.</p>
+
+<blockquote><i>MUD must be able to be shutdown from within the
+game. This function should not be available to all players (ie.
+Password protected, reserved to specific players,
+etc).</i></blockquote>
+
+<a name="Consistency:" /><h3>Consistency:</h3>
+
+<blockquote><i>The MUD should be logically consistent. For example,
+a player should only be able to give items to another player/MOB if
+they are in the same room. Also, walking north to the next room and
+then south should take the player back to the original room they
+were in (Unless the area is designed to randomly connect rooms to
+create a maze like environment. If so, the area should be clearly
+marked with a sign before entering it or a warning in the
+description of the room before entering it).</i></blockquote>
+
+<p>Players can only give items to others in the same room because a
+check is made for this when the player tries to give an item, in
+the class <tt>GiveResponse</tt>. Similar checks exist for commands
+such as get. Consistency in the connections between the rooms is
+ensured by the method <tt>addRoom</tt> of the class <tt>Room</tt>,
+which creates an exit going back to the first room from the room
+that is added. The flexibility to create a maze-link environment
+exists, though.</p>
+
+<a name="Client/Server:" /><h3>Client/Server:</h3>
+
+<blockquote>
+
+<p><i>The main portion of the MUD will be written as the MUD
+Server. All interactions with the client should be sent to the
+server and should trigger an appropriate response by the server
+that is sent back to the client. The server should run as a
+terminal based program on one computer and must accept connections
+from MUD Client programs that run on other computers over the
+internet.</i></p>
+
+<p><i>The MUD Client will be a simple GUI which will allow the user
+to connect to the server. The MUD Client will connect to the server
+using a Socket/ServerSocket relationship. It must provide a GUI
+which consists of at least two frames (or panels), one which
+handles chat (referred to as Chat) and one which handles the users'
+interactions with the Server and the Server's responses (referred
+to as System). The specifics of the implementation are up to
+you.</i></p>
+</blockquote>
+
+<p>Our server and client fulfills these requirements.</p>
+
+<blockquote><i>Note: All commands listed above should work in the
+System frame (or panel), even if they are a chat command (such as
+ooc). On the other hand, the Chat frame (or panel) should only
+respond to commands that relate to Chat functions, such as ooc,
+who, say, and tell.</i></blockquote>
+
+<a name="Extra credit:" /><h3>Extra credit:</h3>
+
+<blockquote><i>Dropped Connections (2 Points) - Announce to all
+when a player's connection is dropped and save that player's
+state.</i></blockquote>
+
+<p>If a player exits the game without properly exiting, a
+<tt>ReaperTask</tt> in <tt>Server</tt> reports this to the logged
+in players when it is removing a player's <tt>ServerThread</tt>
+from the list that the <tt>Server</tt> class has. Players' states
+are periodically saved automatically.</p>
+
+<blockquote><i>Room Behaviors (4 Points) - Rooms that have
+behaviors (for instance, weather, or keys that unlock
+exits).</i></blockquote>
+
+<p>Rooms can be lockable, and <tt>Key</tt> objects can be created
+that correspond to a particular room. When a player uses the
+correct key while they are in a locked room, the room becomes
+temporarily unlocked.</p>
+
+<blockquote><i>ANSI Color Support (4 Points) - ANSI color schemes
+for output.</i></blockquote>
+
+<p>Color of messages that are sent to clients is kept track of in
+<tt>ClientMessage</tt>; if the user is using our GUI client, then
+our client uses the color information inside the message. If the
+user is not using our GUI client, then the color of the message is
+encoded into the string sent to the client using ANSI escape
+codes.</p>
+
+<blockquote><i>Emoting/Posing (1 Point) - A command that allows a
+player to write a sentence from the third person perspective: for
+instance 'emote looks around the room curiously.'</i></blockquote>
+
+<p>Emoting is implemented by including an appropriate
+<tt>ServerResponse</tt> class.</p>
+
+<blockquote><i>Room Exit Description (1 Point) - Room exits that
+have descriptions viewable with the 'look'
+command.</i></blockquote>
+
+<p>The <tt>Exit</tt> class has a method <tt>getDescription</tt>
+which is given to the user when they use the look command on an
+exit (e.g 'look north').</p>
+
+<blockquote><i>Social Commands (1 Point) - A set of social commands
+(such as, 'giggle, laugh, wink, slap,' etc, that would display
+something like, 'player giggles at target' or just 'player;
+giggles').</i></blockquote>
+
+<p>Social commands are implemented by including an appropriate
+<tt>ServerResponse</tt> class.</p>
+
+<blockquote><i>Abbreviated Commands (1 Point) - Players able to
+type abbreviated versions of command names (for instance, 'l' for
+look, 'sc' for score, '"' for say, etc).</i></blockquote>
+
+<p>Abbreviated forms of commands were implemented inside of
+<tt>ResponseFactory</tt>, which, for example, returns the same
+<tt>ServerResponse</tt> if the user types 'look', 'l', or 'ls'.
+Likewise, the same action is performed for each of the commands
+'north', 'n', 'move north', and 'cd north'.</p>
+
+<a name="Design Patterns" /><h2>Design Patterns</h2>
+
+<a name="Prototype" /><h3>Prototype</h3>
+
+<p>Items and MOBs use the prototype pattern. They are cloneable,
+and in constructing the world, we can use this fact to make a mob,
+change something about it, and make several clones. This allows us
+to create many similar groups of items that do not necessarily
+match any particular hard-coded class.</p>
+
+<a name="Factory" /><h3>Factory</h3>
+
+<p><tt>ResponseFactory</tt> is a factory; it has a method,
+<tt>getResponse</tt> which constructs different types of
+<tt>ServerResponse</tt> depending on the input given. Although
+<tt>ResponseFactory</tt> is not abstract and does not have any
+subtypes, it could potentially be extended by a class which parsed
+input differently but still used the same method name for making
+<tt>ServerResponse</tt> objects.</p>
+
+<a name="Template" /><h3>Template</h3>
+
+<p>MOB uses the template pattern. The <tt>run()</tt> method of MOB
+is an invariant behavior, common to all MOBs, but it depends on
+variant behavior, <tt>takeTurn()</tt>, which is specific to
+particular types of MOBs. <tt>run()</tt> is not abstract but
+<tt>takeTurn()</tt> is.</p>
+
+<a name="Abstract Factory" /><h3>Abstract Factory</h3>
+
+<p><tt>RoomFactory</tt>, an inner class of
+<tt>RandomRoomFactory</tt>, is an abstract factory. It is an
+interface for creating a collection of products, which are parts of
+rooms. It is implemented by several concrete factories which make
+differently-themed room parts. This is useful for assembling
+complete rooms that have a particular theme.</p>
+
+<a name="Command" /><h3>Command</h3>
+
+<p><tt>ServerResponse</tt> uses the command pattern; Each
+<tt>ServerResponse</tt> instance is an object that represents an
+action.</p>
+
+<a name="Strategy" /><h3>Strategy</h3>
+
+<p><tt>BehaviorStrategy</tt>, a class used of MOBs use the strategy
+pattern. <tt>BehaviorStrategy</tt> objects encapsulate some
+strategy. The particular <tt>BehaviorStrategy</tt> that MOB is
+using can be changed dynamically depending on what is happening
+around the MOB. For example, a MOB might switch between
+<tt>NullStrategy</tt> and <tt>MoveStrategy</tt>. This could be
+expanded by adding any other behavior that a MOB might switch
+to.</p>
+
+<a name="MVC" /><h3>MVC</h3>
+
+<p>Our MUD could be roughly considered to follow an MVC pattern.
+The <tt>Universe</tt> and its contents could be considered the
+model, our GUI client could be considered a view, and
+<tt>ServerResponse</tt> objects could be considered the
+controller.</p>
+
+<a name="Extra features" /><h2>Extra features</h2>
+
+<p>Our Server can accept connections from telnet or other MUD
+clients as well as our GUI client. This is accomplished by using an
+interface for sending and receiving messages,
+<tt>Communicable</tt>, that is implemented by two classes; one for
+our GUI client and one for other clients. The ability to send
+messages through Communicable objects which can be either of the
+two types is an example of polymorphism.</p>
+
+<a name="Known problems" /><h2>Known problems</h2>
+
+<p>There are no known problems.</p>
+</body>
+</html>
