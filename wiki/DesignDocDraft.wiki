@@ -97,6 +97,8 @@ MOBs also have a `DialogStrategy` object, which determines how they respond to s
 <h3>Interaction:‭</h3>
 
 <blockquote><i>When players are in the system,‎ ‏they should be able to send‭ ‬input and receive‭ ‬output without interference from other players.</i></blockquote>
+
+Each player independently sends input and receives output from the server because each player is handled by a different thread.
 ‭
 <blockquote><i>Players must be able to‎ ‏interact with the game with a set of commands that include‭ ‬at least the following: [ooc, who, say, tell, score, give, get, inventory, drop, use, quit, shutdown]</i></blockquote>
 
@@ -118,9 +120,8 @@ Players can only give items to others in the same room because a check is made f
 
 <h3>Client/Server:</h3>
 
-<blockquote><i>The main portion of the MUD will be written as the MUD Server.‭ ‬All interactions with the client should be sent to the server and should trigger an appropriate response by the server that is sent back to the client.‭ ‬The server should run as a terminal based program on one computer and must accept connections from MUD Client programs that run on other computers over the internet.</i></blockquote>‭
-
-<blockquote><i>The MUD Client will be a simple GUI which will allow the user to connect to the server.‭ ‬The MUD Client will connect to the server using a Socket/ServerSocket relationship.‭ ‬It must provide a GUI which consists of at least two frames‭ (‬or panels‭)‬,‭ ‬one which handles chat‭ (‬referred to as Chat‭) ‬and one which handles the users‭’ ‬interactions with the Server and the Server’s responses‭ (‬referred to as System‭)‬.‭ ‬The specifics of the implementation are up to you.</i></blockquote>
+<blockquote><i><p>The main portion of the MUD will be written as the MUD Server.‭ ‬All interactions with the client should be sent to the server and should trigger an appropriate response by the server that is sent back to the client.‭ ‬The server should run as a terminal based program on one computer and must accept connections from MUD Client programs that run on other computers over the internet.</p>
+<p>The MUD Client will be a simple GUI which will allow the user to connect to the server.‭ ‬The MUD Client will connect to the server using a Socket/ServerSocket relationship.‭ ‬It must provide a GUI which consists of at least two frames‭ (‬or panels‭)‬,‭ ‬one which handles chat‭ (‬referred to as Chat‭) ‬and one which handles the users‭’ ‬interactions with the Server and the Server’s responses‭ (‬referred to as System‭)‬.‭ ‬The specifics of the implementation are up to you.</p></i></blockquote>
 
 Our server and client fulfills these requirements.‭
 
@@ -130,21 +131,27 @@ Our server and client fulfills these requirements.‭
 
 <blockquote><i>Dropped Connections (2 Points) – Announce to all when a player’s connection is dropped and save that player’s state.</i></blockquote>
 
+If a player exits the game without properly exiting, a `ReaperTask` in `Server` reports this to the logged in players when it is removing a player's `ServerThread` from the list that the `Server` class has. Players' states are periodically saved automatically.
+
 <blockquote><i>Room Behaviors (4 Points) - Rooms that have behaviors (for instance, weather, or keys that unlock exits).</i></blockquote>
 
 Rooms can be lockable, and `Key` objects can be created that correspond to a particular room. When a player uses the correct key while they are in a locked room, the room becomes temporarily unlocked.
 
 <blockquote><i>ANSI Color Support (4 Points) - ANSI color schemes for output.</i></blockquote>
 
-Color of messages that are sent to clients is kept track of in `ClientMessage`; if the user is using our GUI client, then our client uses the color information inside the message. If the user is not using our GUI client, then the color of the message is se
+Color of messages that are sent to clients is kept track of in `ClientMessage`; if the user is using our GUI client, then our client uses the color information inside the message. If the user is not using our GUI client, then the color of the message is encoded into the string sent to the client using ANSI escape codes.
 
 <blockquote><i>Emoting/Posing (1 Point) - A command that allows a player to write a sentence from the third person perspective: for instance ‘emote looks around the room curiously.’</i></blockquote>
+
+Emoting is implemented by including an appropriate `ServerResponse` class.
 
 <blockquote><i>Room Exit Description (1 Point) - Room exits that have descriptions viewable with the ‘look’ command.</i></blockquote>
 
 The `Exit` class has a method `getDescription` which is given to the user when they use the look command on an exit (e.g 'look north').
 
 <blockquote><i>Social Commands (1 Point) - A set of “social” commands (such as, ‘giggle, laugh, wink, slap,’ etc, that would display something like, ‘player giggles at target’ or just ‘player; giggles’).</i></blockquote>
+
+Social commands are implemented by including an appropriate `ServerResponse` class.
 
 <blockquote><i>Abbreviated Commands (1 Point) - Players able to type abbreviated versions of command names (for instance, ‘l’ for look, ‘sc’ for score, ‘”’ for say, etc).</i></blockquote>
 
@@ -170,7 +177,7 @@ MOB uses the template pattern. The `run()` method of MOB is an invariant behavio
 
 <h3>Command</h3>
 
-`ServerResponse` uses the command pattern. each `ServerResponse` instance is an object that represents an action -- a response of the server to a client's input.
+`ServerResponse` uses the command pattern; Each `ServerResponse` instance is an object that represents an action. This is useful because the
 
 <h3>Strategy</h3>
 
@@ -178,7 +185,7 @@ MOB uses the template pattern. The `run()` method of MOB is an invariant behavio
 
 <h3>MVC</h3>
 
-*Perhaps the client could be considered the view, something else (parser stuff, possibly server?) could be considered controller, and universe could be considered model?*
+Our MUD could be roughly considered to follow an MVC pattern. The `Universe` and its contents could be considered the model, our GUI client could be considered a view, and `ServerResponse` objects could be considered the controller.
 
 <h2>Extra features</h2>
 
