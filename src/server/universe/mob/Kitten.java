@@ -12,7 +12,7 @@ public class Kitten extends MOB
 {
 
 	private static final long serialVersionUID = 2L;
-	
+
 	/**
 	 * Create a kitten with the given name.
 	 */
@@ -23,7 +23,7 @@ public class Kitten extends MOB
 		this.setDescription("This is a cute, little, white, fluffy kitten. How cute!");
 		this.setDialog(new MeowDialog());
 	}
-	
+
 	/**
 	 * The "dialog strategy" of meowing in response to everything. Very cute.
 	 */
@@ -43,7 +43,7 @@ public class Kitten extends MOB
 	 */
 	public void takeTurn()
 	{
-		if (Math.random() > 0.5)
+		if (Math.random() > 0.3)
 			setBehavior(new MoveBehavior());
 		else
 			setBehavior(new NullBehavior());

@@ -47,7 +47,7 @@ public abstract class MOB extends Creature implements Runnable, Serializable, Cl
  			// Sleep until the next found.
  			try
  			{
-				Thread.sleep(SLEEP_TIME);
+				Thread.currentThread().sleep(SLEEP_TIME);
 			}
  			catch (InterruptedException e)
  			{

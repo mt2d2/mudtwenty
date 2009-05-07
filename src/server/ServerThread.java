@@ -52,7 +52,7 @@ public class ServerThread implements Runnable
 	 * server.
 	 */
 	private static final String		WELCOME_STRING	= "Welcome to mudtwenty!";
-	
+
 	private Communicable			connection;
 	private Server					server;
 	private Socket					socket;
@@ -106,13 +106,13 @@ public class ServerThread implements Runnable
 
 		if (connection instanceof TextConnection) // kludgey way to send special welcome to text-based clients.
 		{
-			String asciiArtWelcome = "Welcome to \n"+
-               "                     _ _                      _           _\n"+ 
+			String asciiArtWelcome = "Welcome to\n"+
+               "                     _ _                      _           _\n"+
                " _ __ ___  _   _  __| | |___      _____ _ __ | |_ _   _  / \\\n"+
                "| '_ ` _ \\| | | |/ _` | __\\ \\ /\\ / / _ \\ '_ \\| __| | | |/  /\n"+
                "| | | | | | |_| | (_| | |_ \\ V  V /  __/ | | | |_| |_| /\\_/ \n"+
-               "|_| |_| |_|\\__,_|\\__,_|\\__| \\_/\\_/ \\___|_| |_|\\__|\\__, \\/   \n"+
-               "                                                  |___/     \n";
+               "|_| |_| |_|\\__,_|\\__,_|\\__| \\_/\\_/ \\___|_| |_|\\__|\\__, \\/\n"+
+               "                                                  |___/\n";
 			this.connection.sendMessage(new ClientMessage(asciiArtWelcome, Server.SYSTEM_TEXT_COLOR));
 		}
 		else
@@ -155,7 +155,7 @@ public class ServerThread implements Runnable
 		List<String> words = Arrays.asList(input.split(" "));
 		return words.subList(1, words.size());
 	}
-	
+
 	/**
 	 * Get the user's name and password. If they're new, register and create a new player.
 	 * Otherwise log them in. If something goes wrong during this process, start again.
@@ -163,14 +163,16 @@ public class ServerThread implements Runnable
 	private void processLogin()
 	{
 		this.connection.sendMessage(new ClientMessage("What is your name?"));
-		String name = this.connection.getMessage().getPayload();
-		
-		if (playerExists(name))
-			processOldPlayer(name);
+		ServerMessage message = this.connection.getMessage();
+
+		if (message == null)
+			this.terminateConnection();
+		else if (playerExists(message.getPayload()))
+			processOldPlayer(message.getPayload());
 		else
-			processNewPlayer(name);
+			processNewPlayer(message.getPayload());
 	}
-	
+
 	/**
 	 * Greet, get the password of, and try to register and log in a new player.
 	 */
@@ -195,9 +197,9 @@ public class ServerThread implements Runnable
 			processLogin();
 		}
 	}
-	
+
 	/**
-	 * Greet, get the password of, and try to log in an already existing player. 
+	 * Greet, get the password of, and try to log in an already existing player.
 	 */
 	private void processOldPlayer(String name)
 	{
@@ -222,7 +224,7 @@ public class ServerThread implements Runnable
 			processLogin();
 		}
 	}
-	
+
 	/**
 	 * Terminates the connection. This terminates the appropriate Input- and
 	 * OutputStreams and the Socket itself.
@@ -304,7 +306,7 @@ public class ServerThread implements Runnable
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Logs a user into the system. This entails a lengthy process: first, the
 	 * session data is checked to see if such a user exists, it is loaded from
@@ -377,8 +379,8 @@ public class ServerThread implements Runnable
 	 * It creates a player and registers the player with the universe,
 	 * which records the player's location as the starting location.
 	 * This does not log the user in.
-	 * 
-	 * Precondition: player does not exist yet. 
+	 *
+	 * Precondition: player does not exist yet.
 	 *
 	 * @return <code>true</code> if the registration was successful, false otherwise.
 	 */
@@ -414,7 +416,7 @@ public class ServerThread implements Runnable
 	{
 		if (player == null)
 			return false;
-		
+
 		final String dataRoot = conf.getProperty("data.root");
 		final File playerFile = new File(dataRoot + File.separatorChar + "players" + File.separatorChar + player.getName() + ".dat");
 		logger.fine("saving " + player.getName() + " to disk at " + playerFile.getAbsolutePath());

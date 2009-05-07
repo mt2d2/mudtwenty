@@ -3,7 +3,7 @@ package server.universe.item;
 /**
  * This is an extension of Weapon that provides properties that a Sword should
  * have, i.e., more expensive and a better weapon.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class Sword extends Weapon
@@ -15,7 +15,7 @@ public class Sword extends Weapon
 	 */
 	public Sword()
 	{
-		setName("Sword");
+		setName("sword");
 		setDescription("An instrument of death, which has 30 damage points");
 		setPrice(30);
 		this.setDamage(30);
