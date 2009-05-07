@@ -4,140 +4,136 @@
 
 "Includes Design Doc with team name and members listed. Describes how each portion of the spec has been implemented and identifies/justifies uses of each Design Pattern correctly. Describes and extra features, how to find them and any known problems."
 
-Outline:
- * Spec section: Go through each section of the spec and list what classes are involved in doing what, and how they do it. Where something isn't obvious, say why it's better than alternatives.
- * Design pattern section: Go through each design pattern and list what classes play what part in the pattern, and why using such a pattern is a good idea in each place.
+I'm writing this wiki page with some html formatting because I think that it would be convenient if, when this doc is done, we just save it as a html file. This would make it easy to keep the same formatting between this draft and the final copy. It's a ugly right now on the wiki, but it can be made prettier later (by adding CSS to it in its own HTML doc, for example). Note, Everything in `blockquote` is a quote from the spec.
 
-I'm writing this wiki page with some html formatting because I think that it would be convenient if, when this doc is done, we just save it as a html file. This would make it easy to keep the same formatting between this draft and the final copy.
+<h1>Design Doc</h1>
 
-Everything in `blockquote` is a quote from the spec.
+<h2>Introduction paragraph</h2>
 
-*It's ugly right now on the wiki, but it can be made prettier later (by adding CSS to it in its own HTML doc, for example).*
-
-= Draft =
-
-== Introduction paragraph ==
-
-== Spec ==
+<h2>Spec</h2>
 
 <h3>Connections:</h3>
 
-<blockquote>Multiple players must be able to connect to the MUD at the same time over the Internet.‭ ‬To do so,‭ ‬they will launch a MUD Client program which will allow them to connect to the MUD Server running at a different location.‭ ‬Read the Client/Server section for more details.</blockquote>
+<blockquote><i>Multiple players must be able to connect to the MUD at the same time over the Internet.‭ ‬To do so,‭ ‬they will launch a MUD Client program which will allow them to connect to the MUD Server running at a different location.‭ ‬Read the Client/Server section for more details.</i></blockquote>
 
-Connection over the internet is possible because we are using sockets to communicate between client and server. Simultaneous connections are possible because when a client connects, a separate thread (A `ServerThread`) is spawned to handle the client. A connection to a player can happen in two different apps, the bundled Client or via telnet. The system automatically decides which system to use and calls each subsystem as appropriate; this is an example of the template pattern. 
+Connection over the internet is possible because we are using sockets to communicate between client and server. Simultaneous connections are possible because when a client connects, a separate thread (A `ServerThread`) is spawned to handle the client. A connection to a player can happen in two different apps, the bundled Client or via telnet. The system automatically decides which system to use and calls each subsystem as appropriate; this is an example of the template pattern.
 
 In the GUI Client, serialized Java objects are passed over the network to provide some useful metadata. The Externalizable interface is implemented for these message objects to circumvent some issues with normal Java Serialization issues. Other options were considered: use different Java serialization routines (e.g., JBossSerialization) or Google Protocol Buffers. Ultimately the default Java method won out, due to the ban on external libraries.
 
 <h3>Players:</h3>
 
-<blockquote>Players must have a name.</blockquote>
+<blockquote><i>Players must have a name.</i></blockquote>
 
 Player names are accessed by a method `getName()` which is inherited from the abstract class `Creature`. The method is mandated by `Entity`, which is implemented by `Creature`.
 
-<blockquote>Players must have a location‎ (‏A room they are in‭)‬.</blockquote>
+<blockquote><i>Players must have a location‎ (‏A room they are in‭)‬.</i></blockquote>
 
 The location of players (and MOBs) is kept track centrally, by the class `Universe`, in a `Map` from players to rooms. This was done because keeping track of player locations in both the `Player` class and the `Room` class could have led to inconsistencies. Keeping track of location in a Map ensures that Players can only have one location.
 
-<blockquote>Players must have statistics that are changed via their actions in the MUD.‎ ‏In a traditional RPG,‭ ‬this would be things like hp‭ (‬health point/hit points‭)‬,‭ ‬defense,‭ ‬level,‭ ‬etc.‭ ‬For something less traditional,‭ ‬it could be number of questions answered correctly or amount of money won.</blockquote>
+<blockquote><i>Players must have statistics that are changed via their actions in the MUD.‎ ‏In a traditional RPG,‭ ‬this would be things like hp‭ (‬health point/hit points‭)‬,‭ ‬defense,‭ ‬level,‭ ‬etc.‭ ‬For something less traditional,‭ ‬it could be number of questions answered correctly or amount of money won.</i></blockquote>
 
-Both players and MOBs have the same sorts of statistics because they are both subtypes of the abstract class Creature, which keeps track of statistics. In our game, there are 
+Both players and MOBs have the same sorts of statistics because they are both subtypes of the abstract class Creature, which keeps track of statistics. In our game, there are
 
-<blockquote>Players must be able to carry items they find/buy/earn with them as they travel.</blockquote>
+<blockquote><i>Players must be able to carry items they find/buy/earn with them as they travel.</i></blockquote>
 
 Players have a list of items inherited from the abstract class `Creature`.
 
-<blockquote>Players must be able to move between rooms through the use of commands‎ (‏See Interaction section‭)‬.</blockquote>
+<blockquote><i>Players must be able to move between rooms through the use of commands‎ (‏See Interaction section‭)‬.</i></blockquote>
 
-Because the `Universe` class keeps track of the locations of players and MOBs in the game, it includes a method, `changeRoomOfCreature`, which changes the location of a mob or player. This method 
+Because the `Universe` class keeps track of the locations of players and MOBs in the game, it includes a method, `changeRoomOfCreature`, which changes the location of a mob or player. This method
 
-<blockquote>Players must be able to‎ ‏interact with one another,‭ ‬and be able to see the locations and movements of other players in the same room as them.</blockquote>
+<blockquote><i>Players must be able to‎ ‏interact with one another,‭ ‬and be able to see the locations and movements of other players in the same room as them.</i></blockquote>
 
 Players can see the locations of other players in the same room because the players in the room are listed when the look command is used. Players can see the movements of others because when a move command is used, a notification is sent to players in the room they're leaving and the room they're arriving in.
 
 Players can interact with each other through chat commands.
 
-<blockquote>Players must be able to‎ ‏interact with MOBs.</blockquote>
+<blockquote><i>Players must be able to‎ ‏interact with MOBs.</i></blockquote>
 
 Players can interact with MOBs through chat commands and by attacking. When a player uses a say or tell command, the text that they type is input to a function that is specific to the type of MOB, which determines the MOB's response.
 
 <h3>Rooms:</h3>
 
-<blockquote>The MUD must have at least‎ ‏30‎ ‏rooms.</blockquote>
+<blockquote><i>The MUD must have at least‎ ‏30‎ ‏rooms.</i></blockquote>
 
-To make the MUD have 30 not-entirely-boring rooms when we were short on time, we used a class called `RandomRoomFactory` to generate rooms of different types. Although the rooms aren't entirely boring, it would probably make more sense to write customized descriptions for each room if we were planning to host a MUD that people actually played on.
+To make the MUD have 30 not-entirely-boring rooms when we were short on time, we used a class called `RandomRoomFactory` to generate rooms of different types.
 
-<blockquote>A room must have a‎ ‏description and a‭ ‬list of possible exits,‭ ‬as well as a‭ ‬list of contents‭ (‬items,‭ ‬MOBs,‭ ‬and other players in the room‭)‬.‭ ‬This must be‭ ‬viewable by the player via‭ ‘‬look‭’ ‬and should be displayed by default upon their entrance into the room.</blockquote>
+<blockquote><i>A room must have a‎ ‏description and a‭ ‬list of possible exits,‭ ‬as well as a‭ ‬list of contents‭ (‬items,‭ ‬MOBs,‭ ‬and other players in the room‭)‬.‭ ‬This must be‭ ‬viewable by the player via‭ ‘‬look‭’ ‬and should be displayed by default upon their entrance into the room.</i></blockquote>
 
+The `Room` class, which represents rooms in the game, contain a list of items that can be accessed by the `getItems()` and modified with the methods `addItem(Item item)` and `removeItem(Item item)`. `Room` also has a map of `Direction` to `Because `Universe` keeps track of which rooms each player and MOB are in, it also contains a method for getting a list of players or MOBs in any particular room.
 
+All of these things that can be in a room are listed by a `LookResponse`, which is created when a player uses ‘‬look‭’. They are also listed when a player enters a room because this action also creates a `LookResponse`.
 
 <h3>Items:</h3>
 
-<blockquote>The MUD must have at least‎ ‏10‎ ‏different types of items.</blockquote>
+<blockquote><i>The MUD must have at least‎ ‏10‎ ‏different types of items.</i></blockquote>
 
 Our MUD has the following concrete Item classes:
 Key, SmallPotion, LargePotion, Cannon, Spear
 Sword, Cloth, Hydes, SteelMesh, CheapTreat,
 FancyTreat, Book.
 
-‎‏<blockquote>All items must have a use in the game.‭ ‬You could have potions to heal damage taken,‭ ‬keys to open doors,‭ ‬special items that affect the player’s stats,‭ ‬equipment the player can wear or items needed to finish a quest.‭</blockquote>
+‎‏<blockquote><i>All items must have a use in the game.‭ ‬You could have potions to heal damage taken,‭ ‬keys to open doors,‭ ‬special items that affect the player’s stats,‭ ‬equipment the player can wear or items needed to finish a quest.‭</i></blockquote>
 
 <h3>MOBs:</h3>
 
-<blockquote>The MUD must have at least‎ ‏10‎ ‏different types of MOBs.</blockquote>
+<blockquote><i>The MUD must have at least‎ ‏10‎ ‏different types of MOBs.</i></blockquote>
 
 Our MUD has the following concrete MOB classes:
-Merchant, ICritterCat, ICritterDog, ICritterPenguin, Kitten, 
+Merchant, ICritterCat, ICritterDog, ICritterPenguin, Kitten,
 Bunny, Deer, RoomGiftMob, RoomThiefMob, Troll.
 
-<blockquote>MOBs must be able to move between rooms.</blockquote>
+<blockquote><i>MOBs must be able to move between rooms.</i></blockquote>
+
+
 
 (`changeRoomOfCreature` in `Universe`, called by a `BehaviorStrategy`?)
 
-<blockquote>MOBs must have‎ ‏complex behaviors—these can involve player interactions that take into account player statistics or items a player is carrying,‭ ‬or the contents of the room that the MOB is in,‭ ‬and MOBs should have actions that are triggered periodically,‭ ‬without direct interaction from players.‭ ‬For instance,‭ ‬movement,‭ ‬speech,‭ ‬interacting with other MOBs,‭ ‬etc.</blockquote>
+<blockquote><i>MOBs must have‎ ‏complex behaviors—these can involve player interactions that take into account player statistics or items a player is carrying,‭ ‬or the contents of the room that the MOB is in,‭ ‬and MOBs should have actions that are triggered periodically,‭ ‬without direct interaction from players.‭ ‬For instance,‭ ‬movement,‭ ‬speech,‭ ‬interacting with other MOBs,‭ ‬etc.</i></blockquote>
 
 (`BehaviorStrategy`, `DialogStrategy`, etc.)
 
 <h3>Interaction:‭</h3>
 
-<blockquote>When players are in the system,‎ ‏they should be able to send‭ ‬input and receive‭ ‬output without interference from other players.</blockquote>
+<blockquote><i>When players are in the system,‎ ‏they should be able to send‭ ‬input and receive‭ ‬output without interference from other players.</i></blockquote>
 ‭
-<blockquote>Players must be able to‎ ‏interact with the game with a set of commands that include‭ ‬at least the following: [ooc, who, say, tell, score, give, get, inventory, drop, use, quit, shutdown]</blockquote>
+<blockquote><i>Players must be able to‎ ‏interact with the game with a set of commands that include‭ ‬at least the following: [ooc, who, say, tell, score, give, get, inventory, drop, use, quit, shutdown]</i></blockquote>
 
 <h3>System:</h3>
 
-<blockquote>MUD must be‭ ‬persistent.‭ ‬Changes made to players and the MUD must remain even after the MUD is shutdown and restarted.</blockquote>
+<blockquote><i>MUD must be‭ ‬persistent.‭ ‬Changes made to players and the MUD must remain even after the MUD is shutdown and restarted.</i></blockquote>
 
-<blockquote>MUD must be able to be‭ ‬shutdown from within the game.‭ ‬This function should not be available to all players‭ (‬ie.‭ ‬Password protected,‭ ‬reserved to specific players,‭ ‬etc‭)‬.</blockquote>
+<blockquote><i>MUD must be able to be‭ ‬shutdown from within the game.‭ ‬This function should not be available to all players‭ (‬ie.‭ ‬Password protected,‭ ‬reserved to specific players,‭ ‬etc‭)‬.</i></blockquote>
 
 <h3>Consistency:</h3>
 
-<blockquote>The MUD should be logically consistent.‭ ‬For example,‭ ‬a player should only be able to give items to another player/MOB if they are in the same room.‭ ‬Also,‭ ‬walking north to the next room and then south should take the player back to the original room they were in‭ (‬Unless the area is designed to randomly connect rooms to create a maze like environment.‭ ‬If so,‭ ‬the area should be clearly marked with a sign before entering it or a warning in the description of the room before entering it‭)‬.</blockquote>
+<blockquote><i>The MUD should be logically consistent.‭ ‬For example,‭ ‬a player should only be able to give items to another player/MOB if they are in the same room.‭ ‬Also,‭ ‬walking north to the next room and then south should take the player back to the original room they were in‭ (‬Unless the area is designed to randomly connect rooms to create a maze like environment.‭ ‬If so,‭ ‬the area should be clearly marked with a sign before entering it or a warning in the description of the room before entering it‭)‬.</i></blockquote>
 
 Players can only give items to others in the same room because a check is made for this when the player tries to give an item, in the class `GiveResponse`. Similar checks exist for commands such as get.
 
 <h3>Client/Server:</h3>
 
-<blockquote>The main portion of the MUD will be written as the MUD Server.‭ ‬All interactions with the client should be sent to the server and should trigger an appropriate response by the server that is sent back to the client.‭ ‬The server should run as a terminal based program on one computer and must accept connections from MUD Client programs that run on other computers over the internet.</blockquote>‭
+<blockquote><i>The main portion of the MUD will be written as the MUD Server.‭ ‬All interactions with the client should be sent to the server and should trigger an appropriate response by the server that is sent back to the client.‭ ‬The server should run as a terminal based program on one computer and must accept connections from MUD Client programs that run on other computers over the internet.</i></blockquote>‭
 
-<blockquote>The MUD Client will be a simple GUI which will allow the user to connect to the server.‭ ‬The MUD Client will connect to the server using a Socket/ServerSocket relationship.‭ ‬It must provide a GUI which consists of at least two frames‭ (‬or panels‭)‬,‭ ‬one which handles chat‭ (‬referred to as Chat‭) ‬and one which handles the users‭’ ‬interactions with the Server and the Server’s responses‭ (‬referred to as System‭)‬.‭ ‬The specifics of the implementation are up to you.</blockquote>‭
+<blockquote><i>The MUD Client will be a simple GUI which will allow the user to connect to the server.‭ ‬The MUD Client will connect to the server using a Socket/ServerSocket relationship.‭ ‬It must provide a GUI which consists of at least two frames‭ (‬or panels‭)‬,‭ ‬one which handles chat‭ (‬referred to as Chat‭) ‬and one which handles the users‭’ ‬interactions with the Server and the Server’s responses‭ (‬referred to as System‭)‬.‭ ‬The specifics of the implementation are up to you.</i></blockquote>‭
 
-<blockquote>Note:‭ ‬All commands listed above should work in the System frame‭ (‬or panel‭)‬,‭ ‬even if they are a chat command‭ (‬such as‭ “‬ooc‭”)‬.‭ ‬On the other hand,‭ ‬the Chat frame‭ (‬or panel‭) ‬should only respond to commands that relate to Chat functions,‭ ‬such as‭ ‬ooc,‭ ‬who,‭ ‬say,‭ ‬and tell.</blockquote>
+<blockquote><i>Note:‭ ‬All commands listed above should work in the System frame‭ (‬or panel‭)‬,‭ ‬even if they are a chat command‭ (‬such as‭ “‬ooc‭”)‬.‭ ‬On the other hand,‭ ‬the Chat frame‭ (‬or panel‭) ‬should only respond to commands that relate to Chat functions,‭ ‬such as‭ ‬ooc,‭ ‬who,‭ ‬say,‭ ‬and tell.</i></blockquote>
 
 <h3>Extra credit:</h3>
 
-<blockquote>Dropped Connections (2 Points) – Announce to all when a player’s connection is dropped and save that player’s state.</blockquote>
+<blockquote><i>Dropped Connections (2 Points) – Announce to all when a player’s connection is dropped and save that player’s state.</i></blockquote>
 
-<blockquote>Room Behaviors (4 Points) - Rooms that have behaviors (for instance, weather, or keys that unlock exits).</blockquote>
+<blockquote><i>Room Behaviors (4 Points) - Rooms that have behaviors (for instance, weather, or keys that unlock exits).</i></blockquote>
 
-<blockquote>ANSI Color Support (4 Points) - ANSI color schemes for output.</blockquote>
+<blockquote><i>ANSI Color Support (4 Points) - ANSI color schemes for output.</i></blockquote>
 
-<blockquote>Emoting/Posing (1 Point) - A command that allows a player to write a sentence from the third person perspective: for instance ‘emote looks around the room curiously.’</blockquote> 
+<blockquote><i>Emoting/Posing (1 Point) - A command that allows a player to write a sentence from the third person perspective: for instance ‘emote looks around the room curiously.’</i></blockquote>
 
-<blockquote>Room Exit Description (1 Point) - Room exits that have descriptions viewable with the ‘look’ command.</blockquote>
+<blockquote><i>Room Exit Description (1 Point) - Room exits that have descriptions viewable with the ‘look’ command.</i></blockquote>
 
-<blockquote>Social Commands (1 Point) - A set of “social” commands (such as, ‘giggle, laugh, wink, slap,’ etc, that would display something like, ‘player giggles at target’ or just ‘player; giggles’).</blockquote>
+<blockquote><i>Social Commands (1 Point) - A set of “social” commands (such as, ‘giggle, laugh, wink, slap,’ etc, that would display something like, ‘player giggles at target’ or just ‘player; giggles’).</i></blockquote>
 
-<blockquote>Abbreviated Commands (1 Point) - Players able to type abbreviated versions of command names (for instance, ‘l’ for look, ‘sc’ for score, ‘”’ for say, etc).</blockquote>
+<blockquote><i>Abbreviated Commands (1 Point) - Players able to type abbreviated versions of command names (for instance, ‘l’ for look, ‘sc’ for score, ‘”’ for say, etc).</i></blockquote>
 
 <h2>Design Patterns</h2>
 
