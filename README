@@ -62,7 +62,7 @@ and the final UML that was turned-in in class can be found under
 For further information about special capabilities of the system, 
 the design process, or specifics in the code, see the design doc.
 The design doc is stored in
-    $ROOT/doc/design.pdf
+    $ROOT/design_doc.html
     
 Finally, the development Wiki may provide other, useful answers:
     http://code.google.com/p/mudtwenty/w/list
