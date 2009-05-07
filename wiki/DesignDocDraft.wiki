@@ -12,6 +12,8 @@ I'm writing this wiki page with some html formatting because I think that it wou
 
 Everything in `blockquote` is a quote from the spec.
 
+*It's ugly right now on the wiki, but it can be made prettier later (by adding CSS to it in its own HTML doc, for example).*
+
 = Draft =
 
 == Introduction paragraph ==
@@ -119,14 +121,56 @@ Players can only give items to others in the same room because a check is made f
 
 <blockquote>Note:‭ ‬All commands listed above should work in the System frame‭ (‬or panel‭)‬,‭ ‬even if they are a chat command‭ (‬such as‭ “‬ooc‭”)‬.‭ ‬On the other hand,‭ ‬the Chat frame‭ (‬or panel‭) ‬should only respond to commands that relate to Chat functions,‭ ‬such as‭ ‬ooc,‭ ‬who,‭ ‬say,‭ ‬and tell.</blockquote>
 
-== Design Patterns ==
+<h3>Extra credit:</h3>
 
-(copy in stuff from our wiki page on design patterns)
+<blockquote>Dropped Connections (2 Points) – Announce to all when a player’s connection is dropped and save that player’s state.</blockquote>
 
-== Extra features ==
+<blockquote>Room Behaviors (4 Points) - Rooms that have behaviors (for instance, weather, or keys that unlock exits).</blockquote>
 
-Our Server can accept connections from telnet or other MUD clients as well as our GUI client. This is accomplished by using a polymorphic interface for sending
+<blockquote>ANSI Color Support (4 Points) - ANSI color schemes for output.</blockquote>
 
-== Known problems ==
+<blockquote>Emoting/Posing (1 Point) - A command that allows a player to write a sentence from the third person perspective: for instance ‘emote looks around the room curiously.’</blockquote> 
 
-There are no known problems.
+<blockquote>Room Exit Description (1 Point) - Room exits that have descriptions viewable with the ‘look’ command.</blockquote>
+
+<blockquote>Social Commands (1 Point) - A set of “social” commands (such as, ‘giggle, laugh, wink, slap,’ etc, that would display something like, ‘player giggles at target’ or just ‘player; giggles’).</blockquote>
+
+<blockquote>Abbreviated Commands (1 Point) - Players able to type abbreviated versions of command names (for instance, ‘l’ for look, ‘sc’ for score, ‘”’ for say, etc).</blockquote>
+
+<h2>Design Patterns</h2>
+
+<h3>Prototype</h3>
+
+Items and MOBs use the prototype pattern. They are cloneable, and in constructing the world, we can use this fact to make a mob, change something about it, and make several clones. This allows us to create many similar groups of items that do not necessarily match any particular hard-coded class.
+
+<h3>Factory</h3>
+
+`ResponseFactory` uses the factory pattern. It contains a method which is designed to create different `ServerResponse` objects depending on the input given (which is a string).
+
+<h3>Template</h3>
+
+MOB uses the template pattern. The `run()` method of MOB is an invariant behavior, common to all MOBs, but it depends on variant behavior, `takeTurn()`, which is specific to particular types of MOBs. `run()` is not abstract but `takeTurn()` is.
+
+<h3>Abstract Factory</h3>
+
+`RandomRoomFactory` uses the factory pattern.
+
+<h3>Command</h3>
+
+`ServerResponse` uses the command pattern. each `ServerResponse` instance is an object that represents an action -- a response of the server to a client's input.
+
+<h3>Strategy</h3>
+
+`BehaviorStrategy`, a class used of MOBs use the strategy pattern. `BehaviorStrategy` objects encapsulate some strategy. The particular `BehaviorStrategy` that MOB is using can be changed dynamically depending on what is happening around the MOB. For example, a MOB might switch between `NullStrategy` and `MoveStrategy`. This could be expanded by adding any other behavior that a MOB might switch to.
+
+<h3>MVC</h3>
+
+Perhaps the client could be considered the view, something else (parser stuff, possibly server?) could be considered controller, and universe could be considered model?
+
+<h2>Extra features</h2>
+
+Our Server can accept connections from telnet or other MUD clients as well as our GUI client. This is accomplished by using an interface for sending and receiving messages, `Communicable`, that is implemented by two classes; one for our GUI client and one for other clients. The ability to send messages through Communicable objects which can be either of the two types is an example of polymorphism.
+
+<h2>Known problems</h2>
+
+There are no known problems. Our universe is not complete enough to use in an actual mud server?
