@@ -51,8 +51,8 @@ public class ServerThread implements Runnable
 	 * This is the default login message users see upon connecting to the
 	 * server.
 	 */
-	private static final String		WELCOME_STRING	= "Welcome to mudtwenty.";
-
+	private static final String		WELCOME_STRING	= "Welcome to mudtwenty!";
+	
 	private Communicable			connection;
 	private Server					server;
 	private Socket					socket;
@@ -104,8 +104,21 @@ public class ServerThread implements Runnable
 			}
 		}
 
-		// send a greeting to our good friend
-		this.connection.sendMessage(new ClientMessage(WELCOME_STRING, Server.SYSTEM_TEXT_COLOR));
+		if (connection instanceof TextConnection) // kludgey way to send special welcome to text-based clients.
+		{
+			String asciiArtWelcome = "Welcome to \n"+
+               "                     _ _                      _           _\n"+ 
+               " _ __ ___  _   _  __| | |___      _____ _ __ | |_ _   _  / \\\n"+
+               "| '_ ` _ \\| | | |/ _` | __\\ \\ /\\ / / _ \\ '_ \\| __| | | |/  /\n"+
+               "| | | | | | |_| | (_| | |_ \\ V  V /  __/ | | | |_| |_| /\\_/ \n"+
+               "|_| |_| |_|\\__,_|\\__,_|\\__| \\_/\\_/ \\___|_| |_|\\__|\\__, \\/   \n"+
+               "                                                  |___/     \n";
+			this.connection.sendMessage(new ClientMessage(asciiArtWelcome, Server.SYSTEM_TEXT_COLOR));
+		}
+		else
+		{
+			this.connection.sendMessage(new ClientMessage(WELCOME_STRING, Server.SYSTEM_TEXT_COLOR));
+		}
 	}
 
 	/**
