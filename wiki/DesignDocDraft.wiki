@@ -24,7 +24,9 @@ Everything in `blockquote` is a quote from the spec.
 
 <blockquote>Multiple players must be able to connect to the MUD at the same time over the Internet.‭ ‬To do so,‭ ‬they will launch a MUD Client program which will allow them to connect to the MUD Server running at a different location.‭ ‬Read the Client/Server section for more details.</blockquote>
 
-Connection over the internet is possible because we are using sockets to communicate between client and server. Simultaneous connections are possible because when a client connects, a separate thread (A `ServerThread`) is spawned to handle the client.
+Connection over the internet is possible because we are using sockets to communicate between client and server. Simultaneous connections are possible because when a client connects, a separate thread (A `ServerThread`) is spawned to handle the client. A connection to a player can happen in two different apps, the bundled Client or via telnet. The system automatically decides which system to use and calls each subsystem as appropriate; this is an example of the template pattern. 
+
+In the GUI Client, serialized Java objects are passed over the network to provide some useful metadata. The Externalizable interface is implemented for these message objects to circumvent some issues with normal Java Serialization issues. Other options were considered: use different Java serialization routines (e.g., JBossSerialization) or Google Protocol Buffers. Ultimately the default Java method won out, due to the ban on external libraries.
 
 <h3>Players:</h3>
 
