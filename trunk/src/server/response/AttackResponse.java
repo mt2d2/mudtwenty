@@ -13,12 +13,14 @@ import server.universe.mob.Troll;
 import util.ArrayUtil;
 
 /**
- * Responds to the say command as input by the user. This command sends a
- * (private) message to the specified user.
+ * Responds to the attack command as input by the user.
  */
 public class AttackResponse implements ServerResponse
 {
 
+	/**
+	 * Attacks the target if possible.
+	 */
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		if (arguments.size() < 1)
@@ -29,20 +31,20 @@ public class AttackResponse implements ServerResponse
 		{
 			final Player attacker = serverThread.getPlayer();
 			final String attackeeName = ArrayUtil.joinArguments(arguments, " ").trim();
-			
+
 			Creature attackee = null;
 			Room room = attacker.getRoom();
 			for (MOB mob : Server.getUniverse().getMOBsInRoom(room))
 				if (mob.getName().equals(attackeeName) && mob instanceof Troll)
 					attackee = mob;
-			
+
 			for (Player player : Server.getUniverse().getPlayersInRoom(room))
 				if (player.getName().equals(attackeeName))
 					attackee = player;
-	
+
 			if (attackee == null)
 				return new ClientMessage("No such MOB or player to attack; some MOBS cannot be attacked", Server.ERROR_TEXT_COLOR);
-			
+
 			if (attackee instanceof Troll)
 			{
 				return ((Troll) attackee).attack(attacker);
@@ -51,7 +53,7 @@ public class AttackResponse implements ServerResponse
 			{
 				if (attackee.getHealth() == 0)
 					return new ClientMessage(attackee.getName() + " has no health left! No need to attack.");
-				
+
 				int attack = attacker.getAttack();
 				attackee.decreaseHealth(attack);
 				Server.getUniverse().sendMessageToCreature(attacker, attackee, new ClientMessage(attacker.getName() + " just hit you for " + attack + " points"));
@@ -60,7 +62,7 @@ public class AttackResponse implements ServerResponse
 				else
 					return new ClientMessage("You attack " + attackee.getName() + " for " + attack + " points");
 			}
-			
+
 			return null;
 		}
 	}

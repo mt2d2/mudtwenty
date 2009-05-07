@@ -16,7 +16,7 @@ import server.universe.item.Sword;
  * has a NullDialog strategy, which means he never talks. He drops random items
  * in rooms, making him something like Santa. That is, if Santa dropped random
  * items in rooms. He has a 30% of dropping an item; else he just moves around.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class RoomGiftMob extends MOB
@@ -39,15 +39,18 @@ public class RoomGiftMob extends MOB
 	 */
 	public void takeTurn()
 	{
-		if (Math.random() < .3)
+		double random = Math.random();
+		if (random < .3)
 			this.setBehavior(new DropBehavior());
-		else
+		else if (random < .5)
 			this.setBehavior(new MoveBehavior());
+		else
+			this.setBehavior(new NullBehavior());
 	}
 
 	/**
 	 * Randomly drops an item into the mobs current room.
-	 * 
+	 *
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
 	private class DropBehavior implements BehaviorStrategy

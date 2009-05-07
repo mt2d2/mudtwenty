@@ -9,7 +9,7 @@ import server.universe.Room;
 /**
  * This Mob steals from rooms. It has a 20% chance of taking an item from a
  * room, or simply moving on to the next one.
- * 
+ *
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class RoomThiefMob extends MOB
@@ -17,7 +17,7 @@ public class RoomThiefMob extends MOB
 	private static final long	serialVersionUID	= 1L;
 
 	/**
-	 * Make a thief with the given name. 
+	 * Make a thief with the given name.
 	 */
 	public RoomThiefMob(String name)
 	{
@@ -33,15 +33,18 @@ public class RoomThiefMob extends MOB
 	 */
 	public void takeTurn()
 	{
-		if (Math.random() < .2)
+		double random = Math.random();
+		if (random < .2)
 			this.setBehavior(new StealBehavior());
-		else
+		else if (random < .4)
 			this.setBehavior(new MoveBehavior());
+		else
+			this.setBehavior(new NullBehavior());
 	}
 
 	/**
 	 * Let all other players in the room know this Mob's true intentions.
-	 * 
+	 *
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
 	private class IntimidationDialog implements DialogStrategy
@@ -57,7 +60,7 @@ public class RoomThiefMob extends MOB
 
 	/**
 	 * Takes the first item from the mob's current room.
-	 * 
+	 *
 	 * @author Michael Tremel (mtremel@email.arizona.edu)
 	 */
 	private class StealBehavior implements BehaviorStrategy
@@ -68,7 +71,7 @@ public class RoomThiefMob extends MOB
 		{
 			Room room = mob.getRoom();
 
-			if (room.getItems().size() > 0)
+			if (!room.getItems().isEmpty())
 				room.removeItem(room.getItems().get(0));
 		}
 	}

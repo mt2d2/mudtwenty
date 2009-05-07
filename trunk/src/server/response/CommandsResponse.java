@@ -47,7 +47,6 @@ public class CommandsResponse implements ServerResponse {
 				+ "\twest, w: move west\n"
 				+ "Admin commands:\n"
 				+ "\tshutdown: shuts down the server, saving and notifying players\n";
-
 		return new ClientMessage(message);
 	}
 

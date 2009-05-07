@@ -13,6 +13,10 @@ import server.universe.item.SteelMesh;
 import server.universe.item.Sword;
 import server.universe.mob.Merchant;
 import server.universe.mob.Troll;
+import server.universe.mob.RoomGiftMob;
+import server.universe.mob.RoomThiefMob;
+import server.universe.mob.Kitten;
+import server.universe.mob.Bunny;
 
 /**
  * A simple default universe that can be loaded for a demo, or when the universe
@@ -22,6 +26,8 @@ import server.universe.mob.Troll;
 public class DefaultUniverse extends Universe
 {
 	private static final long	serialVersionUID	= 1L;
+
+	private Room secretRoom;
 
 	/**
 	 * Make a default universe with many rooms!
@@ -47,10 +53,11 @@ public class DefaultUniverse extends Universe
 		rootRoom.addItem(new Sword());
 
 		// add a locked room
-		Room secretRoom = new Room("Secret Room", "This is a secret room, which was locked from prying eyes.", true);
+		secretRoom = new Room("Secret Room", "This is a secret room, which was locked from prying eyes.", true);
 		rootRoom.addExit(Direction.EAST, new Exit(secretRoom, null, "A secret passageway..."));
-		rootRoom.addItem(new Key("SecretKey", secretRoom));
-		
+		secretRoom.addExit(Direction.WEST, new Exit(rootRoom, null, "A nondescript passageway back to the start room."));
+		rootRoom.addItem(new Key("gold key", secretRoom));
+
 		addCastle(rootRoom);
 		addVillage(rootRoom);
 		addForest(rootRoom);
@@ -77,6 +84,10 @@ public class DefaultUniverse extends Universe
 			northNode.addRoom(Direction.NORTH, nextNorthNode);
 			northNode = nextNorthNode;
 		}
+
+		this.spawnMob(new RoomThiefMob("thief"), northNode);
+		this.spawnMob(new RoomGiftMob("santa"), northNode);
+
 	}
 
 	/**
@@ -88,12 +99,14 @@ public class DefaultUniverse extends Universe
 		startRoom.addExit(Direction.WEST, new Exit(entrance, null, "A dirt pathway to a very strange village."));
 		entrance.addExit(Direction.EAST, new Exit(startRoom, null, "The pathway to the castle entrance."));
 
-		Merchant merch = new Merchant("Vendor");
+		Merchant merch = new Merchant("vendor");
 		merch.addItem(new Spear());
 		merch.addItem(new SteelMesh());
 		merch.addItem(new Book());
 		merch.addItem(new Cannon());
 		merch.addItem(new SmallPotion());
+		merch.addItem(new Key("gold key", secretRoom));
+		merch.addItem(new Key("rusty key", null));
 
 		this.spawnMob(merch, entrance);
 
@@ -118,7 +131,10 @@ public class DefaultUniverse extends Universe
 		startRoom.addExit(Direction.SOUTH, new Exit(entrance, null, "A dark and forboding entrance to a dark and forboding forest."));
 		entrance.addExit(Direction.NORTH, new Exit(startRoom, null, "The path out of the forest."));
 
-		this.spawnMob(new Troll("Gurk"), entrance);
+		this.spawnMob(new Troll("gurk"), entrance);
+
+		this.spawnMob(new Kitten("fluffy"), entrance);
+
 
 		// Add a bunch of random rooms
 		Room southNode = entrance;
@@ -130,6 +146,9 @@ public class DefaultUniverse extends Universe
 			southNode.addRoom(Direction.SOUTH, nextSouthNode);
 			southNode = nextSouthNode;
 		}
+
+		this.spawnMob(new Bunny("cottontail"), southNode);
+
 	}
 
 }
