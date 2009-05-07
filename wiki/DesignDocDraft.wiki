@@ -10,15 +10,18 @@ I'm writing this wiki page with some html formatting because I think that it wou
 
 <h2>Introduction paragraph</h2>
 
+ * We created a basic MUD server and client.
+ * It has potential to be expanded in various ways.
+
 <h2>Spec</h2>
 
 <h3>Connections:</h3>
 
 <blockquote><i>Multiple players must be able to connect to the MUD at the same time over the Internet.‭ ‬To do so,‭ ‬they will launch a MUD Client program which will allow them to connect to the MUD Server running at a different location.‭ ‬Read the Client/Server section for more details.</i></blockquote>
 
-Connection over the internet is possible because we are using sockets to communicate between client and server. Simultaneous connections are possible because when a client connects, a separate thread (A `ServerThread`) is spawned to handle the client. A connection to a player can happen in two different apps, the bundled Client or via telnet. The system automatically decides which system to use and calls each subsystem as appropriate; this is an example of the template pattern.
+Connection over the Internet is possible because we are using sockets to communicate between client and server. Simultaneous connections are possible because when a client connects, a separate thread (A `ServerThread`) is spawned to handle the client. A connection to a player can happen in two different apps, the bundled Client or via telnet. The system automatically decides which system to use and calls each subsystem as appropriate.
 
-In the GUI Client, serialized Java objects are passed over the network to provide some useful metadata. The Externalizable interface is implemented for these message objects to circumvent some issues with normal Java Serialization issues. Other options were considered: use different Java serialization routines (e.g., JBossSerialization) or Google Protocol Buffers. Ultimately the default Java method won out, due to the ban on external libraries.
+In the GUI Client, serialized Java objects are passed over the network to provide some useful metadata. The `Externalizable` interface is implemented for these message objects to circumvent some issues with normal Java Serialization issues. We also considered using different Java serialization routines (e.g. `JBossSerialization`) or Google Protocol Buffers. Ultimately, the default Java method won out, due to the ban on external libraries.
 
 <h3>Players:</h3>
 
@@ -32,7 +35,7 @@ The location of players (and MOBs) is kept track centrally, by the class `Univer
 
 <blockquote><i>Players must have statistics that are changed via their actions in the MUD.‎ ‏In a traditional RPG,‭ ‬this would be things like hp‭ (‬health point/hit points‭)‬,‭ ‬defense,‭ ‬level,‭ ‬etc.‭ ‬For something less traditional,‭ ‬it could be number of questions answered correctly or amount of money won.</i></blockquote>
 
-Both players and MOBs have the same sorts of statistics because they are both subtypes of the abstract class Creature, which keeps track of statistics. In our game, there are
+Both players and MOBs have the same sorts of statistics because they are both subtypes of the abstract class `Creature`, which keeps track of statistics. In our game, there are several statistics that are implemented as fields in the `Creature` class, including health, money, strength of attacks
 
 <blockquote><i>Players must be able to carry items they find/buy/earn with them as they travel.</i></blockquote>
 
@@ -40,7 +43,7 @@ Players have a list of items inherited from the abstract class `Creature`.
 
 <blockquote><i>Players must be able to move between rooms through the use of commands‎ (‏See Interaction section‭)‬.</i></blockquote>
 
-Because the `Universe` class keeps track of the locations of players and MOBs in the game, it includes a method, `changeRoomOfCreature`, which changes the location of a mob or player. This method
+Because the `Universe` class keeps track of the locations of players and MOBs in the game, it includes a method, `changeRoomOfCreature`, that changes the location of a mob or player. This method is called on a player by a `MoveResponse`, which is created when a player uses a move command.
 
 <blockquote><i>Players must be able to‎ ‏interact with one another,‭ ‬and be able to see the locations and movements of other players in the same room as them.</i></blockquote>
 
@@ -75,6 +78,8 @@ FancyTreat, Book.
 
 ‎‏<blockquote><i>All items must have a use in the game.‭ ‬You could have potions to heal damage taken,‭ ‬keys to open doors,‭ ‬special items that affect the player’s stats,‭ ‬equipment the player can wear or items needed to finish a quest.‭</i></blockquote>
 
+`Item`, the supertype of all items in the game, has an abstract `use` method which determines what happens when a player uses an item.
+
 <h3>MOBs:</h3>
 
 <blockquote><i>The MUD must have at least‎ ‏10‎ ‏different types of MOBs.</i></blockquote>
@@ -85,13 +90,14 @@ Bunny, Deer, RoomGiftMob, RoomThiefMob, Troll.
 
 <blockquote><i>MOBs must be able to move between rooms.</i></blockquote>
 
-
-
-(`changeRoomOfCreature` in `Universe`, called by a `BehaviorStrategy`?)
+The mechanism for moving MOBs between rooms is the same as the mechanism for moving Players; the method `changeRoomOfCreature` in `Universe` can be used.
+However, this method is called not by a `MoveResponse`, which only responds to players' commands, but by a MOB's `BehaviorStrategy`.
 
 <blockquote><i>MOBs must have‎ ‏complex behaviors—these can involve player interactions that take into account player statistics or items a player is carrying,‭ ‬or the contents of the room that the MOB is in,‭ ‬and MOBs should have actions that are triggered periodically,‭ ‬without direct interaction from players.‭ ‬For instance,‭ ‬movement,‭ ‬speech,‭ ‬interacting with other MOBs,‭ ‬etc.</i></blockquote>
 
-(`BehaviorStrategy`, `DialogStrategy`, etc.)
+In our server, there is a thread for each MOB; the class `MOB` implements `Runnable`. In the `run()` method for `MOB`, there is a loop wherein the MOB performs some action and then sleeps for an amount of time. This allows MOBs to perform actions that are triggered periodically. To allow MOBs to have complex behaviors, MOBs have a `BehaviorStrategy` object, which determines how they behave at a particular time, and a `takeTurn` method, which determines when a particular MOB switches strategy.
+
+MOBs also have a `DialogStrategy` object, which determines how they respond to speech from players and other MOBs. When some creature says something to a MOB, a method in the MOB's `DialogStrategy` is called, which returns the MOB's response to the speech. `DialogStrategy` was made a separate interface so that complex dialog behavior could be added that could be common to several different types of MOBs.
 
 <h3>Interaction:‭</h3>
 
@@ -125,6 +131,8 @@ Players can only give items to others in the same room because a check is made f
 
 <blockquote><i>Room Behaviors (4 Points) - Rooms that have behaviors (for instance, weather, or keys that unlock exits).</i></blockquote>
 
+Rooms can be lockable, and `Key` objects can be created that correspond to a particular room. When a player uses the correct key while they are in a locked room, the room becomes temporarily unlocked.
+
 <blockquote><i>ANSI Color Support (4 Points) - ANSI color schemes for output.</i></blockquote>
 
 <blockquote><i>Emoting/Posing (1 Point) - A command that allows a player to write a sentence from the third person perspective: for instance ‘emote looks around the room curiously.’</i></blockquote>
@@ -132,6 +140,8 @@ Players can only give items to others in the same room because a check is made f
 <blockquote><i>Room Exit Description (1 Point) - Room exits that have descriptions viewable with the ‘look’ command.</i></blockquote>
 
 <blockquote><i>Social Commands (1 Point) - A set of “social” commands (such as, ‘giggle, laugh, wink, slap,’ etc, that would display something like, ‘player giggles at target’ or just ‘player; giggles’).</i></blockquote>
+
+The social commands
 
 <blockquote><i>Abbreviated Commands (1 Point) - Players able to type abbreviated versions of command names (for instance, ‘l’ for look, ‘sc’ for score, ‘”’ for say, etc).</i></blockquote>
 
