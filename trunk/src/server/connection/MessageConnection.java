@@ -35,7 +35,7 @@ public class MessageConnection implements Communicable
 	 * @see server.Communicable#openConnection()
 	 */
 	@Override
-	public void openConnection(Socket socket) throws IOException
+	public void open(Socket socket) throws IOException
 	{
 		this.objectIn = new ObjectInputStream(socket.getInputStream());
 		this.objectOut = new ObjectOutputStream(socket.getOutputStream());
@@ -57,15 +57,15 @@ public class MessageConnection implements Communicable
 		}
 		catch (EOFException e)
 		{
-			logger.throwing("ServerThread", "getMessageProtocolMode", e);
+			logger.throwing("MessageConnection", "getMessage", e);
 		}
 		catch (IOException e)
 		{
-			logger.throwing("ServerThread", "getMessageProtocolMode", e);
+			logger.throwing("MessageConnection", "getMessage", e);
 		}
 		catch (ClassNotFoundException e)
 		{
-			logger.throwing("ServerThread", "getMessageProtocolMode", e);
+			logger.throwing("MessageConnection", "getMessage", e);
 		}
 
 		return message;
@@ -85,7 +85,7 @@ public class MessageConnection implements Communicable
 		}
 		catch (IOException e)
 		{
-			// pass
+			logger.throwing("MessageConnection", "sendMessage", e);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class MessageConnection implements Communicable
 	 * @see server.Communicable#terminate()
 	 */
 	@Override
-	public void terminate()
+	public void close()
 	{
 		try
 		{
@@ -104,8 +104,7 @@ public class MessageConnection implements Communicable
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.throwing("MessageConnection", "close", e);
 		}
 	}
 

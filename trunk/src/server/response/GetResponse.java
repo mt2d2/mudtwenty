@@ -3,8 +3,8 @@ package server.response;
 import java.util.List;
 
 import message.ClientMessage;
-import server.Server;
 import server.ServerThread;
+import server.SystemColor;
 import server.universe.Player;
 import server.universe.Room;
 import server.universe.item.Item;
@@ -25,7 +25,7 @@ public class GetResponse implements ServerResponse
 	{
 		if (arguments.size() < 1)
 		{
-			return new ClientMessage("The proper syntax is: get <item>", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The proper syntax is: get <item>", SystemColor.ERROR);
 		}
 		else
 		{

@@ -3,8 +3,8 @@ package server.response;
 import java.util.List;
 
 import message.ClientMessage;
-import server.Server;
 import server.ServerThread;
+import server.SystemColor;
 import server.universe.Player;
 import server.universe.item.Item;
 import util.ArrayUtil;
@@ -17,7 +17,7 @@ import util.ArrayUtil;
  */
 public class UseResponse implements ServerResponse
 {
-	
+
 	/**
 	 * Use an item if possible.
 	 */
@@ -25,17 +25,17 @@ public class UseResponse implements ServerResponse
 	{
 		if (arguments.isEmpty())
 		{
-			return new ClientMessage("The proper syntax is: use <item name>", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The proper syntax is: use <item name>", SystemColor.ERROR);
 		}
 		else
 		{
 			final Player player = serverThread.getPlayer();
 			String itemName = ArrayUtil.joinArguments(arguments, " ").trim();
 			Item item = player.getItem(itemName);
-			
+
 			if (item == null)
-				return new ClientMessage("You do not have " + itemName + ".", Server.ERROR_TEXT_COLOR);
-			
+				return new ClientMessage("You do not have " + itemName + ".", SystemColor.ERROR);
+
 			return item.use(player);
 		}
 	}

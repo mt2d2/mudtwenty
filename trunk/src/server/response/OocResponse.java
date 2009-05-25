@@ -9,11 +9,12 @@ import message.ClientMessage;
 import message.Status;
 import server.Server;
 import server.ServerThread;
+import server.SystemColor;
 import util.ArrayUtil;
 
 /**
  * Responds to the ooc command as directed by the user.
- *
+ * 
  * @author Michael Tremel (mtremel@email.arizona.edu)
  */
 public class OocResponse implements ServerResponse
@@ -27,13 +28,13 @@ public class OocResponse implements ServerResponse
 	{
 		if (arguments.size() < 1)
 		{
-			return new ClientMessage("The proper syntax is: ooc <message>", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The proper syntax is: ooc <message>", SystemColor.ERROR);
 		}
 		else
 		{
 			final String textSaid = ArrayUtil.joinArguments(arguments, " ").trim();
-			ClientMessage message = new ClientMessage("Broadcast from " + serverThread.getPlayer().getName() + ": "
-				+ textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR);
+			ClientMessage message = new ClientMessage("Broadcast from " + serverThread.getPlayer().getName() + ": " + textSaid, Status.CHAT,
+					SystemColor.MESSAGE);
 			Server.sendMessageToAllClients(message);
 
 			return new ClientMessage("You said \"" + textSaid + "\" to everyone.");

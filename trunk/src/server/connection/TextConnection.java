@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 import message.ClientMessage;
 import message.ServerMessage;
-import server.Server;
+import server.SystemColor;
 
 /**
  * Implements the Communicable interface for a connection to telnet, which
@@ -29,7 +29,7 @@ public class TextConnection implements Communicable
 	private BufferedReader		textIn;
 	private PrintWriter			textOut;
 
-	public void openConnection(Socket socket) throws IOException
+	public void open(Socket socket) throws IOException
 	{
 		this.textIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		this.textOut = new PrintWriter(socket.getOutputStream(), true);
@@ -68,7 +68,7 @@ public class TextConnection implements Communicable
 		}
 	}
 
-	public void terminate()
+	public void close()
 	{
 		try
 		{
@@ -93,15 +93,15 @@ public class TextConnection implements Communicable
 	 */
 	private String translateColor(Color color)
 	{
-		if (color == Server.ERROR_TEXT_COLOR)
+		if (color == SystemColor.ERROR)
 		{
 			return "\u001B[31m";
 		}
-		else if (color == Server.SYSTEM_TEXT_COLOR)
+		else if (color == SystemColor.DEFAULT)
 		{
 			return "\u001B[32m";
 		}
-		else if (color == Server.MESSAGE_TEXT_COLOR)
+		else if (color == SystemColor.MESSAGE)
 		{
 			return "\u001B[34m";
 		}

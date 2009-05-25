@@ -64,7 +64,7 @@ public class ServerThread implements Runnable
 	 * connecting client on socket. After the welcome message is sent to the
 	 * user. At this point, the mode of communication is established (either via
 	 * MessageProtocol or text streams) and the thread enters its run loop.
-	 *
+	 * 
 	 * @param server
 	 *            Server parent of this thread, useful for getting a list of
 	 *            other, connected clients
@@ -82,7 +82,7 @@ public class ServerThread implements Runnable
 		{
 			// by default, we should run using the gui
 			this.connection = new MessageConnection();
-			this.connection.openConnection(this.socket);
+			this.connection.open(this.socket);
 		}
 		catch (IOException e)
 		{
@@ -94,7 +94,7 @@ public class ServerThread implements Runnable
 			{
 				// and fall back on text mode
 				this.connection = new TextConnection();
-				this.connection.openConnection(this.socket);
+				this.connection.open(this.socket);
 			}
 			catch (IOException ex)
 			{
@@ -104,20 +104,18 @@ public class ServerThread implements Runnable
 			}
 		}
 
-		if (connection instanceof TextConnection) // kludgey way to send special welcome to text-based clients.
+		if (connection instanceof TextConnection)
 		{
-			String asciiArtWelcome = "Welcome to\n"+
-               "                     _ _                      _           _\n"+
-               " _ __ ___  _   _  __| | |___      _____ _ __ | |_ _   _  / \\\n"+
-               "| '_ ` _ \\| | | |/ _` | __\\ \\ /\\ / / _ \\ '_ \\| __| | | |/  /\n"+
-               "| | | | | | |_| | (_| | |_ \\ V  V /  __/ | | | |_| |_| /\\_/ \n"+
-               "|_| |_| |_|\\__,_|\\__,_|\\__| \\_/\\_/ \\___|_| |_|\\__|\\__, \\/\n"+
-               "                                                  |___/\n";
-			this.connection.sendMessage(new ClientMessage(asciiArtWelcome, Server.SYSTEM_TEXT_COLOR));
+			String asciiArtWelcome = "Welcome to\n" + "                     _ _                      _           _\n"
+					+ " _ __ ___  _   _  __| | |___      _____ _ __ | |_ _   _  / \\\n"
+					+ "| '_ ` _ \\| | | |/ _` | __\\ \\ /\\ / / _ \\ '_ \\| __| | | |/  /\n"
+					+ "| | | | | | |_| | (_| | |_ \\ V  V /  __/ | | | |_| |_| /\\_/ \n"
+					+ "|_| |_| |_|\\__,_|\\__,_|\\__| \\_/\\_/ \\___|_| |_|\\__|\\__, \\/\n" + "                                                  |___/\n";
+			this.connection.sendMessage(new ClientMessage(asciiArtWelcome, SystemColor.DEFAULT));
 		}
 		else
 		{
-			this.connection.sendMessage(new ClientMessage(WELCOME_STRING, Server.SYSTEM_TEXT_COLOR));
+			this.connection.sendMessage(new ClientMessage(WELCOME_STRING, SystemColor.DEFAULT));
 		}
 	}
 
@@ -157,8 +155,9 @@ public class ServerThread implements Runnable
 	}
 
 	/**
-	 * Get the user's name and password. If they're new, register and create a new player.
-	 * Otherwise log them in. If something goes wrong during this process, start again.
+	 * Get the user's name and password. If they're new, register and create a
+	 * new player. Otherwise log them in. If something goes wrong during this
+	 * process, start again.
 	 */
 	private void processLogin()
 	{
@@ -182,13 +181,17 @@ public class ServerThread implements Runnable
 		String password = this.connection.getMessage().getPayload();
 		if (this.register(name, password))
 		{
-			try {
+			try
+			{
 				this.login(name, password);
-			} catch (InvalidLoginException e) {
+			}
+			catch (InvalidLoginException e)
+			{
 				this.connection.sendMessage(new ClientMessage(e.getMessage(), Color.RED));
 				processLogin();
 			}
-			this.connection.sendMessage(new ClientMessage("Registration and login complete.", Server.SYSTEM_TEXT_COLOR));
+
+			this.connection.sendMessage(new ClientMessage("Registration and login complete.", SystemColor.DEFAULT));
 			this.connection.sendMessage(new LookResponse().respond(this, new ArrayList<String>()));
 		}
 		else
@@ -209,7 +212,7 @@ public class ServerThread implements Runnable
 		{
 			if (this.login(name, password))
 			{
-				this.connection.sendMessage(new ClientMessage("Login was successful.", Server.SYSTEM_TEXT_COLOR));
+				this.connection.sendMessage(new ClientMessage("Login was successful.", SystemColor.DEFAULT));
 				this.connection.sendMessage(new LookResponse().respond(this, new ArrayList<String>()));
 			}
 			else
@@ -233,7 +236,7 @@ public class ServerThread implements Runnable
 	{
 		try
 		{
-			this.connection.terminate();
+			this.connection.close();
 			this.socket.close();
 		}
 		catch (IOException e)
@@ -254,7 +257,7 @@ public class ServerThread implements Runnable
 	/**
 	 * Get the state; if a client is still running, then <code>State.OK</code>,
 	 * or if the user has quit, <code>State.DONE</code>
-	 *
+	 * 
 	 * @return the State of a client.
 	 */
 	public State getState()
@@ -264,7 +267,7 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Sets the state of the thread.
-	 *
+	 * 
 	 * @param state
 	 *            new state for this thread
 	 */
@@ -276,7 +279,7 @@ public class ServerThread implements Runnable
 	/**
 	 * Return the player associated with this thread, if possible. If no player
 	 * has logged in, this returns null.
-	 *
+	 * 
 	 * @return Player associated with this ServerThread
 	 */
 	public Player getPlayer()
@@ -285,8 +288,8 @@ public class ServerThread implements Runnable
 	}
 
 	/**
-	 * Test whether a player exists and rectify any inconsistency between universe and
-	 * player file.
+	 * Test whether a player exists and rectify any inconsistency between
+	 * universe and player file.
 	 */
 	private boolean playerExists(String name)
 	{
@@ -313,7 +316,7 @@ public class ServerThread implements Runnable
 	 * the filesystem, and finally user and password are compared. If all checks
 	 * out, the resultant Player object is associated with this ServerThread,
 	 * and the Player is added to the Universe.
-	 *
+	 * 
 	 * @param name
 	 *            user input for name
 	 * @param password
@@ -327,14 +330,11 @@ public class ServerThread implements Runnable
 	{
 		Player player = loadPlayer(name);
 		if (player == null || !player.getName().equals(name))
-		{
 			throw new InvalidLoginException("Player does not exist.");
-		}
 
-		if (!player.confirmPasswordHash(password))
-		{
+		if (!player.confirmPassword(password))
 			throw new InvalidLoginException("Incorrect password");
-		}
+
 		// add this player to the universe
 		Server.getUniverse().login(player);
 
@@ -344,7 +344,8 @@ public class ServerThread implements Runnable
 	}
 
 	/**
-	 * Load a player from their player file if possible. If something goes wrong, return null.
+	 * Load a player from their player file if possible. If something goes
+	 * wrong, return null.
 	 */
 	private Player loadPlayer(String name)
 	{
@@ -371,22 +372,24 @@ public class ServerThread implements Runnable
 				return null;
 			}
 		}
+
 		return null;
 	}
 
 	/**
-	 * This registers the player with the universe.
-	 * It creates a player and registers the player with the universe,
-	 * which records the player's location as the starting location.
-	 * This does not log the user in.
-	 *
+	 * This registers the player with the universe. It creates a player and
+	 * registers the player with the universe, which records the player's
+	 * location as the starting location. This does not log the user in.
+	 * 
 	 * Precondition: player does not exist yet.
-	 *
-	 * @return <code>true</code> if the registration was successful, false otherwise.
+	 * 
+	 * @return <code>true</code> if the registration was successful, false
+	 *         otherwise.
 	 */
 	private boolean register(String name, String password)
 	{
 		Player newPlayer = new Player(name, password);
+
 		if (this.savePlayerToDisk(newPlayer))
 		{
 			Server.getUniverse().register(name);
@@ -408,7 +411,7 @@ public class ServerThread implements Runnable
 	 * Saves a given Player to disk. This is useful during registration,
 	 * possibly when the player is exiting, but also because the server will
 	 * periodically save all players to disk.
-	 *
+	 * 
 	 * @return <code>true</code> if the save were successful or
 	 *         <code>false</code>
 	 */
@@ -439,7 +442,7 @@ public class ServerThread implements Runnable
 
 	/**
 	 * Convenience method for sending messages from outside this class.
-	 *
+	 * 
 	 * @param message
 	 *            the message to be sent
 	 */

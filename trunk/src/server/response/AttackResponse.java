@@ -5,6 +5,7 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
+import server.SystemColor;
 import server.universe.Creature;
 import server.universe.Player;
 import server.universe.Room;
@@ -25,7 +26,7 @@ public class AttackResponse implements ServerResponse
 	{
 		if (arguments.size() < 1)
 		{
-			return new ClientMessage("The proper syntax is: attack <mob name>", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The proper syntax is: attack <mob name>", SystemColor.ERROR);
 		}
 		else
 		{
@@ -43,7 +44,7 @@ public class AttackResponse implements ServerResponse
 					attackee = player;
 
 			if (attackee == null)
-				return new ClientMessage("No such MOB or player to attack; some MOBS cannot be attacked", Server.ERROR_TEXT_COLOR);
+				return new ClientMessage("No such MOB or player to attack; some MOBS cannot be attacked", SystemColor.ERROR);
 
 			if (attackee instanceof Troll)
 			{

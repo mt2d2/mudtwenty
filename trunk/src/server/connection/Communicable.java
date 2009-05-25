@@ -23,7 +23,7 @@ public interface Communicable
 	 *            client connection as a socket
 	 * @throws IOException
 	 */
-	public void openConnection(Socket socket) throws IOException;
+	public void open(Socket socket) throws IOException;
 
 	/**
 	 * This blocks until a message is sent from the client, at which put the
@@ -45,5 +45,5 @@ public interface Communicable
 	/**
 	 * Closes the connection to the client.
 	 */
-	public void terminate();
+	public void close();
 }

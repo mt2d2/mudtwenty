@@ -2,6 +2,7 @@ package server.universe.item;
 
 import message.ClientMessage;
 import server.Server;
+import server.SystemColor;
 import server.universe.Creature;
 import server.universe.Room;
 
@@ -44,11 +45,11 @@ public class Key extends Item
 		if (roomOfCreature.isAdjacentTo(room))
 		{
 			room.unlockExit();
-			return new ClientMessage("The room, " + room.getName() + ", has been unlocked!", Server.SYSTEM_TEXT_COLOR);
+			return new ClientMessage("The room, " + room.getName() + ", has been unlocked!", SystemColor.DEFAULT);
 		}
 		else
 		{
-			return new ClientMessage("The key does not work for opening any adjacent rooms!", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The key does not work for opening any adjacent rooms!", SystemColor.ERROR);
 		}
 	}
 }

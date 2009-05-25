@@ -6,6 +6,7 @@ import message.ClientMessage;
 import message.Status;
 import server.Server;
 import server.ServerThread;
+import server.SystemColor;
 import server.universe.Creature;
 import server.universe.Player;
 import server.universe.Room;
@@ -26,7 +27,7 @@ public class TellResponse implements ServerResponse
 	{
 		if (arguments.size() < 2)
 		{
-			return new ClientMessage("The proper syntax is: say <user> <message>", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The proper syntax is: say <user> <message>", SystemColor.ERROR);
 		}
 		else
 		{
@@ -53,13 +54,13 @@ public class TellResponse implements ServerResponse
 
 			if (receiver != null)
 			{
-				ClientMessage message = new ClientMessage(textSaid, Status.CHAT, Server.MESSAGE_TEXT_COLOR);
+				ClientMessage message = new ClientMessage(textSaid, Status.CHAT, SystemColor.MESSAGE);
 				Server.getUniverse().sendMessageToCreature(sender, receiver, message);
 				return new ClientMessage("You said something to " + receiverName + ".");
 			}
 			else
 			{
-				return new ClientMessage("No such player or MOB.", Server.ERROR_TEXT_COLOR);
+				return new ClientMessage("No such player or MOB.", SystemColor.ERROR);
 			}
 			
 		}
