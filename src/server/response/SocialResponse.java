@@ -5,6 +5,7 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
+import server.SystemColor;
 import server.universe.Player;
 import server.universe.Room;
 
@@ -57,7 +58,7 @@ public class SocialResponse implements ServerResponse
 			Player target = Server.getUniverse().getPlayer(targetName);
 			
 			if (target == null)
-				return new ClientMessage("That player, " + targetName  + ", could not be found.", Server.ERROR_TEXT_COLOR);
+				return new ClientMessage("That player, " + targetName  + ", could not be found.", SystemColor.ERROR);
 			ClientMessage message = new ClientMessage(player.getName() + " " + this.verb + " at " + targetName);
 			Server.sendMessageToAllClientsInRoom(room, message);
 			

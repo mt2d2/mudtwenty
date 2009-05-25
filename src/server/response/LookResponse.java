@@ -6,6 +6,7 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
+import server.SystemColor;
 import server.universe.Direction;
 import server.universe.Entity;
 import server.universe.Player;
@@ -59,7 +60,7 @@ public class LookResponse implements ServerResponse
 			}
 			catch (IllegalArgumentException e)
 			{
-				return new ClientMessage("The thing you are searching for, " + arguments.get(0) + ", could not be found.", Server.ERROR_TEXT_COLOR);
+				return new ClientMessage("The thing you are searching for, " + arguments.get(0) + ", could not be found.", SystemColor.ERROR);
 			}
 		}
 	}
@@ -171,7 +172,7 @@ public class LookResponse implements ServerResponse
 		}
 		else
 		{
-			return new ClientMessage("There is no exit in that direction.", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("There is no exit in that direction.", SystemColor.ERROR);
 		}
 	}
 }

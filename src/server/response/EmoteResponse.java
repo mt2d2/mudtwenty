@@ -5,6 +5,7 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
+import server.SystemColor;
 import server.universe.Player;
 import server.universe.Room;
 import util.ArrayUtil;
@@ -25,7 +26,7 @@ public class EmoteResponse implements ServerResponse
 	{
 		if (arguments.size() < 1)
 		{
-			return new ClientMessage("The proper syntax is: emote <phrase>", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The proper syntax is: emote <phrase>", SystemColor.ERROR);
 		}
 		else
 		{

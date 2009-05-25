@@ -7,6 +7,7 @@ import java.util.Properties;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
+import server.SystemColor;
 import util.PropertyLoader;
 
 /**
@@ -34,16 +35,16 @@ public class ShutdownResponse implements ServerResponse
 
 		if (admins.contains(serverThread.getPlayer().getName()))
 		{
-			Server.sendMessageToAllClients(new ClientMessage("The server is shutting down now.", Server.ERROR_TEXT_COLOR));
+			Server.sendMessageToAllClients(new ClientMessage("The server is shutting down now.", SystemColor.ERROR));
 			serverThread.getServer().shutdown();
 
 			// the server is shutdown, there is no response to send
-			return null;
+			return new ClientMessage("The server was unable to be shutdown, check the server logs.");
 		}
 		else
 		{
 			// user is not allowed to perform shutdown
-			return new ClientMessage("You are not permmitted to execute this command.", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("You are not permmitted to execute this command.", SystemColor.ERROR);
 		}
 	}
 }

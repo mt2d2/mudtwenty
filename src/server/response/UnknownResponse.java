@@ -3,8 +3,8 @@ package server.response;
 import java.util.List;
 
 import message.ClientMessage;
-import server.Server;
 import server.ServerThread;
+import server.SystemColor;
 
 /**
  * The default response to any action that the Server does not recognize. Spits
@@ -21,6 +21,6 @@ public class UnknownResponse implements ServerResponse
 	public ClientMessage respond(ServerThread serverThread, List<String> arguments)
 	{
 		return new ClientMessage("The command you entered was not found. Type help for a list of commands.",
-				Server.ERROR_TEXT_COLOR);
+				SystemColor.ERROR);
 	}
 }

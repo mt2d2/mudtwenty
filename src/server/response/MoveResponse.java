@@ -6,6 +6,7 @@ import java.util.List;
 import message.ClientMessage;
 import server.Server;
 import server.ServerThread;
+import server.SystemColor;
 import server.universe.Direction;
 import server.universe.Player;
 import server.universe.Room;
@@ -46,7 +47,7 @@ public class MoveResponse implements ServerResponse
 		}
 		else if (arguments.size() < 1)
 		{
-			return new ClientMessage("The proper syntax is: move <exit name>", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("The proper syntax is: move <exit name>", SystemColor.ERROR);
 		}
 		else
 		{
@@ -58,7 +59,7 @@ public class MoveResponse implements ServerResponse
 			}
 			catch (IllegalArgumentException e)
 			{
-				return new ClientMessage("That direction was not recognized.", Server.ERROR_TEXT_COLOR);
+				return new ClientMessage("That direction was not recognized.", SystemColor.ERROR);
 			}
 
 		}
@@ -75,7 +76,7 @@ public class MoveResponse implements ServerResponse
 
 		// make sure that the exit exists
 		if (!oldRoom.hasExit(direction))
-			return new ClientMessage("There is no exit in that direction.", Server.ERROR_TEXT_COLOR);
+			return new ClientMessage("There is no exit in that direction.", SystemColor.ERROR);
 
 		// get the new room
 		Room newRoom = oldRoom.getExit(direction).getRoom();
@@ -83,7 +84,7 @@ public class MoveResponse implements ServerResponse
 		// make sure that the exit is unlocked
 		if (newRoom.requiresKey())
 			if (!newRoom.isLocked())
-				return new ClientMessage("The room " + newRoom.getName() + " is currently locked", Server.ERROR_TEXT_COLOR);
+				return new ClientMessage("The room " + newRoom.getName() + " is currently locked", SystemColor.ERROR);
 
 		// make the swap
 		Server.getUniverse().changeRoomOfCreature(player, newRoom);

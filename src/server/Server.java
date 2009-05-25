@@ -1,6 +1,5 @@
 package server;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,23 +35,6 @@ import util.PropertyLoader;
 public class Server
 {
 	/**
-	 * System messages are associated with a single color when sent to the
-	 * client. This is a dark green.
-	 */
-	public static final Color				SYSTEM_TEXT_COLOR	= new Color(0, 51, 0);
-
-	/**
-	 * Error messages ought to be red, it's what people expect.
-	 */
-	public static final Color				ERROR_TEXT_COLOR	= Color.RED;
-
-	/**
-	 * Messages from other users should appear blue. It'll balance the world
-	 * out.
-	 */
-	public static final Color				MESSAGE_TEXT_COLOR	= Color.BLUE;
-
-	/**
 	 * Logging utility, globally addressed in entire program as "mudtwenty".
 	 * This could be augmented by using a global properties file to localize the
 	 * error strings.
@@ -80,7 +62,7 @@ public class Server
 	 * Default constructor for Server. It attempts to establish a ServerSocket,
 	 * and will throw an IOException in the case that this is impossible. It
 	 * also makes sure the universe is up and loaded and starts anything else
-	 * that the server needs to have started (e.g., ReaperTask)
+	 * that the server needs to have started (e.g., ReaperTask).
 	 *
 	 * After that, it enters a blocking loop waiting for connections.
 	 *
@@ -100,7 +82,7 @@ public class Server
 		this.timer = new Timer();
 
 		// Prefer latency over bandwith, over connection time
-		//this.serverSocket.setPerformancePreferences(0, 2, 1);
+		this.serverSocket.setPerformancePreferences(0, 2, 1);
 
 		// Set up the universe
 		logger.info("loading universe");
@@ -270,10 +252,10 @@ public class Server
 			for (ServerThread st : toRemove)
 				if (st.getPlayer() != null)
 					Server.sendMessageToAllClients(new ClientMessage(st.getPlayer().getName() +
-							" has left the game.", Server.SYSTEM_TEXT_COLOR));
+							" has left the game.", SystemColor.DEFAULT));
 				else
 					Server.sendMessageToAllClients(new ClientMessage("client terminated connection: " +st,
-							Server.SYSTEM_TEXT_COLOR));
+							SystemColor.DEFAULT));
 
 			toRemove.clear();
 		}

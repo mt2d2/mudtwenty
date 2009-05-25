@@ -8,11 +8,12 @@ import java.io.ObjectOutput;
  * This extends MessageProtocol, providing data useful for a Server to receive.
  * It could replace ServerMessage.
  */
-public class ServerMessage extends MessageProtocol {
-	
+public class ServerMessage extends MessageProtocol
+{
+
 	private static final long	serialVersionUID	= 1L;
 
-	private String text;
+	private String				text;
 
 	/**
 	 * This constructor is required by Externalizable. There are no setters to
@@ -46,6 +47,7 @@ public class ServerMessage extends MessageProtocol {
 	{
 		// properties of message
 		super.readExternal(in);
+
 		// text of message
 		this.text = in.readUTF();
 	}
@@ -54,6 +56,7 @@ public class ServerMessage extends MessageProtocol {
 	{
 		// properties of message
 		super.writeExternal(out);
+
 		// text of message
 		out.writeUTF(this.text);
 	}
