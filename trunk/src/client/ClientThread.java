@@ -2,6 +2,8 @@ package client;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -16,9 +18,6 @@ import message.ClientMessage;
 import message.ServerMessage;
 import message.Status;
 
-import org.jboss.netty.handler.codec.serialization.ObjectDecoderInputStream;
-import org.jboss.netty.handler.codec.serialization.ObjectEncoderOutputStream;
-
 /**
  * This class is responsible for initiating a socket connection to the given
  * server, sending messages, and recieving messages from Server.
@@ -30,11 +29,11 @@ import org.jboss.netty.handler.codec.serialization.ObjectEncoderOutputStream;
  */
 public class ClientThread implements Runnable
 {
-	private Client						client;
-	private Socket						socket;
-	private ObjectDecoderInputStream	in;
-	private ObjectEncoderOutputStream	out;
-	private boolean						done;
+	private Client				client;
+	private Socket				socket;
+	private ObjectInputStream	in;
+	private ObjectOutputStream	out;
+	private boolean				done;
 
 	/**
 	 * Sole constructor. Attempts to open a socket connection on server port.
@@ -53,8 +52,8 @@ public class ClientThread implements Runnable
 		{
 			this.client = client;
 			this.socket = new Socket(InetAddress.getByName(server), port);
-			this.out = new ObjectEncoderOutputStream(this.socket.getOutputStream());
-			this.in = new ObjectDecoderInputStream(this.socket.getInputStream());
+			this.out = new ObjectOutputStream(this.socket.getOutputStream());
+			this.in = new ObjectInputStream(this.socket.getInputStream());
 			this.done = false;
 		}
 		catch (UnknownHostException e)
