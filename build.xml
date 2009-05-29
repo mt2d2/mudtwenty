@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- WARNING: Eclipse auto-generated file.
               Any modifications will be overwritten.
               To include a user specific buildfile here, simply create one in the same
@@ -14,6 +14,7 @@
     <path id="mudtwenty.classpath">
         <pathelement location="bin"/>
         <pathelement location="lib/junit.jar"/>
+        <pathelement location="lib/netty-3.1.0.BETA2.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -55,6 +56,14 @@
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
+    <target name="ArrayUtilTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="util.ArrayUtilTest" todir="${junit.output.dir}"/>
+            <classpath refid="mudtwenty.classpath"/>
+        </junit>
+    </target>
     <target name="Client">
         <java classname="client.Client" failonerror="true" fork="yes">
             <classpath refid="mudtwenty.classpath"/>
@@ -68,19 +77,24 @@
             <classpath refid="mudtwenty.classpath"/>
         </junit>
     </target>
+    <target name="NettyServer">
+        <java classname="server.NettyServer" failonerror="true" fork="yes">
+            <classpath refid="mudtwenty.classpath"/>
+        </java>
+    </target>
+    <target name="PropertyLoaderTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="util.PropertyLoaderTest" todir="${junit.output.dir}"/>
+            <classpath refid="mudtwenty.classpath"/>
+        </junit>
+    </target>
     <target name="Server">
         <java classname="server.Server" failonerror="true" fork="yes">
             <jvmarg line="-server -Djava.awt.headless=true"/>
             <classpath refid="mudtwenty.classpath"/>
         </java>
-    </target>
-    <target name="ServerMessageTest">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <test name="message.ServerMessageTest" todir="${junit.output.dir}"/>
-            <classpath refid="mudtwenty.classpath"/>
-        </junit>
     </target>
     <target name="junitreport">
         <junitreport todir="${junit.output.dir}">
