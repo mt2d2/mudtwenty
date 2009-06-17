@@ -330,7 +330,7 @@ public class Client extends JFrame
 		JLabel host = new JLabel("Hostname:");
 		final JTextField hostField = new JTextField("localhost");
 		JLabel port = new JLabel("Port:");
-		final JTextField portField = new JTextField("4000");
+		final JTextField portField = new JTextField("8080");
 		final JButton connectButton = new JButton("Connect");
 		final JProgressBar spinner = new JProgressBar();
 		spinner.setIndeterminate(true);
