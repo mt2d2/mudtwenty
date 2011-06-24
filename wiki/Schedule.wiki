@@ -21,13 +21,6 @@ As of now, we have *less than a week to finish the project*.
   * Finalize design doc, *4 May 2009*
   * Project due, final submission, *6 May 2009*
 
-= Work Distribution =
-  * *client/server interaction, GUI*
-  * Simon, *content design, Universe interaction with content*
-  * Aaron, *client GUI design, Universe interaction with content*
-  * Quinten, *content design, Universe interaction with content*
-    * MOBs and MOB AI
-
 = Major things to do =
 
 We really have to focus on just the most important things for getting a good grade on this assignment, as our time is extremely limited. Some of the major things to do include:
