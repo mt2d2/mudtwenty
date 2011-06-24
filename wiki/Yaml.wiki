@@ -20,4 +20,4 @@ The problem I see with default java serialization is that it requires you to be 
 
 ----
 
-I agree that that is an advantage to using Yaml. I am personally partial to the idea of keeping all our data stored in plain text so that it's relatively easy to add bits to the world, edit descriptions, etc. I think that we should make sure that it works fairly easily and ask Jan about whether it's okay. -- Quinten
+I agree that that is an advantage to using Yaml. I am personally partial to the idea of keeping all our data stored in plain text so that it's relatively easy to add bits to the world, edit descriptions, etc. I think that we should make sure that it works fairly easily and ask Jan about whether it's okay. 
