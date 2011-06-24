@@ -22,7 +22,7 @@ As of now, we have *less than a week to finish the project*.
   * Project due, final submission, *6 May 2009*
 
 = Work Distribution =
-  * Michael, *client/server interaction, GUI*
+  * *client/server interaction, GUI*
   * Simon, *content design, Universe interaction with content*
   * Aaron, *client GUI design, Universe interaction with content*
   * Quinten, *content design, Universe interaction with content*
