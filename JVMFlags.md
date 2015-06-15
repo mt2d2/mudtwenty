@@ -1,0 +1,2 @@
+# Introduction #
+The JVM has many flags which can affect the performance of a Java application, specifically servers. If we deploy this application, we might find many of these flags useful (for one, the JVM already starts in -server mode for Server). See [Sun's documentation](http://java.sun.com/javase/technologies/hotspot/vmoptions.jsp) on the subject for future reference.

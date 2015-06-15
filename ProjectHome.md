@@ -1,0 +1,1 @@
+mudtwenty is a Java MUD Server/Client framework inspired by a university project. Although a playable game is a goal of the project, a more immediate goal is the completion of the server/client relationship and a basic layout of the MUD.
